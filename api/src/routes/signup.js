@@ -17,11 +17,10 @@ async function getUserSignups(req, res) {
     .limit(limitCount)
     .populate('event');
 
+  const formattedSignups = await Signup.formatArrayOfSignups(signups, requestUser);
+
   return res.json({
-    signups: signups.map(signup => ({
-      ...signup,
-      user: signup.user.getApiProfile(requestUser),
-    }))
+    signups: formattedSignups,
   });
 }
 
@@ -56,11 +55,10 @@ async function getEventSignups(req, res) {
     .limit(limitCount)
     .populate('event user');
 
+  const formattedSignups = await Signup.formatArrayOfSignups(signups, requestUser);
+
   return res.json({
-    signups: signups.map(signup => ({
-      ...signup,
-      user: signup.user.getApiProfile(requestUser),
-    }))
+    signups: formattedSignups,
   });
 }
 
@@ -69,12 +67,10 @@ async function postUserSignup(req, res) {
   const { eventId } = req.params;
 
   const signup = Signup.makeSignup(requestUser, eventId);
+  const formattedSignup = signup.getApiResponse(requestUser);
 
   res.json({
-    signup: {
-      ...signup,
-      user: signup.user.getApiProfile(requestUser),
-    },
+    signup: formattedSignup,
   });
 }
 

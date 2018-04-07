@@ -37,6 +37,35 @@ SignupSchema.statics.makeSignup = async function(user, event) {
   }
 };
 
+SignupSchema.statics.formatArrayOfSignups = async function(signups, requestUser) {
+  const formattedSignups = await Promise.all(signups.map(async (signup) =>
+    await signup.getApiResponse(requestUser)
+  ));
+
+  return formattedSignups;
+};
+
+SignupSchema.methods.getApiResponse = async function(requestUser) {
+  const baseApiResponse = { id: this.id };
+
+  try {
+    const user = this.user && this.user.getApiResponse ?
+      await this.user.getApiResponse(requestUser) : (this.user || null);
+
+    const event = this.event && this.event.getApiResponse ?
+      await this.event.getApiResponse(requestUser) : (this.event || null);
+
+    return {
+      ...baseApiResponse,
+      user,
+      event,
+    };
+  } catch (error) {
+    console.error(error);
+    return baseApiResponse;
+  }
+};
+
 const Signup = mongoose.model('signup', SignupSchema);
 
 module.exports = Signup;

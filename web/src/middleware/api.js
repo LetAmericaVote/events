@@ -1,19 +1,22 @@
 import {
-  selectApiRequestIsPending,
-} from '../selectors';
-import {
   API_REQUEST_INITIATED,
   apiRequestFailed,
   apiRequestSucceeded,
+  setApiActionMetaEndpoint,
 } from '../actions';
+import {
+  selectApiRequestIsPending
+} from '../selectors';
 
-const api = store => next => action => {
+const routing = store => next => action => {
   if (action.type === API_REQUEST_INITIATED) {
-    const { endpoint, options } = action;
+    const { endpoint, options, metaAction } = action;
 
     if (selectApiRequestIsPending(endpoint, store.getState())) {
       return next(action);
     }
+
+    store.dispatch(setApiActionMetaEndpoint(metaAction, endpoint));
 
     fetch(endpoint, options)
       .then(async res => {
@@ -40,4 +43,4 @@ const api = store => next => action => {
   return next(action);
 };
 
-export default api;
+export default routing;

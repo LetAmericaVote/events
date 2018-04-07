@@ -111,28 +111,28 @@ EventSchema.statics.findByLatLong = async function(long, lat, minDistance, maxDi
           near: {
             type: 'Point',
             coordinates: [long, lat],
-            spherical: true,
-            distanceField: 'distance',
-            query: {
-              _id: {
-                '$nin': exlcudeId,
-              },
-              dateTime: {
-                '$gte': new Date(),
-              },
-            },
-            limit: 25,
           },
+          spherical: true,
+          query: {
+            _id: {
+              '$nin': exlcudeId, // TODO: Fix this
+            },
+            dateTime: {
+              '$gte': new Date(),
+            },
+          },
+          limit: 25,
+          distanceField: 'distance',
         }
       },
     ]);
 
-    const aggregateEvents = events.results;
-    if (! aggregateEvents || ! aggregateEvents.length) {
+    if (! events || ! events.length) {
       return [];
     }
 
-    const populatedEvents = await this.populate(aggregateEvents, { path: 'hostUser' });
+    const hydratedEvents = events.map(event => this.hydrate(event));
+    const populatedEvents = await this.populate(hydratedEvents, { path: 'hostUser' });
 
     return populatedEvents;
   } catch (error) {
@@ -174,6 +174,47 @@ EventSchema.statics.syncFromContentful = async function(entry) {
   } catch(error) {
     console.error(error);
     return false;
+  }
+};
+
+EventSchema.statics.formatArrayOfEvents = async function(events, requestUser) {
+  const formattedEvents = await Promise.all(events.map(async (event) =>
+    await event.getApiResponse(requestUser)
+  ));
+
+  return formattedEvents;
+};
+
+EventSchema.methods.getApiResponse = async function(requestUser) {
+  const baseEventResponse = {
+    id: this.id,
+    title: this.title,
+    slug: this.slug,
+    description: this.description,
+    headerPhoto: this.headerPhoto,
+    dateTime: this.dateTime,
+    streetAddress: this.streetAddress,
+    city: this.city,
+    state: this.state,
+    zipcode: this.zipcode,
+    geoLocation: this.geoLocation,
+  };
+
+  if (this._doc && typeof this._doc.distance !== 'undefined') {
+    baseEventResponse.distance = this._doc.distance;
+  }
+
+  try {
+    const hostUser = this.hostUser && this.hostUser.getApiResponse ?
+      await this.hostUser.getApiResponse(requestUser) : (this.hostUser || null);
+
+    return {
+      ...baseEventResponse,
+      hostUser,
+    };
+  } catch (error) {
+    console.error(error);
+    return baseEventResponse;
   }
 };
 

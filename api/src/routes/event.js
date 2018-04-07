@@ -3,7 +3,7 @@ const Event = require('../models/Event');
 
 async function getEvents(req, res) {
   const { requestUser } = res.locals;
-  const { start, limit, sortByDateTime } = req.query;
+  const { start, limit, sortByUpcoming } = req.query;
   const parsedLimit = Math.max(parseInt(limit), 0);
 
   const findQuery = {
@@ -19,17 +19,17 @@ async function getEvents(req, res) {
   }
 
   const limitCount = parsedLimit > 25 ? 25 : parsedLimit;
-  const sortQuery = (sortByDateTime === 'true') ? { dateTime: 1 } : {};
+  const sortQuery = (sortByUpcoming === 'true') ? { dateTime: -1 } : {};
 
   const events = await Event.find(findQuery)
     .sort(sortQuery)
-    .limit(limitCount);
+    .limit(limitCount)
+    .populate('hostUser');
+
+  const formattedEvents = await Event.formatArrayOfEvents(events, requestUser);
 
   res.json({
-    events: events.map(event => ({
-      ...event,
-      hostUser: event.hostUser.getApiProfile(requestUser),
-    })),
+    events: formattedEvents,
   });
 }
 
@@ -42,15 +42,14 @@ async function getEventById(req, res) {
     return res.status(404).json({ error: true, message: 'Event not found' });
   }
 
+  const formattedEvent = await event.getApiResponse(requestUser);
+
   return res.json({
-    event: {
-      ...event,
-      hostUser: event.hostUser.getApiProfile(requestUser),
-    },
+    event: formattedEvent,
   });
 }
 
-async function getEventBySlug(req, reas) {
+async function getEventBySlug(req, res) {
   const { requestUser } = res.locals;
   const { eventSlug } = req.params;
 
@@ -59,23 +58,22 @@ async function getEventBySlug(req, reas) {
     return res.status(404).json({ error: true, message: 'Event not found' });
   }
 
+  const formattedEvent = await event.getApiResponse(requestUser);
+
   return res.json({
-    event: {
-      ...event,
-      hostUser: event.hostUser.getApiProfile(requestUser),
-    },
+    event: formattedEvent,
   });
 }
 
 async function getEventsByGeoLocation(req, res) {
   const { requestUser } = res.locals;
-  const { long, lat, minDistance, maxDistance, excludeId } = req.query;
+  const { lon, lat, minDistance, maxDistance, excludeId } = req.query;
 
-  if (! long || ! lat) {
+  if (! lon || ! lat) {
     return res.status(400).json({ error: true, message: 'Missing lat/long' });
   }
 
-  const parsedLong = parseFloat(long);
+  const parsedLong = parseFloat(lon);
   const parsedLat = parseFloat(lat);
 
   if (isNaN(parsedLong) || isNaN(parsedLat)) {
@@ -96,11 +94,10 @@ async function getEventsByGeoLocation(req, res) {
 
   const events = await Event.findByLatLong(...searchArgs);
 
+  const formattedEvents = await Event.formatArrayOfEvents(events, requestUser);
+
   res.json({
-    events: events.map(event => ({
-      ...event,
-      hostUser: event.hostUser.getApiProfile(requestUser),
-    })),
+    events: formattedEvents,
   });
 }
 

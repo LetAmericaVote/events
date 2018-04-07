@@ -69,11 +69,20 @@ UserSchema.statics.findByEmail = async function(email) {
   }
 };
 
-UserSchema.methods.getApiProfile = function (requestingUser) {
+UserSchema.statics.formatArrayOfUsers = async function(users, requestUser) {
+  const formattedUsers = await Promise.all(users.map(async (user) =>
+    await user.getApiResponse(requestUser)
+  ));
+
+  return formattedUsers;
+};
+
+UserSchema.methods.getApiResponse = async function (requestingUser) {
   // TODO: Add fields for admins only?
   // TODO: Add more fields if same user?
 
   return {
+    id: this.id,
     firstName: this.firstName,
     lastName: this.lastName,
     fullName: this.fullName,

@@ -60,7 +60,7 @@ const googleAuthVerification = async (req, res) => {
   const lavToken = await Token.generateToken(user);
 
   res.json({
-    user,
+    user, // TODO: NO NO NO NO
     token: lavToken,
   });
 };
