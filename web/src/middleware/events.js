@@ -29,10 +29,14 @@ const eventOutgoingRequest = (store, next, action) => {
     );
 
     if (lastSort && lastSort !== sortByUpcoming) {
-      store.dispatch(setApiActionMetaProperty(META_START, null));
+      store.dispatch(setApiActionMetaProperty(
+        FETCH_PAGINATED_EVENTS, META_START, null,
+      ));
     }
 
-    store.dispatch(setApiActionMetaProperty(META_SORT_BY_UPCOMING, sortByUpcoming));
+    store.dispatch(setApiActionMetaProperty(
+      FETCH_PAGINATED_EVENTS, META_SORT_BY_UPCOMING, sortByUpcoming,
+    ));
 
     const start = selectApiMetaCustomProperty(
       FETCH_PAGINATED_EVENTS,

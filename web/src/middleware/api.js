@@ -4,6 +4,9 @@ import {
   apiRequestSucceeded,
   setApiActionMetaEndpoint,
 } from '../actions';
+import {
+  selectApiRequestIsPending
+} from '../selectors';
 
 const routing = store => next => action => {
   if (action.type === API_REQUEST_INITIATED) {
