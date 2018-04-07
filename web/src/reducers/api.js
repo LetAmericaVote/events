@@ -48,7 +48,7 @@ const getRelevantProps = (action) => {
 
 const setApiStatus = (state, action) => ({
   ...state,
-  endpoint: {
+  [action.endpoint]: {
     ...(state[action.endpoint] || {}),
     ...getRelevantProps(action),
   },

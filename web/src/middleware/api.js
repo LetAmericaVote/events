@@ -16,26 +16,24 @@ const api = store => next => action => {
     }
 
     fetch(endpoint, options)
-      .then(res => {
+      .then(async res => {
         const json = await res.json();
 
-        if (! json || ! json.body) {
+        if (! json) {
           store.dispatch(apiRequestFailed(endpoint, 'Api request returned no data.'));
           return;
         }
 
-        const { body } = json;
-
-        if (res.status !== 200 || body.error) {
-          store.dispatch(apiRequestFailed(endpoint, body.message || 'Api request failed.'));
+        if (res.status !== 200 || json.error) {
+          store.dispatch(apiRequestFailed(endpoint, json.message || 'Api request failed.'));
           return;
         }
 
-        store.dispatch(apiRequestSucceeded(endpoint, body));
+        store.dispatch(apiRequestSucceeded(endpoint, json));
       })
       .catch(error => {
         console.error(error);
-        store.dispatch(apiRequestFailed(endpoint, 'Api request failed due to network failure.'));
+        store.dispatch(apiRequestFailed(endpoint, 'Api request failed, possibly due to network failure.'));
       });
   }
 
