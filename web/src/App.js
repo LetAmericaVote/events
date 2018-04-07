@@ -1,13 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
-import logo from './logo.svg';
-
-const Nav = styled.nav`
-  
-`;
+import GoogleAuthButton from './GoogleAuthButton';
 
 const App = (props) => {
-  return null;
+  return (
+    <GoogleAuthButton />
+  );
 };
 
 export default App;
