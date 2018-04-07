@@ -23,11 +23,10 @@ async function getUserComments(req, res) {
     .sort(sortQuery)
     .limit(limitCount);
 
+  const formattedComments = await Comment.formatArrayOfComments(comments, requestUser);
+
   res.json({
-    comments: comments.map(comment => ({
-      ...comment,
-      user: comment.user.getApiProfile(requestUser),
-    })),
+    comments: formattedComments,
   });
 }
 
@@ -58,11 +57,10 @@ async function getEventComments(req, res) {
     .sort(sortQuery)
     .limit(limitCount);
 
+  const formattedComments = await Comment.formatArrayOfComments(comments, requestUser);
+
   res.json({
-    comments: comments.map(comment => ({
-      ...comment,
-      user: comment.user.getApiProfile(requestUser),
-    })),
+    comments: formattedComments,
   });
 }
 
@@ -83,12 +81,10 @@ async function postEventComment(req, res) {
   await comment.save();
 
   const populatedComment = await Comment.populate(comment, 'user event inReplyTo'); // TODO: Does this work the way I think it does?
+  const formattedComment = await populatedComment.getApiResponse(requestUser);
 
   res.json({
-    comment: {
-      ...populatedComment,
-      user: populatedComment.user.getApiProfile(requestUser),
-    },
+    comment: formattedComment,
   });
 }
 
@@ -99,6 +95,11 @@ module.exports = [
     handler: getUserComments,
     middleware: requireUser,
   },
+  // TODO: Make individual comment getter
+  // {
+  //   route: '/v1/comment/:commentId',
+  //   method: 'get',
+  // }
   {
     route: '/v1/comments/event/:eventId',
     method: 'get',

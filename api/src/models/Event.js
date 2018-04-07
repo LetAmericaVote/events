@@ -177,6 +177,42 @@ EventSchema.statics.syncFromContentful = async function(entry) {
   }
 };
 
+EventSchema.statics.formatArrayOfEvents = async function(events, requestUser) {
+  const formattedEvents = await Promise.all(events.map(async (event) =>
+    await event.getApiResponse(requestUser)
+  ));
+
+  return formattedEvents;
+};
+
+EventSchema.methods.getApiResponse = async function(requestUser) {
+  const baseEventResponse = {
+    title: this.title,
+    slug: this.slug,
+    description: this.description,
+    headerPhoto: this.headerPhoto,
+    dateTime: this.dateTime,
+    streetAddress: this.streetAddress,
+    city: this.city,
+    state: this.state,
+    zipcode: this.zipcode,
+    geoLocation: this.geoLocation,
+  };
+
+  try {
+    const hostUser = this.hostUser && this.hostUser.getApiResponse ?
+      await this.hostUser.getApiResponse(requestUser) : (this.hostUser || null);
+
+    return {
+      ...baseEventResponse,
+      hostUser,
+    };
+  } catch (error) {
+    console.error(error);
+    return baseEventResponse;
+  }
+};
+
 EventSchema.methods.getAlgoliaIndex = async function() {
   const hostUser = await User.findOne({ _id: this.hostUser });
 

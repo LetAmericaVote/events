@@ -10,7 +10,8 @@ const getUsers = async (req, res) => {
   const limitCount = parsedLimit > 25 ? 25 : parsedLimit;
 
   const users = await User.find(findQuery).limit(limitCount);
-  const formattedUsers = users.map(user => user.getApiProfile(requestUser));
+
+  const formattedUsers = await User.formatArrayOfUsers(users, requestUser);
 
   res.json({ users: formattedUsers });
 };
@@ -25,7 +26,9 @@ const getUserById = async (req, res) => {
     return res.status(404).json({ error: true, message: 'Invalid user id.' });
   }
 
-  res.json({ user: queryUser.getApiProfile(requestUser) });
+  const formattedUser = await user.getApiResponse(requestUser);
+
+  res.json({ user: formattedUser });
 };
 
 const updateUserProfile = async (req, res) => {
@@ -40,7 +43,9 @@ const updateUserProfile = async (req, res) => {
 
   await requestUser.save();
 
-  res.json({ user: requestUser });
+  const formattedUser = await requestUser.getApiResponse(requestUser);
+
+  res.json({ user: formattedUser });
 };
 
 module.exports = [

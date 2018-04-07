@@ -15,16 +15,7 @@ const randomBytes = (length) => {
   });
 };
 
-const transformApiUser = (user, requestUser) => {
-  if (! user) {
-    return null;
-  }
-
-  return user.getApiProfile(requestUser);
-};
-
 module.exports = {
   dbConnect,
   randomBytes,
-  transformApiUser
 }

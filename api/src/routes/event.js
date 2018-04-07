@@ -1,5 +1,4 @@
 const { loadUser } = require('../middleware/auth');
-const { transformApiUser } = require('../lib/common');
 const Event = require('../models/Event');
 
 async function getEvents(req, res) {
@@ -27,11 +26,10 @@ async function getEvents(req, res) {
     .limit(limitCount)
     .populate('hostUser');
 
+  const formattedEvents = await Event.formatArrayOfEvents(events, requestUser);
+
   res.json({
-    events: events.map(event => ({
-      ...event,
-      hostUser: transformApiUser(event.hostUser, requestUser),
-    })),
+    events: formattedEvents,
   });
 }
 
@@ -44,11 +42,10 @@ async function getEventById(req, res) {
     return res.status(404).json({ error: true, message: 'Event not found' });
   }
 
+  const formattedEvent = await event.getApiResponse(requestUser);
+
   return res.json({
-    event: {
-      ...event,
-      hostUser: transformApiUser(event.hostUser, requestUser),
-    },
+    event: formattedEvent,
   });
 }
 
@@ -61,11 +58,10 @@ async function getEventBySlug(req, reas) {
     return res.status(404).json({ error: true, message: 'Event not found' });
   }
 
+  const formattedEvent = await event.getApiResponse(requestUser);
+
   return res.json({
-    event: {
-      ...event,
-      hostUser: transformApiUser(event.hostUser, requestUser),
-    },
+    event: formattedEvent,
   });
 }
 
@@ -98,11 +94,10 @@ async function getEventsByGeoLocation(req, res) {
 
   const events = await Event.findByLatLong(...searchArgs);
 
+  const formattedEvents = await Event.formatArrayOfEvents(events, requestUser);
+
   res.json({
-    events: events.map(event => ({
-      ...event,
-      hostUser: transformApiUser(event.hostUser, requestUser),
-    })),
+    events: formattedEvents,
   });
 }
 
