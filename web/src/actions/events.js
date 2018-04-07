@@ -41,10 +41,9 @@ export const FETCH_EVENT_BY_GEO_LOCATION = 'FETCH_EVENT_BY_GEO_LOCATION';
  * @param  {Float} lon Center point longitude
  * @param  {Float} lat Center point latitude
  * @param  {Int} maxDistance The max amount of meters to search out for
- * @param  {Array<String>} excludeId Array of events to exclude in future geo queries
  */
-export function fetchEventByGeoLocation(lon, lat, maxDistance, excludeId) {
-  return { type: FETCH_EVENT_BY_GEO_LOCATION, lon, lat, maxDistance, excludeId };
+export function fetchEventByGeoLocation(lon, lat, maxDistance) {
+  return { type: FETCH_EVENT_BY_GEO_LOCATION, lon, lat, maxDistance };
 }
 
 export const STORE_EVENT = 'STORE_EVENT';

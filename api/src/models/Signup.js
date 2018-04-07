@@ -46,6 +46,8 @@ SignupSchema.statics.formatArrayOfSignups = async function(signups, requestUser)
 };
 
 SignupSchema.methods.getApiResponse = async function(requestUser) {
+  const baseApiResponse = { id: this.id };
+
   try {
     const user = this.user && this.user.getApiResponse ?
       await this.user.getApiResponse(requestUser) : (this.user || null);
@@ -54,12 +56,13 @@ SignupSchema.methods.getApiResponse = async function(requestUser) {
       await this.event.getApiResponse(requestUser) : (this.event || null);
 
     return {
+      ...baseApiResponse,
       user,
       event,
     };
   } catch (error) {
     console.error(error);
-    return null;
+    return baseApiResponse;
   }
 };
 

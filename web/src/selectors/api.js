@@ -115,7 +115,7 @@ export const selectApiMetaEndpoint = (metaAction, state) =>
 export const selectApiMetaCustomProperty = (metaAction, property, state) =>
   !!selectApiMeta(metaAction, state) &&
   !!selectApiMeta(metaAction, state).custom ?
-    selectApiMeta(metaAction, state).custom[property] || null : null;
+    (selectApiMeta(metaAction, state).custom[property]) || null : null;
 
 /**
  * Select the meta action name for the given endpoint.

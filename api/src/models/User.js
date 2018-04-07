@@ -82,6 +82,7 @@ UserSchema.methods.getApiResponse = async function (requestingUser) {
   // TODO: Add more fields if same user?
 
   return {
+    id: this.id,
     firstName: this.firstName,
     lastName: this.lastName,
     fullName: this.fullName,

@@ -111,28 +111,28 @@ EventSchema.statics.findByLatLong = async function(long, lat, minDistance, maxDi
           near: {
             type: 'Point',
             coordinates: [long, lat],
-            spherical: true,
-            distanceField: 'distance',
-            query: {
-              _id: {
-                '$nin': exlcudeId,
-              },
-              dateTime: {
-                '$gte': new Date(),
-              },
-            },
-            limit: 25,
           },
+          spherical: true,
+          query: {
+            _id: {
+              '$nin': exlcudeId, // TODO: Fix this
+            },
+            dateTime: {
+              '$gte': new Date(),
+            },
+          },
+          limit: 25,
+          distanceField: 'distance',
         }
       },
     ]);
 
-    const aggregateEvents = events.results;
-    if (! aggregateEvents || ! aggregateEvents.length) {
+    if (! events || ! events.length) {
       return [];
     }
 
-    const populatedEvents = await this.populate(aggregateEvents, { path: 'hostUser' });
+    const hydratedEvents = events.map(event => this.hydrate(event));
+    const populatedEvents = await this.populate(hydratedEvents, { path: 'hostUser' });
 
     return populatedEvents;
   } catch (error) {
@@ -187,6 +187,7 @@ EventSchema.statics.formatArrayOfEvents = async function(events, requestUser) {
 
 EventSchema.methods.getApiResponse = async function(requestUser) {
   const baseEventResponse = {
+    id: this.id,
     title: this.title,
     slug: this.slug,
     description: this.description,
@@ -198,6 +199,10 @@ EventSchema.methods.getApiResponse = async function(requestUser) {
     zipcode: this.zipcode,
     geoLocation: this.geoLocation,
   };
+
+  if (this._doc && typeof this._doc.distance !== 'undefined') {
+    baseEventResponse.distance = this._doc.distance;
+  }
 
   try {
     const hostUser = this.hostUser && this.hostUser.getApiResponse ?

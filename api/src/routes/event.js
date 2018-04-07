@@ -49,7 +49,7 @@ async function getEventById(req, res) {
   });
 }
 
-async function getEventBySlug(req, reas) {
+async function getEventBySlug(req, res) {
   const { requestUser } = res.locals;
   const { eventSlug } = req.params;
 
@@ -67,13 +67,13 @@ async function getEventBySlug(req, reas) {
 
 async function getEventsByGeoLocation(req, res) {
   const { requestUser } = res.locals;
-  const { long, lat, minDistance, maxDistance, excludeId } = req.query;
+  const { lon, lat, minDistance, maxDistance, excludeId } = req.query;
 
-  if (! long || ! lat) {
+  if (! lon || ! lat) {
     return res.status(400).json({ error: true, message: 'Missing lat/long' });
   }
 
-  const parsedLong = parseFloat(long);
+  const parsedLong = parseFloat(lon);
   const parsedLat = parseFloat(lat);
 
   if (isNaN(parsedLong) || isNaN(parsedLat)) {

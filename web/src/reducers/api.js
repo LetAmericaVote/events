@@ -72,7 +72,10 @@ const setApiActionMeta = (state, action) => ({
           };
 
           case SET_API_ACTION_META_PROPERTY: return {
-            [action.property]: [action.value],
+            custom: {
+              ...((state.meta[action.metaAction] || {}).custom || {}),
+              [action.property]: action.value,
+            },
           };
 
           default: return {};

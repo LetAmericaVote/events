@@ -36,6 +36,7 @@ CommentSchema.statics.formatArrayOfComments = async function(comments, requestUs
 
 CommentSchema.methods.getApiResponse = async function(requestUser) {
   const baseEventResponse = {
+    id: this.id,
     message: this.message,
   };
 
