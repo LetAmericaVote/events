@@ -1,20 +1,12 @@
 import {
   API_REQUEST_INITIATED,
-<<<<<<< Updated upstream
-  apiRequestFailed, apiRequestSucceeded,
-=======
   apiRequestFailed,
   apiRequestSucceeded,
   setApiActionMetaEndpoint,
->>>>>>> Stashed changes
 } from '../actions';
 
 const routing = store => next => action => {
   if (action.type === API_REQUEST_INITIATED) {
-<<<<<<< Updated upstream
-    // ... makeFetchRequest with options
-    // ... ... dispatch failed/succeeded action
-=======
     const { endpoint, options, metaAction } = action;
 
     if (selectApiRequestIsPending(endpoint, store.getState())) {
@@ -43,7 +35,6 @@ const routing = store => next => action => {
         console.error(error);
         store.dispatch(apiRequestFailed(endpoint, 'Api request failed, possibly due to network failure.'));
       });
->>>>>>> Stashed changes
   }
 
   return next(action);

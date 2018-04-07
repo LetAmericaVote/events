@@ -50,11 +50,6 @@ const getRelevantProps = (action) => {
 
 const setApiStatus = (state, action) => ({
   ...state,
-<<<<<<< Updated upstream
-  endpoint: {
-    ...(state[action.endpoint] || {}),
-    ...getRelevantProps(action),
-=======
   requests: {
     ...state.requests,
     [action.endpoint]: {
@@ -84,7 +79,6 @@ const setApiActionMeta = (state, action) => ({
         }
       })(),
     },
->>>>>>> Stashed changes
   },
 });
 
