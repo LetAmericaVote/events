@@ -1,5 +1,11 @@
 const initialState = {
-  api: {},
+  api: {
+    requests: {},
+    meta: {},
+  },
+  events: {
+    items: [],
+  },
   routing: {
     pathname: '',
     history: [],

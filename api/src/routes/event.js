@@ -1,9 +1,10 @@
 const { loadUser } = require('../middleware/auth');
+const { transformApiUser } = require('../lib/common');
 const Event = require('../models/Event');
 
 async function getEvents(req, res) {
   const { requestUser } = res.locals;
-  const { start, limit, sortByDateTime } = req.query;
+  const { start, limit, sortByUpcoming } = req.query;
   const parsedLimit = Math.max(parseInt(limit), 0);
 
   const findQuery = {
@@ -19,16 +20,17 @@ async function getEvents(req, res) {
   }
 
   const limitCount = parsedLimit > 25 ? 25 : parsedLimit;
-  const sortQuery = (sortByDateTime === 'true') ? { dateTime: 1 } : {};
+  const sortQuery = (sortByUpcoming === 'true') ? { dateTime: -1 } : {};
 
   const events = await Event.find(findQuery)
     .sort(sortQuery)
-    .limit(limitCount);
+    .limit(limitCount)
+    .populate('hostUser');
 
   res.json({
     events: events.map(event => ({
       ...event,
-      hostUser: event.hostUser.getApiProfile(requestUser),
+      hostUser: transformApiUser(event.hostUser, requestUser),
     })),
   });
 }
@@ -45,7 +47,7 @@ async function getEventById(req, res) {
   return res.json({
     event: {
       ...event,
-      hostUser: event.hostUser.getApiProfile(requestUser),
+      hostUser: transformApiUser(event.hostUser, requestUser),
     },
   });
 }
@@ -62,7 +64,7 @@ async function getEventBySlug(req, reas) {
   return res.json({
     event: {
       ...event,
-      hostUser: event.hostUser.getApiProfile(requestUser),
+      hostUser: transformApiUser(event.hostUser, requestUser),
     },
   });
 }
@@ -99,7 +101,7 @@ async function getEventsByGeoLocation(req, res) {
   res.json({
     events: events.map(event => ({
       ...event,
-      hostUser: event.hostUser.getApiProfile(requestUser),
+      hostUser: transformApiUser(event.hostUser, requestUser),
     })),
   });
 }

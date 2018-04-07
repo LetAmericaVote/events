@@ -4,6 +4,8 @@ import {
   API_REQUEST_SUCCEEDED,
   API_REQUEST_FAILED,
   WIPE_API_REQUEST,
+  SET_API_ACTION_META_ENDPOINT,
+  SET_API_ACTION_META_PROPERTY,
 } from '../actions';
 
 const getRelevantProps = (action) => {
@@ -48,9 +50,41 @@ const getRelevantProps = (action) => {
 
 const setApiStatus = (state, action) => ({
   ...state,
+<<<<<<< Updated upstream
   endpoint: {
     ...(state[action.endpoint] || {}),
     ...getRelevantProps(action),
+=======
+  requests: {
+    ...state.requests,
+    [action.endpoint]: {
+      ...(state.requests[action.endpoint] || {}),
+      ...getRelevantProps(action),
+    },
+  },
+});
+
+const setApiActionMeta = (state, action) => ({
+  ...state,
+  meta: {
+    ...state.meta,
+    [action.metaAction]: {
+      ...(state.meta[action.metaAction] || {}),
+      ...(() => {
+        switch (action.type) {
+          case SET_API_ACTION_META_ENDPOINT: return {
+            endpoint: action.endpoint,
+          };
+
+          case SET_API_ACTION_META_PROPERTY: return {
+            [action.property]: [action.value],
+          };
+
+          default: return {};
+        }
+      })(),
+    },
+>>>>>>> Stashed changes
   },
 });
 
@@ -59,6 +93,8 @@ const api = createReducer('api', {
   [API_REQUEST_SUCCEEDED]: setApiStatus,
   [API_REQUEST_FAILED]: setApiStatus,
   [WIPE_API_REQUEST]: setApiStatus,
+  [SET_API_ACTION_META_ENDPOINT]: setApiActionMeta,
+  [SET_API_ACTION_META_PROPERTY]: setApiActionMeta,
 });
 
 export default api;
