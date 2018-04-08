@@ -3,6 +3,10 @@ const initialState = {
     requests: {},
     meta: {},
   },
+  auth: {
+    userId: null,
+    token: null,
+  },
   events: {
     items: {},
   },

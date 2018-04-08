@@ -58,20 +58,13 @@ const googleAuthVerification = async (req, res) => {
   await user.save();
 
   const lavToken = await Token.generateToken(user);
+  const formattedToken = await lavToken.getApiResponse(user);
+  const formattedUser = await user.getApiResponse(user);
 
   res.json({
-    user, // TODO: NO NO NO NO
+    user: formattedUser,
     token: lavToken,
   });
-};
-
-// TODO: ?
-async function testAuthEndpoint(req, res) {
-  if (NODE_ENV !== 'development') {
-    return res.status(404).json({ error: true, message: 'Test auth unavailable.' });
-  }
-
-  // const adminUser =
 };
 
 module.exports = [
@@ -79,10 +72,5 @@ module.exports = [
     route: '/v1/auth/google',
     method: 'post',
     handler: googleAuthVerification
-  },
-  {
-    route: '/v1/auth/test',
-    method: 'get',
-    handler: testAuthEndpoint,
   },
 ];

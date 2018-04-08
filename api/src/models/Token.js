@@ -63,6 +63,24 @@ TokenSchema.statics.generateToken = async function(user) {
   }
 };
 
+TokenSchema.methods.getApiResponse = async function(requestUser) {
+  const baseResponse = {
+    value: this.value,
+  };
+
+  try {
+    const user = !!this.user ? await this.user.getApiResponse(requestUser) : null;
+    
+    return {
+      ...baseResponse,
+      user,
+    };
+  } catch (error) {
+    console.error(error);
+    return baseResponse;
+  }
+};
+
 const Token = mongoose.model('token', TokenSchema);
 
 module.exports = Token;

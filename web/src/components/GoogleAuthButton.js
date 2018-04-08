@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
+import Rivet from '../Rivet';
+import { postGoogleIdToken } from '../actions';
 
 // TODO: Make sure we notify people if the pop-up blocker catches it for some reason.
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 // WATCH: https://github.com/google/google-api-javascript-client/issues/399
 function testGAPI() {
-  return !!window.gapi && !!window.gapi.client;
+  return !!window.gapi && !!window.gapi.load;
 }
 
 class GoogleAuthButton extends Component {
@@ -71,15 +73,7 @@ class GoogleAuthButton extends Component {
         const user = await this.googleAuth.signIn();
         const token = user.getAuthResponse().id_token;
 
-        fetch('http://localhost:5000/v1/auth/google', {
-          method: 'POST',
-          body: JSON.stringify({ token: token }),
-          headers: new Headers({
-            'Content-Type': 'application/json',
-          }),
-        })
-        .then(res => res.json())
-        .then(console.log);
+        this.props.postGoogleIdToken(token);
       } catch (error) {
         // TODO: Handle error.
         // More info here: https://developers.google.com/api-client-library/javascript/reference/referencedocs#googleauthsignin
@@ -94,7 +88,7 @@ class GoogleAuthButton extends Component {
     return (
       <button
         onClick={this.onLogin}
-        disabled={this.state.gapiIsReady}
+        disabled={! this.state.gapiIsReady}
       >
         login with the googles
       </button>
@@ -102,4 +96,8 @@ class GoogleAuthButton extends Component {
   }
 }
 
-export default GoogleAuthButton;
+GoogleAuthButton.actionCreators = {
+  postGoogleIdToken,
+};
+
+export default Rivet(GoogleAuthButton);
