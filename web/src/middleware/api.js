@@ -5,7 +5,10 @@ import {
   setApiActionMetaEndpoint,
 } from '../actions';
 import {
-  selectApiRequestIsPending
+  selectApiRequestIsPending,
+  selectAuthUserId,
+  selectAuthToken,
+  selectIsAuthenticated,
 } from '../selectors';
 
 const routing = store => next => action => {
@@ -18,7 +21,22 @@ const routing = store => next => action => {
 
     store.dispatch(setApiActionMetaEndpoint(metaAction, endpoint));
 
-    fetch(endpoint, options)
+    const authUserId = selectAuthUserId(store.getState());
+    const authToken = selectAuthToken(store.getState());
+    const isAuthenticated = selectIsAuthenticated(store.getState());
+
+    const requestOptions = { ...(options || {}) };
+
+    if (isAuthenticated) {
+      if (! requestOptions.headers) {
+        requestOptions.headers = new Headers();
+      }
+
+      requestOptions.headers.append('lav_auth_id', authUserId);
+      requestOptions.headers.append('lav_auth_token', authToken);
+    }
+
+    fetch(endpoint, requestOptions)
       .then(async res => {
         const json = await res.json();
 
