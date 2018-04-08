@@ -201,6 +201,7 @@ EventSchema.methods.getApiResponse = async function(requestUser) {
     state: this.state,
     zipcode: this.zipcode,
     geoLocation: this.geoLocation,
+    createdAt: this.createdAt,
   };
 
   if (this._doc && typeof this._doc.distance !== 'undefined') {

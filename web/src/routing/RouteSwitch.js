@@ -1,5 +1,5 @@
 import UrlPattern from 'url-pattern';
-import Rivet from '../Rivet';
+import Rivet from '../HOC/Rivet';
 import { selectRoutingPathname } from '../selectors';
 
 const RouteSwitch = (props) => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import UrlPattern from 'url-pattern';
-import Rivet from '../Rivet';
+import Rivet from '../HOC/Rivet';
 import { selectRoutingPathname } from '../selectors';
 
 const Route = (props) => {

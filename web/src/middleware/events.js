@@ -4,7 +4,7 @@ import {
   FETCH_EVENT_BY_SLUG,
   FETCH_EVENT_BY_GEO_LOCATION,
   API_REQUEST_SUCCEEDED,
-  API_REQUEST_FAILED, // TODO: Where should we handle errors?
+  // API_REQUEST_FAILED, // TODO: Where should we handle errors?
   setApiActionMetaProperty,
   storeEvent,
   storeEvents,

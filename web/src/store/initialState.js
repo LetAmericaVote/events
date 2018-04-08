@@ -14,6 +14,10 @@ const initialState = {
     pathname: '',
     history: [],
   },
+  search: {
+    order: [],
+    query: '',
+  },
   signups: {
     items: {},
   },
