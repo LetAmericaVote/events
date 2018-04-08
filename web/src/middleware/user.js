@@ -7,6 +7,7 @@ import {
   UPDATE_AUTHENTICATED_USER,
   storeUser,
   getFromApi,
+  postToApi,
 } from '../actions';
 
 const usersOutgoingRequest = (store, action) => {
@@ -17,7 +18,7 @@ const usersOutgoingRequest = (store, action) => {
     }
 
     case UPDATE_AUTHENTICATED_USER: {
-      // TODO: ...
+      store.dispatch(postToApi(UPDATE_AUTHENTICATED_USER, '/v1/users', action.fields));
       break;
     }
 

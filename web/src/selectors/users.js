@@ -1,3 +1,8 @@
+import {
+  selectIsAuthenticated,
+  selectAuthUserId
+} from './auth';
+
 /**
  * Select user items from the store.
  *
@@ -35,7 +40,7 @@ export const selectUser = (userId, state) =>
  */
 export const selectUserFirstName = (userId, state) =>
   selectUserExists(userId, state) ?
-    selectUser(userId).firstName : null;
+    selectUser(userId, state).firstName : null;
 
 /**
  * Select the users full name.
@@ -46,7 +51,7 @@ export const selectUserFirstName = (userId, state) =>
  */
 export const selectUserFullName = (userId, state) =>
   selectUserExists(userId, state) ?
-    selectUser(userId).fullName : null;
+    selectUser(userId, state).fullName : null;
 
 /**
  * Select the users last name.
@@ -57,7 +62,7 @@ export const selectUserFullName = (userId, state) =>
  */
 export const selectUserLastName = (userId, state) =>
   selectUserExists(userId, state) ?
-    selectUser(userId).lastName : null;
+    selectUser(userId, state).lastName : null;
 
 /**
  * Select the users profile photo.
@@ -68,7 +73,7 @@ export const selectUserLastName = (userId, state) =>
  */
 export const selectUserProfilePhoto = (userId, state) =>
   selectUserExists(userId, state) ?
-    selectUser(userId).profilePhoto : null;
+    selectUser(userId, state).profilePhoto : null;
 
 /**
  * Select the users role.
@@ -79,11 +84,70 @@ export const selectUserProfilePhoto = (userId, state) =>
  */
 export const selectUserRole = (userId, state) =>
   selectUserExists(userId, state) ?
-    selectUser(userId).role : null;
+    selectUser(userId, state).role : null;
 
-// TODO: nAuthenticatedUser variants
-/*
-export const selectAuthenticatedUserRole = (state) =>
-  selectIsAuthenticated(state) ?
-    selectUserRole(selectAuthenticatedUserId(state), state) : null;
+/**
+ * Select the currently authenticated user.
+ *
+ * @param  {Object} state Redux state
+ * @return {Object|null}  Null if user is not authenticated or not stored
  */
+export const selectAuthenticatedUser = (state) =>
+  selectIsAuthenticated(state) &&
+  selectUserExists(selectAuthUserId(state), state) ?
+    selectUser(selectAuthUserId(state), state) : null;
+
+/**
+ * Select the authenticated users first name.
+ *
+ * @param  {Object} state  Redux state
+ * @return {String|null}   null if user is false-y
+ */
+export const selectAuthenticatedUserFirstName = (state) =>
+  selectUserExists(selectAuthUserId(state), state) &&
+  selectIsAuthenticated(state) ?
+    selectUser(selectAuthUserId(state), state).firstName : null;
+
+/**
+ * Select the authenticated users full name.
+ *
+ * @param  {Object} state  Redux state
+ * @return {String|null}   null if user is false-y
+ */
+export const selectAuthenticatedUserFullName = (state) =>
+  selectUserExists(selectAuthUserId(state), state) &&
+  selectIsAuthenticated(state) ?
+    selectUser(selectAuthUserId(state), state).fullName : null;
+
+/**
+ * Select the authenticated users last name.
+ *
+ * @param  {Object} state  Redux state
+ * @return {String|null}   null if user is false-y
+ */
+export const selectAuthenticatedUserLastName = (state) =>
+  selectUserExists(selectAuthUserId(state), state) &&
+  selectIsAuthenticated(state) ?
+    selectUser(selectAuthUserId(state), state).lastName : null;
+
+/**
+ * Select the authenticated users profile photo.
+ *
+ * @param  {Object} state  Redux state
+ * @return {String|null}   null if user is false-y
+ */
+export const selectAuthenticatedUserProfilePhoto = (state) =>
+  selectUserExists(selectAuthUserId(state), state) &&
+  selectIsAuthenticated(state) ?
+    selectUser(selectAuthUserId(state), state).profilePhoto : null;
+
+/**
+ * Select the authenticated users role.
+ *
+ * @param  {Object} state  Redux state
+ * @return {String|null}   null if user is false-y
+ */
+export const selectAuthenticatedUserRole = (state) =>
+  selectUserExists(selectAuthUserId(state), state) &&
+  selectIsAuthenticated(state) ?
+    selectUser(selectAuthUserId(state), state).role : null;
