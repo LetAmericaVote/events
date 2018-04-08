@@ -103,7 +103,10 @@ EventSchema.statics.findByContentfulId = async function(contentfulId) {
   }
 };
 
-EventSchema.statics.findByLatLong = async function(long, lat, minDistance, maxDistance, exlcudeId) {
+EventSchema.statics.findByLatLong = async function(long, lat, minDistance, maxDistance, excludeId) {
+  const excludeIdCasted = !!excludeId && Array.isArray(excludeId) ?
+    (excludeId.map(id => mongoose.Types.ObjectId(id))) : [];
+
   try {
     const events = await this.aggregate([
       {
@@ -115,7 +118,7 @@ EventSchema.statics.findByLatLong = async function(long, lat, minDistance, maxDi
           spherical: true,
           query: {
             _id: {
-              '$nin': exlcudeId, // TODO: Fix this
+              '$nin': excludeIdCasted,
             },
             dateTime: {
               '$gte': new Date(),

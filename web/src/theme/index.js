@@ -6,6 +6,4 @@ const theme = {
   reset,
 };
 
-console.log(theme);
-
 export default theme;

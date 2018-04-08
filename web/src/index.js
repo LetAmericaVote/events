@@ -17,6 +17,10 @@ injectGlobal`
   }
 `;
 
+if (process.env.NODE_ENV === 'development') {
+  window.store = store;
+}
+
 ReactDOM.render((
   <Provider store={store}>
     <ThemeProvider theme={theme}>
