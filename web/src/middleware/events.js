@@ -102,9 +102,9 @@ const eventOutgoingRequest = (store, action) => {
 };
 
 const eventsIncomingRequest = (store, action) => {
-  const { metaActionName, space } = action;
+  const { metaAction, space } = action;
 
-  switch (metaActionName) {
+  switch (metaAction) {
     case FETCH_EVENT_BY_ID:
     case FETCH_EVENT_BY_SLUG: {
       const { data } = action;
@@ -150,13 +150,13 @@ const eventsIncomingRequest = (store, action) => {
 
       const lastEvent = processedData.events[processedData.events.length - 1];
 
-      if (metaActionName === FETCH_PAGINATED_EVENTS) {
+      if (metaAction === FETCH_PAGINATED_EVENTS) {
         store.dispatch(setApiActionMetaProperty(
           FETCH_PAGINATED_EVENTS, space, META_START, lastEvent.id,
         ));
       }
 
-      if (metaActionName === FETCH_EVENT_BY_GEO_LOCATION) {
+      if (metaAction === FETCH_EVENT_BY_GEO_LOCATION) {
         store.dispatch(setApiActionMetaProperty(
           FETCH_EVENT_BY_GEO_LOCATION, space, META_MIN_DISTANCE, lastEvent.distance,
         ));
@@ -167,8 +167,13 @@ const eventsIncomingRequest = (store, action) => {
         ));
       }
 
-      store.dispatch(storeEvents(processedData.events));
-      store.dispatch(storeUsers(processedData.users));
+      if (processedData.events.length) {
+        store.dispatch(storeEvents(processedData.events));
+      }
+
+      if (processedData.users.length) {
+        store.dispatch(storeUsers(processedData.users));
+      }
 
       break;
     }

@@ -1,6 +1,6 @@
 const Comment = require('../models/Comment');
 const Signup = require('../models/Signup');
-const { requireUser } = require('../middleware/auth');
+const { requiresAuth } = require('../middleware/auth');
 
 async function getUserComments(req, res) {
   const { requestUser } = res.locals;
@@ -21,6 +21,7 @@ async function getUserComments(req, res) {
   const sortQuery = (sortByRecent === 'true') ? { '_id': -1 } : {};
 
   const comments = await Comment.find(findQuery)
+    .populate('user event inReplyTo')
     .sort(sortQuery)
     .limit(limitCount);
 
@@ -60,6 +61,7 @@ async function getEventComments(req, res) {
   const sortQuery = (sortByRecent === 'true') ? { '_id': -1 } : {};
 
   const comments = await Comment.find(findQuery)
+    .populate('user event inReplyTo')
     .sort(sortQuery)
     .limit(limitCount);
 
@@ -84,7 +86,8 @@ async function getEventComment(req, res) {
     event: eventId,
   };
 
-  const comment = await Comment.find(findQuery);
+  const comment = await Comment.find(findQuery)
+    .populate('user event inReplyTo');
 
   if (! comment || ! comment.id) {
     return res.status(404).json({ error: true, message: 'Comment not found' });
@@ -128,7 +131,7 @@ async function postEventComment(req, res) {
 
   await comment.save();
 
-  const populatedComment = await Comment.populate(comment, 'user event inReplyTo'); // TODO: Does this work the way I think it does?
+  const populatedComment = await Comment.populate(comment, 'user event inReplyTo');
   const formattedComment = await populatedComment.getApiResponse(requestUser);
 
   res.json({
@@ -141,24 +144,24 @@ module.exports = [
     route: '/v1/comments/user',
     method: 'get',
     handler: getUserComments,
-    middleware: requireUser,
+    middleware: requiresAuth,
   },
   {
     route: '/v1/comments/id/:commentId/event/:eventId',
     method: 'get',
     handler: getEventComment,
-    middleware: requireUser,
+    middleware: requiresAuth,
   },
   {
     route: '/v1/comments/event/:eventId',
     method: 'get',
     handler: getEventComments,
-    middleware: requireUser,
+    middleware: requiresAuth,
   },
   {
     route: '/v1/comments/event/:eventId',
     method: 'post',
     handler: postEventComment,
-    middleware: requireUser,
+    middleware: requiresAuth,
   },
 ];

@@ -104,9 +104,9 @@ const commentOutgoingRequest = (store, action) => {
 };
 
 const commentsIncomingRequest = (store, action) => {
-  const { metaActionName, space } = action;
+  const { metaAction, space } = action;
 
-  switch (metaActionName) {
+  switch (metaAction) {
     case FETCH_COMMENT:
     case POST_COMMENT_TO_EVENT: {
       const { data } = action;
@@ -152,6 +152,10 @@ const commentsIncomingRequest = (store, action) => {
           acc.events.push(processedItem.event);
         }
 
+        if (!!processedItem.parentComment) {
+          acc.comments.push(processedItem.parentComment);
+        }
+
         return acc;
       }, {
         comments: [],
@@ -162,12 +166,20 @@ const commentsIncomingRequest = (store, action) => {
       const lastComment = processedData.comments[processedData.comments.length - 1];
 
       store.dispatch(setApiActionMetaProperty(
-        metaActionName, space, META_START, lastComment.id,
+        metaAction, space, META_START, lastComment.id,
       ));
 
-      store.dispatch(storeComments(processedData.comments));
-      store.dispatch(storeEvents(processedData.events));
-      store.dispatch(storeUsers(processedData.users));
+      if (processedData.comments.length) {
+        store.dispatch(storeComments(processedData.comments));
+      }
+
+      if (processedData.events.length) {
+        store.dispatch(storeEvents(processedData.events));
+      }
+
+      if (processedData.users.length) {
+        store.dispatch(storeUsers(processedData.users));
+      }
 
       break;
     }

@@ -90,9 +90,9 @@ const signupOutgoingRequest = (store, action) => {
 };
 
 const signupIncomingRequest = (store, action) => {
-  const { metaActionName, space } = action;
+  const { metaAction, space } = action;
 
-  switch (metaActionName) {
+  switch (metaAction) {
     case FETCH_USER_SIGNUP_STATUS:
     case SIGNUP_FOR_EVENT: {
       const { data } = action;
@@ -147,13 +147,13 @@ const signupIncomingRequest = (store, action) => {
 
       const lastSignup = processedData.signups[processedData.signups.length - 1];
 
-      if (metaActionName === FETCH_PAGINAED_EVENT_SIGNUPS) {
+      if (metaAction === FETCH_PAGINAED_EVENT_SIGNUPS) {
         store.dispatch(setApiActionMetaProperty(
           FETCH_PAGINAED_EVENT_SIGNUPS, space, META_EVENT_START, lastSignup.user,
         ));
       }
 
-      if (metaActionName === FETCH_PAGINATED_USER_SIGNUPS) {
+      if (metaAction === FETCH_PAGINATED_USER_SIGNUPS) {
         store.dispatch(setApiActionMetaProperty(
           FETCH_PAGINATED_USER_SIGNUPS, space, META_USER_START, lastSignup.event,
         ));
