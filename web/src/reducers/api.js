@@ -65,22 +65,25 @@ const setApiActionMeta = (state, action) => ({
     ...state.meta,
     [action.metaAction]: {
       ...(state.meta[action.metaAction] || {}),
-      ...(() => {
-        switch (action.type) {
-          case SET_API_ACTION_META_ENDPOINT: return {
-            endpoint: action.endpoint,
-          };
+      [action.space]: {
+        ...((state.meta[action.metaAction] || {})[action.space] || {}),
+        ...(() => {
+          switch (action.type) {
+            case SET_API_ACTION_META_ENDPOINT: return {
+              endpoint: action.endpoint,
+            };
 
-          case SET_API_ACTION_META_PROPERTY: return {
-            custom: {
-              ...((state.meta[action.metaAction] || {}).custom || {}),
-              [action.property]: action.value,
-            },
-          };
+            case SET_API_ACTION_META_PROPERTY: return {
+              custom: {
+                ...(((state.meta[action.metaAction] || {})[action.space] || {}).custom || {}),
+                [action.property]: action.value,
+              },
+            };
 
-          default: return {};
-        }
-      })(),
+            default: return {};
+          }
+        })(),
+      },
     },
   },
 });

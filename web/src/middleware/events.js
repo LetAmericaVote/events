@@ -14,15 +14,10 @@ import {
 } from '../actions';
 import {
   selectApiMetaCustomProperty,
-  selectActionMetaNameForEndpoint,
 } from '../selectors';
 import processEvent from '../processors/event';
 
 const META_START = 'start';
-const META_SORT_BY_UPCOMING = 'sortByUpcoming';
-const META_LON = 'lon';
-const META_LAT = 'lat';
-const META_MAX_DISTANCE = 'maxDistance';
 const META_MIN_DISTANCE = 'minDistance';
 const META_EXCLUDED_ID = 'excludedId';
 
@@ -30,25 +25,11 @@ const eventOutgoingRequest = (store, action) => {
   switch (action.type) {
     case FETCH_PAGINATED_EVENTS: {
       const { sortByUpcoming } = action;
-
-      const lastSort = selectApiMetaCustomProperty(
-        FETCH_PAGINATED_EVENTS,
-        META_SORT_BY_UPCOMING,
-        store.getState()
-      );
-
-      if (lastSort !== null && lastSort !== sortByUpcoming) {
-        store.dispatch(setApiActionMetaProperty(
-          FETCH_PAGINATED_EVENTS, META_START, null,
-        ));
-      }
-
-      store.dispatch(setApiActionMetaProperty(
-        FETCH_PAGINATED_EVENTS, META_SORT_BY_UPCOMING, sortByUpcoming,
-      ));
+      const spaceName = `sortByUpcoming=${sortByUpcoming}`;
 
       const start = selectApiMetaCustomProperty(
         FETCH_PAGINATED_EVENTS,
+        spaceName,
         META_START,
         store.getState()
       );
@@ -59,61 +40,27 @@ const eventOutgoingRequest = (store, action) => {
         query.start = start;
       }
 
-      store.dispatch(getFromApi(FETCH_PAGINATED_EVENTS, '/v1/events', query));
+      store.dispatch(getFromApi(
+        FETCH_PAGINATED_EVENTS, spaceName, '/v1/events', query,
+      ));
       break;
     }
 
     case FETCH_EVENT_BY_GEO_LOCATION: {
       const { lon, lat, maxDistance } = action;
 
-      const lastLon = selectApiMetaCustomProperty(
-        FETCH_EVENT_BY_GEO_LOCATION,
-        META_LON,
-        store.getState()
-      );
-
-      const lastLat = selectApiMetaCustomProperty(
-        FETCH_EVENT_BY_GEO_LOCATION,
-        META_LAT,
-        store.getState()
-      );
-
-      const lastMaxDistance = selectApiMetaCustomProperty(
-        FETCH_EVENT_BY_GEO_LOCATION,
-        META_MAX_DISTANCE,
-        store.getState()
-      );
-
-      if (lon !== lastLon || lat !== lastLat || maxDistance !== lastMaxDistance) {
-        store.dispatch(setApiActionMetaProperty(
-          FETCH_EVENT_BY_GEO_LOCATION, META_MIN_DISTANCE, null,
-        ));
-
-        store.dispatch(setApiActionMetaProperty(
-          FETCH_EVENT_BY_GEO_LOCATION, META_EXCLUDED_ID, null,
-        ));
-      }
-
-      store.dispatch(setApiActionMetaProperty(
-        FETCH_EVENT_BY_GEO_LOCATION, META_LON, lon,
-      ));
-
-      store.dispatch(setApiActionMetaProperty(
-        FETCH_EVENT_BY_GEO_LOCATION, META_LAT, lat,
-      ));
-
-      store.dispatch(setApiActionMetaProperty(
-        FETCH_EVENT_BY_GEO_LOCATION, META_MAX_DISTANCE, maxDistance,
-      ));
+      const spaceName = `lon=${lon},lat=${lat},maxDistance=${maxDistance}`;
 
       const minDistance = selectApiMetaCustomProperty(
         FETCH_EVENT_BY_GEO_LOCATION,
+        spaceName,
         META_MIN_DISTANCE,
         store.getState()
       );
 
       const excludeId = selectApiMetaCustomProperty(
         FETCH_EVENT_BY_GEO_LOCATION,
+        spaceName,
         META_EXCLUDED_ID,
         store.getState()
       );
@@ -128,17 +75,25 @@ const eventOutgoingRequest = (store, action) => {
         query.excludeId = excludeId;
       }
 
-      store.dispatch(getFromApi(FETCH_EVENT_BY_GEO_LOCATION, '/v1/events/location', query));
+      store.dispatch(getFromApi(
+        FETCH_EVENT_BY_GEO_LOCATION, spaceName, '/v1/events/location', query,
+      ));
       break;
     }
 
     case FETCH_EVENT_BY_ID: {
-      store.dispatch(getFromApi(FETCH_EVENT_BY_ID, `/v1/events/id/${action.eventId}`));
+      store.dispatch(getFromApi(
+        FETCH_EVENT_BY_ID, 'id', `/v1/events/id/${action.eventId}`,
+      ));
+
       break;
     }
 
     case FETCH_EVENT_BY_SLUG: {
-      store.dispatch(getFromApi(FETCH_EVENT_BY_SLUG, `/v1/events/slug/${action.slug}`));
+      store.dispatch(getFromApi(
+        FETCH_EVENT_BY_SLUG, 'slug', `/v1/events/slug/${action.slug}`,
+      ));
+
       break;
     }
 
@@ -146,7 +101,9 @@ const eventOutgoingRequest = (store, action) => {
   }
 };
 
-const eventsIncomingRequest = (store, action, metaActionName) => {
+const eventsIncomingRequest = (store, action) => {
+  const { metaActionName, space } = action;
+
   switch (metaActionName) {
     case FETCH_EVENT_BY_ID:
     case FETCH_EVENT_BY_SLUG: {
@@ -195,18 +152,18 @@ const eventsIncomingRequest = (store, action, metaActionName) => {
 
       if (metaActionName === FETCH_PAGINATED_EVENTS) {
         store.dispatch(setApiActionMetaProperty(
-          FETCH_PAGINATED_EVENTS, META_START, lastEvent.id,
+          FETCH_PAGINATED_EVENTS, space, META_START, lastEvent.id,
         ));
       }
 
       if (metaActionName === FETCH_EVENT_BY_GEO_LOCATION) {
         store.dispatch(setApiActionMetaProperty(
-          FETCH_EVENT_BY_GEO_LOCATION, META_MIN_DISTANCE, lastEvent.distance,
+          FETCH_EVENT_BY_GEO_LOCATION, space, META_MIN_DISTANCE, lastEvent.distance,
         ));
 
         const excludedId = processedData.events.map(event => event.id);
         store.dispatch(setApiActionMetaProperty(
-          FETCH_EVENT_BY_GEO_LOCATION, META_EXCLUDED_ID, excludedId,
+          FETCH_EVENT_BY_GEO_LOCATION, space, META_EXCLUDED_ID, excludedId,
         ));
       }
 
@@ -222,9 +179,7 @@ const eventsIncomingRequest = (store, action, metaActionName) => {
 
 const events = store => next => action => {
   if (action.type === API_REQUEST_SUCCEEDED) {
-    const metaActionName = selectActionMetaNameForEndpoint(action.endpoint, store.getState());
-
-    eventsIncomingRequest(store, action, metaActionName);
+    eventsIncomingRequest(store, action);
   } else {
     eventOutgoingRequest(store, action);
   }

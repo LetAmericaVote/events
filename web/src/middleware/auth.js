@@ -1,7 +1,4 @@
 import {
-  selectActionMetaNameForEndpoint
-} from '../selectors';
-import {
   API_REQUEST_SUCCEEDED,
   POST_GOOGLE_ID_TOKEN,
   storeUser,
@@ -11,7 +8,7 @@ import {
 
 const auth = store => next => action => {
   if (action.type === API_REQUEST_SUCCEEDED) {
-    const metaActionName = selectActionMetaNameForEndpoint(action.endpoint, store.getState());
+    const { metaActionName} = action;
 
     if (metaActionName === POST_GOOGLE_ID_TOKEN) {
       store.dispatch(storeUser(action.data.user));
@@ -19,7 +16,7 @@ const auth = store => next => action => {
     }
   } else if (action.type === POST_GOOGLE_ID_TOKEN) {
     const payload = { token: action.idToken };
-    store.dispatch(postToApi(POST_GOOGLE_ID_TOKEN, `/v1/auth/google`, payload));
+    store.dispatch(postToApi(POST_GOOGLE_ID_TOKEN, 'auth', `/v1/auth/google`, payload));
   }
 
   return next(action);

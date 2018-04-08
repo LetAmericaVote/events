@@ -38,7 +38,7 @@ export const FETCH_COMMENT = 'FETCH_COMMENT';
  * @param  {String} commentId Comment id
  */
 export function fetchComment(eventId, commentId) {
-  return { type: FETCH_COMMENT, eventid, commentId };
+  return { type: FETCH_COMMENT, eventId, commentId };
 }
 
 export const POST_COMMENT_TO_EVENT = 'POST_COMMENT_TO_EVENT';

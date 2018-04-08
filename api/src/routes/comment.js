@@ -138,7 +138,7 @@ async function postEventComment(req, res) {
 
 module.exports = [
   {
-    route: '/v1/comments',
+    route: '/v1/comments/user',
     method: 'get',
     handler: getUserComments,
     middleware: requireUser,

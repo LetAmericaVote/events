@@ -1,7 +1,4 @@
 import {
-  selectActionMetaNameForEndpoint
-} from '../selectors';
-import {
   API_REQUEST_SUCCEEDED,
   FETCH_USER_BY_ID,
   UPDATE_AUTHENTICATED_USER,
@@ -13,12 +10,12 @@ import {
 const usersOutgoingRequest = (store, action) => {
   switch (action.type) {
     case FETCH_USER_BY_ID: {
-      store.dispatch(getFromApi(FETCH_USER_BY_ID, `/v1/users/id/${action.userId}`));
+      store.dispatch(getFromApi(FETCH_USER_BY_ID, 'id', `/v1/users/id/${action.userId}`));
       break;
     }
 
     case UPDATE_AUTHENTICATED_USER: {
-      store.dispatch(postToApi(UPDATE_AUTHENTICATED_USER, '/v1/users', action.fields));
+      store.dispatch(postToApi(UPDATE_AUTHENTICATED_USER, 'update', '/v1/users', action.fields));
       break;
     }
 
@@ -26,7 +23,8 @@ const usersOutgoingRequest = (store, action) => {
   }
 }
 
-const usersIncomingRequest = (store, action, metaActionName) => {
+const usersIncomingRequest = (store, action) => {
+  const { metaActionName } = action;
   switch (metaActionName) {
     case FETCH_USER_BY_ID:
     case UPDATE_AUTHENTICATED_USER: {
@@ -48,9 +46,7 @@ const usersIncomingRequest = (store, action, metaActionName) => {
 
 const users = store => next => action => {
   if (action.type === API_REQUEST_SUCCEEDED) {
-    const metaActionName = selectActionMetaNameForEndpoint(action.endpoint, store.getState());
-
-    usersIncomingRequest(store, action, metaActionName);
+    usersIncomingRequest(store, action);
   } else {
     usersOutgoingRequest(store, action);
   }

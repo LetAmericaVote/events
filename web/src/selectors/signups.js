@@ -1,4 +1,4 @@
-import { selectAuthId } from './auth';
+import { selectAuthUserId } from './auth';
 import { selectUser } from './users';
 import { selectEvent } from './events';
 
@@ -57,7 +57,7 @@ export const selectSignupsForEvent = (eventId, state) =>
  * @return {Array}          Sorted list of signups
  */
 export const selectSignupsForEventSortedByCreatedAt = (eventId, state) =>
-  selectSignupsForEvent(event, state).sort((signupA, signupB) => (
+  selectSignupsForEvent(eventId, state).sort((signupA, signupB) => (
     new Date(signupB.createdAt).getTime() -
     new Date(signupA.createdAt).getTime()
   ));
@@ -105,7 +105,7 @@ export const selectSignupsForUserSortedByUpcoming = (userId, state) =>
  * @return {Array}        List of signups
  */
 export const selectSignupsForAuthenticatedUser = (state) =>
-  selectSignupsForUser(selectAuthId(state), state);
+  selectSignupsForUser(selectAuthUserId(state), state);
 
 /**
  * Select all signups for the authenticated user sorted by
@@ -115,4 +115,4 @@ export const selectSignupsForAuthenticatedUser = (state) =>
  * @return {Array}        List of signups
  */
 export const selectSignupsForAuthenticatedUserSortedByUpcoming = (state) =>
-  selectSignupsForUserSortedByUpcoming(selectAuthId(state), state);
+  selectSignupsForUserSortedByUpcoming(selectAuthUserId(state), state);
