@@ -56,7 +56,7 @@ module.exports = [
     middleware: loadUser,
   },
   {
-    route: '/v1/users/:userId',
+    route: '/v1/users/id/:userId',
     method: 'get',
     handler: getUserById,
     middleware: loadUser,
