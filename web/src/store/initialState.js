@@ -14,6 +14,9 @@ const initialState = {
     pathname: '',
     history: [],
   },
+  signups: {
+    items: {},
+  },
   users: {
     items: {},
   },

@@ -1,4 +1,4 @@
-import { selectUser } from './user';
+import { selectUser } from './users';
 
 /**
  * Selec event items.
@@ -28,7 +28,8 @@ export const selectEventExists = (eventId, state) =>
 export const selectEvent = (eventId, state) =>
   selectEventExists(eventId, state) ? ({
     ...selectEvents(state)[eventId],
-    hostUser: selectUser(selectEvents(state)[eventId].hostUser),
+    hostUser: selectUser(selectEvents(state)[eventId].hostUser) ||
+      selectEvents(state)[eventId].hostUser || null,
   }) : null;
 
 /**
@@ -104,7 +105,7 @@ export const selectEventGeoLocation = (eventId, state) =>
  * @param  {Object} state  Redux state
  * @return {String|null}   null if event is false-y
  */
-export const selectEventLat = (eventId, state) =>
+export const selectEventLon = (eventId, state) =>
   selectEventExists(eventId, state) ?
     selectEventGeoLocation(eventId, state).geoLocation[0] : null;
 

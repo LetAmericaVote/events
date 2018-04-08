@@ -46,7 +46,10 @@ SignupSchema.statics.formatArrayOfSignups = async function(signups, requestUser)
 };
 
 SignupSchema.methods.getApiResponse = async function(requestUser) {
-  const baseApiResponse = { id: this.id };
+  const baseApiResponse = {
+    id: this.id,
+    createdAt: this.createdAt, 
+  };
 
   try {
     const user = this.user && this.user.getApiResponse ?
