@@ -4,11 +4,14 @@ const initialState = {
     meta: {},
   },
   events: {
-    items: [],
+    items: {},
   },
   routing: {
     pathname: '',
     history: [],
+  },
+  users: {
+    items: {},
   },
 };
 

@@ -1,20 +1,52 @@
 import React, { Component } from 'react';
 
-// TODO: All of this Google API stuff should go in a middleware.
-// NOTES TO SELF FOR LATER:
-//  - Make sure we notify people if the pop-up blocker catches it for some reason.
-//  - How do we handle the library not being loaded yet?
+// TODO: Make sure we notify people if the pop-up blocker catches it for some reason.
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+
+// WATCH: https://github.com/google/google-api-javascript-client/issues/399
+function testGAPI() {
+  return !!window.gapi && !!window.gapi.client;
+}
 
 class GoogleAuthButton extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      gapiIsReady: testGAPI(),
+    };
+
     this.googleAuth = null;
     this.onLogin = this.onLogin.bind(this);
+    this.setupProcedure = this.setupProcedure.bind(this);
+    this.checkIfReadyToSetup = this.checkIfReadyToSetup.bind(this);
   }
 
   componentDidMount() {
+    if (this.state.gapiIsReady) {
+      this.setupProcedure();
+      return;
+    }
+
+    setTimeout(this.checkIfReadyToSetup, 100);
+  }
+
+  checkIfReadyToSetup() {
+    const gapiIsReady = testGAPI();
+
+    if (gapiIsReady) {
+      this.setState({
+        gapiIsReady,
+      });
+
+      this.setupProcedure();
+      return;
+    }
+
+    setTimeout(this.checkIfReadyToSetup, 100);
+  }
+
+  setupProcedure() {
     const setupAuth = async () => {
       const authOptions = {
         fetch_basic_profile: true,
@@ -60,8 +92,13 @@ class GoogleAuthButton extends Component {
 
   render() {
     return (
-      <button onClick={this.onLogin}>login with the googles</button>
-    )
+      <button
+        onClick={this.onLogin}
+        disabled={this.state.gapiIsReady}
+      >
+        login with the googles
+      </button>
+    );
   }
 }
 

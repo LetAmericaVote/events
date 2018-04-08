@@ -4,10 +4,12 @@ import {
   FETCH_EVENT_BY_SLUG,
   FETCH_EVENT_BY_GEO_LOCATION,
   API_REQUEST_SUCCEEDED,
-  API_REQUEST_FAILED, // ??? Where should we handle error / move them to?
+  API_REQUEST_FAILED, // TODO: Where should we handle errors?
   setApiActionMetaProperty,
   storeEvent,
   storeEvents,
+  storeUsers,
+  storeUser,
   getFromApi,
 } from '../actions';
 import {
@@ -157,7 +159,7 @@ const eventsIncomingRequest = (store, action, metaActionName) => {
 
       const processedItem = processEvent(event);
       store.dispatch(storeEvent(processedItem.event));
-      // TODO: store user
+      store.dispatch(storeUser(processedItem.user));
 
       break;
     }
@@ -206,7 +208,7 @@ const eventsIncomingRequest = (store, action, metaActionName) => {
       }
 
       store.dispatch(storeEvents(processedData.events));
-      // TODO: Store users
+      store.dispatch(storeUsers(processedData.users));
 
       break;
     }
