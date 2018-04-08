@@ -13,9 +13,9 @@ async function getUserSignups(req, res) {
 
   const limitCount = parsedLimit > 25 ? 25 : parsedLimit;
 
-  const signups = await this.find(findQuery)
+  const signups = await Signup.find(findQuery)
     .limit(limitCount)
-    .populate('event');
+    .populate('user event');
 
   const formattedSignups = await Signup.formatArrayOfSignups(signups, requestUser);
 
@@ -28,10 +28,14 @@ async function getUserStatus(req, res) {
   const { requestUser } = res.locals;
   const { eventId } = req.params;
 
-  const signup = await Signup.findOne({ user: requestUser, event: eventId });
+  const signup = await Signup.findOne({ user: requestUser, event: eventId })
+    .populate('user event');
+
+  const formattedSignup = await signup.getApiResponse(requestUser);
 
   res.json({
     signupStatus: !!signup && !!signup.id,
+    signup: formattedSignup,
   });
 }
 
@@ -50,7 +54,7 @@ async function getEventSignups(req, res) {
 
   const limitCount = parsedLimit > 25 ? 25 : parsedLimit;
 
-  const signups = await this.find(findQuery)
+  const signups = await Signup.find(findQuery)
     .sort(sortyQuery)
     .limit(limitCount)
     .populate('event user');
@@ -66,8 +70,8 @@ async function postUserSignup(req, res) {
   const { requestUser } = res.locals;
   const { eventId } = req.params;
 
-  const signup = Signup.makeSignup(requestUser, eventId);
-  const formattedSignup = signup.getApiResponse(requestUser);
+  const signup = await Signup.makeSignup(requestUser, eventId);
+  const formattedSignup = await signup.getApiResponse(requestUser);
 
   res.json({
     signup: formattedSignup,
@@ -79,7 +83,7 @@ module.exports = [
     route: '/v1/signups/user',
     method: 'get',
     handler: getUserSignups,
-    middleware: loadUser,
+    middleware: requiresAuth,
   },
   {
     route: '/v1/signups/user/status/:eventId',

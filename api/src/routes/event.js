@@ -101,6 +101,8 @@ async function getEventsByGeoLocation(req, res) {
   });
 }
 
+// TODO: Bulk id find
+
 module.exports = [
   {
     route: '/v1/events',

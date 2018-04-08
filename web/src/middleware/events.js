@@ -159,7 +159,10 @@ const eventsIncomingRequest = (store, action, metaActionName) => {
 
       const processedItem = processEvent(event);
       store.dispatch(storeEvent(processedItem.event));
-      store.dispatch(storeUser(processedItem.user));
+
+      if (!!processedItem.user) {
+        store.dispatch(storeUser(processedItem.user));
+      }
 
       break;
     }
