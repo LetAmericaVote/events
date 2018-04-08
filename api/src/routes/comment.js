@@ -1,4 +1,5 @@
 const Comment = require('../models/Comment');
+const Signup = require('../models/Signup');
 const { requireUser } = require('../middleware/auth');
 
 async function getUserComments(req, res) {
@@ -36,6 +37,11 @@ async function getEventComments(req, res) {
   const { start, limit, sortByRecent, inReplyTo } = req.query;
   const parsedLimit = Math.max(parseInt(limit), 0);
 
+  const signup = await Signup.findOne({ user: requestUser, event: eventId });
+  if (! signup || ! signup.id) {
+    return res.status(401).json({ error: true, message: 'You must be signed up for this event' });
+  }
+
   const findQuery = {
     event: eventId,
   };
@@ -46,7 +52,7 @@ async function getEventComments(req, res) {
     };
   }
 
-  if (inReplyTo) {
+  if (typeof inReplyTo !== 'undefined') {
     findQuery.inReplyTo = inReplyTo;
   }
 
@@ -64,6 +70,33 @@ async function getEventComments(req, res) {
   });
 }
 
+async function getEventComment(req, res) {
+  const { requestUser } = res.locals;
+  const { eventId, commentId } = req.params;
+
+  const signup = await Signup.findOne({ user: requestUser, event: eventId });
+  if (! signup || ! signup.id) {
+    return res.status(401).json({ error: true, message: 'You must be signed up for this event' });
+  }
+
+  const findQuery = {
+    _id: commentId,
+    event: eventId,
+  };
+
+  const comment = await Comment.find(findQuery);
+
+  if (! comment || ! comment.id) {
+    return res.status(404).json({ error: true, message: 'Comment not found' });
+  }
+
+  const formattedComment = await comment.getApiResponse(requestUser);
+
+  res.json({
+    comment: formattedComment,
+  });
+}
+
 async function postEventComment(req, res) {
   const { requestUser } = res.locals;
   const { eventId } = req.params;
@@ -73,8 +106,23 @@ async function postEventComment(req, res) {
     return res.status(400).json({ error: true, message: 'Missing message' });
   }
 
+  const signup = await Signup.findOne({ user: requestUser, event: eventId });
+  if (! signup || ! signup.id) {
+    return res.status(401).json({ error: true, message: 'You must be signed up for this event' });
+  }
+
   const comment = new Comment({ user: requestUser, event: eventId, message });
   if (inReplyTo) {
+    const inReplyToComment = await Comment.findOne({ _id: inReplyTo });
+
+    if (! inReplyToComment || ! inReplyToComment.id) {
+      return res.status(400).json({ error: true, message: 'Invalid reply' });
+    }
+
+    if (inReplyToComment.inReplyTo) {
+      return res.status(400).json({ error: true, message: 'You can\'t reply to that comment' });
+    }
+
     comment.inReplyTo = comment;
   }
 
@@ -95,11 +143,12 @@ module.exports = [
     handler: getUserComments,
     middleware: requireUser,
   },
-  // TODO: Make individual comment getter
-  // {
-  //   route: '/v1/comment/:commentId',
-  //   method: 'get',
-  // }
+  {
+    route: '/v1/comments/id/:commentId/event/:eventId',
+    method: 'get',
+    handler: getEventComment,
+    middleware: requireUser,
+  },
   {
     route: '/v1/comments/event/:eventId',
     method: 'get',
