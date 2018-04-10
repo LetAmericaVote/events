@@ -62,6 +62,7 @@ CommentSchema.methods.getApiResponse = async function(requestUser) {
   }
 };
 
+// TODO: we gotta change this at some point...
 const Comment = mongoose.model('post', CommentSchema);
 
 module.exports = Comment;

@@ -38,6 +38,9 @@ const UserSchema = mongoose.Schema({
     enum: ROLES_LIST,
     default: USER_ROLE,
   },
+  isTest: {
+    type: Boolean,
+  },
 }, {
   timestamps: true,
   toObject: {

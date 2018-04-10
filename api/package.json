@@ -20,7 +20,8 @@
     "mongoose": "^5.0.12",
     "passport": "^0.4.0",
     "qs": "^6.5.1",
-    "superagent": "^3.8.2"
+    "superagent": "^3.8.2",
+    "unsplash-js": "^4.8.0"
   },
   "engines": {
     "node": "9.5.x",
