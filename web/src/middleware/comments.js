@@ -66,7 +66,11 @@ const commentOutgoingRequest = (store, action) => {
       }
 
       if (typeof inReplyTo !== 'undefined') {
-        query.inReplyTo = inReplyTo;
+        if (inReplyTo === null) {
+          query.inReplyTo = 'null';
+        } else {
+          query.inReplyTo = inReplyTo;
+        }
       }
 
       const endpoint = `/v1/comments/event/${eventId}`;

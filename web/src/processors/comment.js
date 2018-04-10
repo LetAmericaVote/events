@@ -1,9 +1,7 @@
-// TODO: handle inReplyTo
-
 export default function processComment(comment) {
   const hasUser = !!comment.user;
   const hasEvent = !!comment.event;
-  const isReply = !!comment.isReplyTo;
+  const isReply = !!comment.inReplyTo;
 
   const isUserFilled = hasUser && typeof comment.user === 'object';
   const isEventFilled = hasEvent && typeof comment.event === 'object';

@@ -8,9 +8,9 @@ import {
 
 const auth = store => next => action => {
   if (action.type === API_REQUEST_SUCCEEDED) {
-    const { metaActionName} = action;
+    const { metaAction } = action;
 
-    if (metaActionName === POST_GOOGLE_ID_TOKEN) {
+    if (metaAction === POST_GOOGLE_ID_TOKEN) {
       store.dispatch(storeUser(action.data.user));
       store.dispatch(storeAuthCredentials(action.data.user.id, action.data.token.value));
     }

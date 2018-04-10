@@ -54,7 +54,11 @@ async function getEventComments(req, res) {
   }
 
   if (typeof inReplyTo !== 'undefined') {
-    findQuery.inReplyTo = inReplyTo;
+    if (inReplyTo === 'null') {
+      findQuery.inReplyTo = { '$eq': null };
+    } else if (typeof inReplyTo === 'string') {
+      findQuery.inReplyTo = inReplyTo
+    }
   }
 
   const limitCount = parsedLimit > 25 ? 25 : parsedLimit;
