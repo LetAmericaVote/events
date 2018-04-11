@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const contentful = require('contentful-management');
 const { randomBytes } = require('../lib/common');
 
 const HostLinkSchema = mongoose.Schema({
@@ -28,6 +29,35 @@ HostLinkSchema.statics.make = async function(contentfulId) {
     console.error(error);
   }
 };
+
+HostLinkSchema.methods.sync = async function(requestUser) {
+  try {
+    const { contentfulId } = hostLink;
+    const event = await Event.findOne({ contentfulId });
+
+    if (! event || ! event.id) {
+      return false;
+    }
+
+    event.hostUser = requestUser;
+    await event.save();
+
+    const client = contentful.createClient({
+      accessToken: process.env.CONTENTFUL_MANAGEMENT_KEY,
+    });
+
+    const space = await client.getSpace(process.env.CONTENTFUL_SPACE);
+    const entry = await space.getEntry(contentfulId);
+    entry.fields.hostUser['en-US'] = requestUser;
+
+    await entry.update();
+
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
+}
 
 // TODO: Add method function here for linking the event & the user, updating contentful, instead of in the signup route.
 

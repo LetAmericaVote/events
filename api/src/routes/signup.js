@@ -80,15 +80,11 @@ async function postUserSignup(req, res) {
       return res.status(400).json({ error: true, message: 'Invalid host link' });
     }
 
-    const { contentfulId } = hostLink;
-    const event = await Event.findOne({ contentfulId });
+    const inSynced = await hostLink.sync(requestUser);
 
-    if (! event || ! event.id) {
+    if (! isSynced) {
       return res.status(400).json({ error: true, message: 'Invalid host link' });
     }
-
-    event.hostUser = requestUser;
-    await event.save();
   }
 
   const signup = await Signup.makeSignup(requestUser, eventId);
