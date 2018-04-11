@@ -11,6 +11,12 @@ const initialState = {
     items: {},
   },
   hostLink: null,
+  location: {
+    lon: null,
+    lat: null,
+    city: null,
+    state: null
+  },
   routing: {
     pathname: '',
     history: [],

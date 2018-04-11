@@ -3,6 +3,7 @@ export * from './auth';
 export * from './comment';
 export * from './events';
 export * from './hostLink';
+export * from './location';
 export * from './routing';
 export * from './search';
 export * from './signups';

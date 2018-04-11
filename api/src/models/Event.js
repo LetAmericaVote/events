@@ -224,6 +224,7 @@ EventSchema.methods.getApiResponse = async function(requestUser) {
 
 EventSchema.methods.getAlgoliaIndex = async function() {
   const hostUser = await User.findOne({ _id: this.hostUser });
+  // TODO: Should we add state abbreviations to the index?
 
   return {
     objectID: this.id,

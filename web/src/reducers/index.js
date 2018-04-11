@@ -3,6 +3,7 @@ import api from './api';
 import auth from './auth';
 import events from './events';
 import hostLink from './hostLink';
+import location from './location';
 import routing from './routing';
 import search from './search';
 import signups from './signups';
@@ -13,6 +14,7 @@ const reducers = combineReducers({
   auth,
   events,
   hostLink,
+  location,
   routing,
   search,
   signups,
