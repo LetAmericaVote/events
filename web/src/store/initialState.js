@@ -10,6 +10,7 @@ const initialState = {
   events: {
     items: {},
   },
+  hostLink: null,
   routing: {
     pathname: '',
     history: [],

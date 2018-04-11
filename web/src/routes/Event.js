@@ -1,12 +1,11 @@
 import React from 'react';
 
 const Event = (props) => {
-  const { match } = props;
-  const { eventId } = match;
+  const { eventSlug } = props;
 
   return (
     <section>
-      <h1>event {eventId}</h1>
+      <h1>event {eventSlug}</h1>
     </section>
   );
 }

@@ -20,6 +20,7 @@ const controllers = [
   ...require('./src/routes/comment'),
   ...require('./src/routes/contentful'),
   ...require('./src/routes/event'),
+  ...require('./src/routes/hostLink'),
   ...require('./src/routes/location'),
   ...require('./src/routes/signup'),
   ...require('./src/routes/user'),

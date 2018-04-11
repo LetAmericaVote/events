@@ -52,6 +52,8 @@ HostLinkSchema.methods.sync = async function(requestUser) {
 
     await entry.update();
 
+    await this.remove();
+
     return true;
   } catch (error) {
     console.error(error);

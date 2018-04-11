@@ -17,6 +17,7 @@ import {
 import {
   selectApiMetaCustomProperty,
   selectAuthUserId,
+  selectHostLink,
 } from '../selectors';
 import processSignup from '../processors/signup';
 
@@ -81,7 +82,15 @@ const signupOutgoingRequest = (store, action) => {
 
     case SIGNUP_FOR_EVENT: {
       const endpoint = `/v1/signups/event/${action.eventId}`;
-      store.dispatch(postToApi(SIGNUP_FOR_EVENT, 'signup', endpoint));
+
+      const payload = {};
+      const hostLink = selectHostLink(store.getState());
+
+      if (hostLink) {
+        payload.hostCode = hostLink;
+      }
+
+      store.dispatch(postToApi(SIGNUP_FOR_EVENT, 'signup', endpoint, payload));
       break;
     }
 
