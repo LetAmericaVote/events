@@ -1,4 +1,6 @@
 const Signup = require('../models/Signup');
+const HostLink = require('../models/HostLink');
+const Event = require('../models/Event');
 const { loadUser, requiresAuth } = require('../middleware/auth');
 
 async function getUserSignups(req, res) {
@@ -69,6 +71,25 @@ async function getEventSignups(req, res) {
 async function postUserSignup(req, res) {
   const { requestUser } = res.locals;
   const { eventId } = req.params;
+  const { hostCode } = req.body;
+
+  if (hostCode) {
+    const hostLink = await HostLink.findOne({ hostCode });
+
+    if (! hostLink || ! hostLink.id) {
+      return res.status(400).json({ error: true, message: 'Invalid host link' });
+    }
+
+    const { contentfulId } = hostLink;
+    const event = await Event.findOne({ contentfulId });
+
+    if (! event || ! event.id) {
+      return res.status(400).json({ error: true, message: 'Invalid host link' });
+    }
+
+    event.hostUser = requestUser;
+    await event.save();
+  }
 
   const signup = await Signup.makeSignup(requestUser, eventId);
   const formattedSignup = await signup.getApiResponse(requestUser);
