@@ -14,7 +14,7 @@ async function contentfulWebhook(req, res) {
   }
 }
 
-async function contentfulUserSearch(req, res) {
+async function contentfulUserEmailSearch(req, res) {
   const { email } = req.params;
 
   const user = await User.findOne({ email });
@@ -28,16 +28,39 @@ async function contentfulUserSearch(req, res) {
     firstName: user.firstName,
     lastName: user.lastName,
     email: email,
+    profilePhoto: user.profilePhoto,
+  });
+}
+
+async function contentfulUserIdSearch(req, res) {
+  const { id } = req.params;
+
+  const user = await User.findOne({ _id: id });
+
+  if (! user) {
+    return res.status(404).json({ error: true, message: 'User not found' });
+  }
+
+  return res.json({
+    id: user.id,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: email,
+    profilePhoto: user.profilePhoto,
   });
 }
 
 async function contentfulCreateHostLoginLink(req, res) {
-  const { contentfulId } = req.body;
+  const { contentfulId } = req.params;
 
   const hostCode = await HostLink.make(contentfulId);
   const link = `${process.env.APP_URL}/host/${hostCode}`;
 
   res.json({ link });
+}
+
+async function contentfulKeyVerify(req, res) {
+  res.json({ ok: true });
 }
 
 module.exports = [
@@ -48,15 +71,27 @@ module.exports = [
     middleware: contentfulAuth,
   },
   {
-    route: '/v1/contentful/user/:email',
+    route: '/v1/contentful/user/email/:email',
     method: 'get',
-    handler: contentfulUserSearch,
+    handler: contentfulUserEmailSearch,
+    middleware: contentfulAuth,
+  },
+  {
+    route: '/v1/contentful/user/id/:userId',
+    method: 'get',
+    handler: contentfulUserIdSearch,
     middleware: contentfulAuth,
   },
   {
     route: '/v1/contentful/:contentfulId/host',
     method: 'post',
     handler: contentfulCreateHostLoginLink,
+    middleware: contentfulAuth,
+  },
+  {
+    route: '/v1/contentful/verify',
+    method: 'get',
+    handler: contentfulKeyVerify,
     middleware: contentfulAuth,
   },
 ];
