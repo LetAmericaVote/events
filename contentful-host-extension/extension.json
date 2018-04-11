@@ -1,0 +1,6 @@
+{
+  "id": "hostUser",
+  "name": "Rowboat Host Picker",
+  "fieldTypes": ["Symbol"],
+  "src": "http://localhost:3000/"
+}

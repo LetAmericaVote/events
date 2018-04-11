@@ -50,7 +50,7 @@ class SearchEmail extends React.Component {
           notFound: false,
         });
 
-        this.props.extension.field.setValue(id);
+        this.props.setValue(id);
       });
   }
 
@@ -61,7 +61,7 @@ class SearchEmail extends React.Component {
     const buttonClass = `cf-btn-primary cf-block ${isLoading ? 'cf-is-loading' : ''}`;
 
     return (
-      <div class="cf-form-field">
+      <div class="cf-form-field" style={{ marginTop: '32px' }}>
         <label>User Email</label>
         <input
           type="text"

@@ -33,9 +33,9 @@ async function contentfulUserEmailSearch(req, res) {
 }
 
 async function contentfulUserIdSearch(req, res) {
-  const { id } = req.params;
+  const { userId } = req.params;
 
-  const user = await User.findOne({ _id: id });
+  const user = await User.findOne({ _id: userId });
 
   if (! user) {
     return res.status(404).json({ error: true, message: 'User not found' });
@@ -45,7 +45,7 @@ async function contentfulUserIdSearch(req, res) {
     id: user.id,
     firstName: user.firstName,
     lastName: user.lastName,
-    email: email,
+    email: user.email,
     profilePhoto: user.profilePhoto,
   });
 }

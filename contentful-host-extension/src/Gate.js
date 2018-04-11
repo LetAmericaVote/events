@@ -1,8 +1,6 @@
 import React from 'react';
 import App from './App';
 
-const STORAGE_KEY = 'STORAGE_KEY';
-
 class Gate extends React.Component {
   constructor(props) {
     super(props);
@@ -15,14 +13,6 @@ class Gate extends React.Component {
     };
 
     this.onSubmit = this.onSubmit.bind(this);
-  }
-
-  componentDidMount() {
-    const savedKey = localStorage.getItem(STORAGE_KEY);
-    if (savedKey) {
-      this.setState({ input: savedKey });
-      this.onSubmit();
-    }
   }
 
   onSubmit() {
@@ -73,8 +63,6 @@ class Gate extends React.Component {
           isLoading: false,
           isIncorrect: false,
         });
-
-        localStorage.setItem(STORAGE_KEY, input);
       });
   }
 

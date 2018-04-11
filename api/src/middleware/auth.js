@@ -41,8 +41,8 @@ async function requiresAdmin(req, res, next) {
   res.status(401).json({ error: true, message: 'Unauthorized. Requires administrator.' });
 }
 
-async function contentfulAuth(res, res, next) {
-  const contentfulAuthKey = req.headers['X-Rowboat-Contentful-Key'];
+async function contentfulAuth(req, res, next) {
+  const contentfulAuthKey = req.headers['x-rowboat-contentful-key'];
 
   if (contentfulAuthKey === process.env.CONTENTFUL_ROWBOAT_API_KEY) {
     return next();

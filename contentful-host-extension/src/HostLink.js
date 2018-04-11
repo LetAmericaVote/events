@@ -13,7 +13,7 @@ class HostLink extends React.Component {
   }
 
   onSubmit() {
-    const sys = this.props.extension.entry.getSys();
+    const { sys } = this.props;
     const { id } = sys;
 
     const uri = `${process.env.REACT_APP_ROWBOAT_API_URI}/v1/contentful/${id}/host`;
@@ -40,8 +40,8 @@ class HostLink extends React.Component {
     const buttonClass = `cf-btn-primary cf-block ${isLoading ? 'cf-is-loading' : ''}`;
 
     return (
-      <div class="cf-form-field">
-        { link ? (
+      <div class="cf-form-field" style={{ marginTop: '32px' }}>
+        { ! link || ! link.length ? (
           <p>
             <button class={buttonClass} onClick={this.onSubmit}>{isLoading ? 'Creating link' : 'Create one-time login link'}</button>
           </p>

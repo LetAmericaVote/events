@@ -81,6 +81,12 @@ class Profile extends React.Component {
       email, profilePhoto, isLoading,
     } = this.state;
 
+    if (! this.props.userId) {
+      return (
+        <p><strong>no user selected</strong></p>
+      );
+    }
+
     if (isLoading) {
       return (
         <p>Loading...</p>

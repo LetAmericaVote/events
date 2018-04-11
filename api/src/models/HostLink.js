@@ -19,7 +19,7 @@ const HostLinkSchema = mongoose.Schema({
 HostLinkSchema.statics.make = async function(contentfulId) {
   try {
     const hostCode = await randomBytes(6);
-    const hostLoginLink = new HostLoginLink({ hostCode, contentfulID });
+    const hostLoginLink = new this({ hostCode, contentfulId });
 
     await hostLoginLink.save();
 

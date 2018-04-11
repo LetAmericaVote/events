@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import contentfulExtension from 'contentful-ui-extensions-sdk';
 import SearchEmail from './SearchEmail';
 import SearchId from './SearchId';
 import HostLink from './HostLink';
@@ -19,10 +18,12 @@ class App extends Component {
     };
 
     this.extension = null;
+
+    this.setValue = this.setValue.bind(this);
   }
 
   componentDidMount() {
-    contentfulExtension.init((extension) => {
+    window.contentfulExtension.init((extension) => {
       this.extension = extension;
 
       extension.window.startAutoResizer();
@@ -40,12 +41,21 @@ class App extends Component {
     });
   }
 
+  setValue(value) {
+    this.extension.field.setValue(value);
+
+    this.setState({
+      fieldValue: value,
+    });
+  }
+
   render() {
     const { isReady, fieldValue } = this.state;
     const { apiKey } = this.props;
 
     const tabProps = {
-      extension: this.extension,
+      setValue: this.setValue,
+      sys: this.extension ? this.extension.entry.getSys() : {},
       fieldValue: fieldValue,
       apiKey,
     };
@@ -63,14 +73,20 @@ class App extends Component {
       EMAIL_TAB,
       LINK_TAB,
       USER_ID_TAB,
-    ].map(tabName => getTabComponent(tabName));
+    ].map(tabName => {
+      const TabComponent = getTabComponent(tabName);
+
+      return (
+        <TabComponent {...tabProps} />
+      );
+    });
 
     return (
       <main>
-        { this.isReady ? (
+        { isReady ? (
           <div>
-            { fieldValue ? <Profile userId={fieldValue} /> : null }
-            { fieldValue ? <p>Update the host user</p> : <p>Set the host user</p> }
+            { fieldValue ? <Profile userId={fieldValue} apiKey={apiKey} /> : null }
+            { fieldValue ? <h1 style={{ marginTop: '32px' }}>Update the host user</h1> : <h1>Set the host user</h1> }
             { tabComponents }
           </div>
         ) : <p>Loading...</p> }
