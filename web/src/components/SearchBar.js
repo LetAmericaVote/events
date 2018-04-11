@@ -1,6 +1,6 @@
 import React from 'react';
-import Rivet from '../HOC/Rivet';
-import AlgoliaSearch from '../HOC/AlgoliaSearch';
+import Rivet from '../hoc/Rivet';
+import AlgoliaSearch from '../hoc/AlgoliaSearch';
 
 const SearchBar = (props) => {
   const { queryValue, onType } = props;

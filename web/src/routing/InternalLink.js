@@ -1,5 +1,5 @@
 import React from 'react';
-import Rivet from '../HOC/Rivet';
+import Rivet from '../hoc/Rivet';
 import { setPathname } from '../actions';
 
 const InternalLink = (props) => {

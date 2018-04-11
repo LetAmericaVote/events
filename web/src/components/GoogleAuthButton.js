@@ -1,6 +1,6 @@
 import React from 'react';
-import Rivet from '../HOC/Rivet';
-import GoogleAuth from '../HOC/GoogleAuth';
+import Rivet from '../hoc/Rivet';
+import GoogleAuth from '../hoc/GoogleAuth';
 
 const GoogleAuthButton = (props) => {
   const { isSafeToClick, showLoginDialog } = props;

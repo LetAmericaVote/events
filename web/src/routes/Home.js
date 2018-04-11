@@ -1,5 +1,5 @@
 import React from 'react';
-import Rivet from '../HOC/Rivet';
+import Rivet from '../hoc/Rivet';
 
 const Home = (props) => {
   return (
