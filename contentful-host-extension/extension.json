@@ -2,5 +2,5 @@
   "id": "hostUser",
   "name": "Rowboat Host Picker",
   "fieldTypes": ["Symbol"],
-  "src": "http://localhost:3000/"
+  "src": "https://extension.votingrightshouseparty.com/"
 }
