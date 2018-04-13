@@ -4,6 +4,7 @@ import Rivet from './Rivet';
 import {
   setSearchResultOrder,
   setSearchQueryValue,
+  setSearchIsPending,
   storeEvents,
   fetchEventById,
 } from '../actions';
@@ -41,6 +42,8 @@ function AlgoliaSearchHOC(InnerComponent) {
 
       const typingTimer = setTimeout(this.clearWaitingTimer, 250);
       this.setState({ typingTimer, isTyping: true });
+
+      this.props.setSearchIsPending(true);
     }
 
     async clearWaitingTimer () {
@@ -85,8 +88,11 @@ function AlgoliaSearchHOC(InnerComponent) {
             fetchEventById(event.id);
           }
         });
+
+        setSearchIsPending(false);
       } catch (error) {
         console.error(error);
+        setSearchIsPending(false);
       }
     }
 
@@ -120,6 +126,7 @@ function AlgoliaSearchHOC(InnerComponent) {
   AlgoliaSearch.actionCreators = {
     setSearchResultOrder,
     setSearchQueryValue,
+    setSearchIsPending,
     storeEvents,
     fetchEventById,
   };

@@ -28,9 +28,21 @@ export const selectEventExists = (eventId, state) =>
 export const selectEvent = (eventId, state) =>
   selectEventExists(eventId, state) ? ({
     ...selectEvents(state)[eventId],
-    hostUser: selectUser(selectEvents(state)[eventId].hostUser) ||
+    hostUser: selectUser(selectEvents(state)[eventId].hostUser, state) ||
       selectEvents(state)[eventId].hostUser || null,
   }) : null;
+
+/**
+ * Select an event by its slug.
+ *
+ * @param  {String} eventSlug Event slug
+ * @param  {Object} state     Redux state
+ * @return {String|null}      Event id if found, otherwise null
+ */
+export const selectEventIdBySlug = (eventSlug, state) =>
+  Object.keys(selectEvents(state)).find(eventId =>
+    selectEvent(eventId).slug === eventSlug
+  );
 
 /**
  * Select the title of an event.
@@ -127,7 +139,7 @@ export const selectEventLat = (eventId, state) =>
  * @param  {Object} state  Redux state
  * @return {String|null}   null if event is false-y
  */
-export const selectHeaderPhoto = (eventId, state) =>
+export const selectEventHeaderPhoto = (eventId, state) =>
   selectEventExists(eventId, state) ?
     selectEvent(eventId, state).headerPhoto : null;
 

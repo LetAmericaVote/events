@@ -26,3 +26,5 @@ export const selectSearchResultsFilled = (state) =>
     id: eventId,
     ...(selectEvent(eventId, state) || {}),
   }));
+
+export const selectIsSearchPending = (state) => state.search.isPending;

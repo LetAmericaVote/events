@@ -60,13 +60,8 @@ const spacingTypes = [
 
 const spacing = increments.reduce((acc, increment) => {
   spacingTypes.forEach(spacer => {
-    // if (! acc[spacer.name]) {
-    //   acc[spacer.name] = {};
-    // }
-
     const value = spacer.style(`${increment.multiplier * baseSpacing}px`);
     acc[`${increment.name}${spacer.name}`] = value;
-    // acc[increment.name][spacer.name] = value;
   });
 
   return acc;

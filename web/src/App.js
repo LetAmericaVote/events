@@ -1,4 +1,6 @@
 import React from 'react';
+import Page from './blocks/Page';
+import Navigation from './components/Navigation';
 import RouteSwitch from './routing/RouteSwitch';
 import routes from './routing/routes';
 import Home from './routes/Home';
@@ -17,10 +19,11 @@ const App = (props) => {
   };
 
   return (
-    <main>
+    <Page>
+      <Navigation />
       <RouteSwitch routes={appRoutes} />
-    </main>
-  )
+    </Page>
+  );
 };
 
 export default App;

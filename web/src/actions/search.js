@@ -18,3 +18,9 @@ export const SET_SEARCH_QUERY_VALUE = 'SET_SEARCH_QUERY_VALUE';
 export function setSearchQueryValue(value) {
   return { type: SET_SEARCH_QUERY_VALUE, value };
 }
+
+export const SET_SEARCH_IS_PENDING = 'SET_SEARCH_IS_PENDING';
+
+export function setSearchIsPending(isPending) {
+  return { type: SET_SEARCH_IS_PENDING, isPending };
+}

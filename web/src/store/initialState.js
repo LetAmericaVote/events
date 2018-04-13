@@ -24,6 +24,7 @@ const initialState = {
   search: {
     order: [],
     query: '',
+    isPending: false,
   },
   signups: {
     items: {},
