@@ -2,6 +2,8 @@ import styled from 'styled-components';
 import logo from '../assets/icons/logo.svg';
 import search from '../assets/icons/search.svg';
 import gps from '../assets/icons/gps.svg';
+import calendar from '../assets/icons/calendar.svg';
+import house from '../assets/icons/house.svg';
 
 export const Logo = styled.div`
   ${props => props.theme.reset}
@@ -13,16 +15,27 @@ export const Logo = styled.div`
   background-size: 100% 100%;
 `;
 
-export const SearchIcon = styled.div`
+const BaseIcon = styled.div`
   ${props => props.theme.reset}
 
-  background-image: url(${search});
+  width: 32px;
+  height: 32px;
+
   background-size: 100% 100%;
 `;
 
-export const GpsIcon = styled.div`
-  ${props => props.theme.reset}
+export const SearchIcon = styled(BaseIcon)`
+  background-image: url(${search});
+`;
 
+export const GpsIcon = styled(BaseIcon)`
   background-image: url(${gps});
-  background-size: 100% 100%;
+`;
+
+export const CalendarIcon = styled(BaseIcon)`
+  background-image: url(${calendar});
+`;
+
+export const HouseIcon = styled(BaseIcon)`
+  background-image: url(${house});
 `;

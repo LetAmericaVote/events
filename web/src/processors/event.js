@@ -13,7 +13,7 @@ export default function processEvent(event) {
   };
 
   if (hostUserId) {
-    processEvent.hostUser = hostUserId;
+    processedEvent.hostUser = hostUserId;
   }
 
   const processedData = {
@@ -21,7 +21,7 @@ export default function processEvent(event) {
   };
 
   if (isHostUserFilled) {
-    processedData.user = event.user;
+    processedData.user = event.hostUser;
   }
 
   return processedData;

@@ -10,8 +10,6 @@ import {
 import { SearchIcon } from '../blocks/Icons';
 
 const SizedSearchIcon = styled(SearchIcon)`
-  width: 32px;
-  height: 32px;
   align-self: center;
   ${props => props.theme.tinyMarginLeft}
 `;

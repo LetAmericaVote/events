@@ -6,8 +6,6 @@ import { SecondaryCallToAction } from '../blocks/Button';
 import { GpsIcon } from '../blocks/Icons';
 
 const SizedGpsIcon = styled(GpsIcon)`
-  width: 32px;
-  height: 32px;
   display: inline-block;
   ${props => props.theme.tinyMarginHorizontal}
 `;

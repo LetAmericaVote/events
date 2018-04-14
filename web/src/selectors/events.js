@@ -41,7 +41,7 @@ export const selectEvent = (eventId, state) =>
  */
 export const selectEventIdBySlug = (eventSlug, state) =>
   Object.keys(selectEvents(state)).find(eventId =>
-    selectEvent(eventId).slug === eventSlug
+    selectEvent(eventId, state).slug === eventSlug
   );
 
 /**
@@ -144,15 +144,18 @@ export const selectEventHeaderPhoto = (eventId, state) =>
     selectEvent(eventId, state).headerPhoto : null;
 
 /**
- * Select the host user of an event.
+ * Select the host user id of an event.
  *
  * @param  {String} eventId Event id
  * @param  {Object} state  Redux state
  * @return {String|null}   null if event is false-y
  */
-export const selectHostUser = (eventId, state) =>
+export const selectEventHostUserId = (eventId, state) =>
   selectEventExists(eventId, state) ?
-    selectEvent(eventId, state).hostUser : null;
+    (
+      (selectEvent(eventId, state).hostUser || {}).id ||
+      selectEvent(eventId, state).hostUser
+    ) : null;
 
 /**
  * Select the slug of an event.

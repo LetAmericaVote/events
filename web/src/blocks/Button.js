@@ -9,12 +9,12 @@ export const CallToActionButton = styled.button`
   text-transform: uppercase;
   ${props => props.theme.basePaddingHorizontal}
   ${props => props.theme.tinyPaddingVertical}
-  border-radius: 4px;
+  ${props => props.theme.borderRadius}
   cursor: pointer;
 `;
 
 export const SecondaryCallToAction = styled(CallToActionButton)`
   ${props => props.theme.fg.action}
   ${props => props.theme.bg.paper}
-  border: 1px solid ${props => props.theme.action}
+  ${props => props.theme.actionBorderStyle}
 `;
