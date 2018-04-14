@@ -18,7 +18,7 @@ const Navigation = (props) => {
     <Section>
       <FlexAcross>
         <FlexHalfColumn>
-          <InternalLink>
+          <InternalLink to="/">
             <HomeButton />
           </InternalLink>
         </FlexHalfColumn>

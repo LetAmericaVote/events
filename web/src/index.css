@@ -1,0 +1,35 @@
+@font-face {
+  font-family: 'mreavesmodot-heavy';
+  src: url('./assets/fonts/mreavesmodot-heavy-webfont.eot');
+  src: url('./assets/fonts/mreavesmodot-heavy-webfont.eot?#iefix') format('embedded-opentype'),
+       url('./assets/fonts/mreavesmodot-heavy-webfont.woff2') format('woff2'),
+       url('./assets/fonts/mreavesmodot-heavy-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'mreavesmodot-reg';
+  src: url('./assets/fonts/mreavesmodot-reg-webfont.eot');
+  src: url('./assets/fonts/mreavesmodot-reg-webfont.eot?#iefix') format('embedded-opentype'),
+       url('./assets/fonts/mreavesmodot-reg-webfont.woff2') format('woff2'),
+       url('./assets/fonts/mreavesmodot-reg-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'mreavesmodot-thin';
+  src: url('./assets/fonts/mreavesmodot-thin-webfont.eot');
+  src: url('./assets/fonts/mreavesmodot-thin-webfont.eot?#iefix') format('embedded-opentype'),
+       url('./assets/fonts/mreavesmodot-thin-webfont.woff2') format('woff2'),
+       url('./assets/fonts/mreavesmodot-thin-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'mreavesmodot-reg';
+}
