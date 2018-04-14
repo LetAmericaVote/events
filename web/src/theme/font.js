@@ -26,7 +26,7 @@ const font = {
   thinFontFamily,
   regularFontFamily,
   heavyFontFamily,
-  baseFontSize,
+  baseFontFamily,
   rootTypography,
 };
 

@@ -5,6 +5,8 @@ const Section = styled.section`
 
   width: 100%;
   max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
 
   ${props => props.theme.basePadding}
 `;
