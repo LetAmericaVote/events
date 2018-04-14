@@ -100,6 +100,19 @@ export const selectEventDistance = (eventId, state) =>
     selectEvent(eventId, state).distance : null;
 
 /**
+ * Select a list of events sorted by distance.
+ * Excludes event that don't have a distance property.
+ *
+ * @param  {Object} state Redux state
+ * @return {Array<Object>} List of events
+ */
+export const selectEventsSortedByDistance = (state) =>
+  Object.keys(selectEvents(state))
+    .filter(eventId => selectEventDistance(eventId, state) !== null)
+    .map(eventId => selectEvent(eventId, state))
+    .sort((eventA, eventB) => eventA.distance - eventB.distance);
+
+/**
  * Select the description of an event.
  *
  * @param  {String} eventId Event id

@@ -27,4 +27,26 @@ export const selectSearchResultsFilled = (state) =>
     ...(selectEvent(eventId, state) || {}),
   }));
 
+/**
+ * Select if the search is pending
+ * @param  {Object} state Redux state
+ * @return {Boolean}      True if the search is pending
+ */
 export const selectIsSearchPending = (state) => state.search.isPending;
+
+/**
+ * Select the search mode.
+ *
+ * @param  {Object} state Redux state
+ * @return {String}       Search mode
+ */
+export const selectSearchMode = (state) => state.search.mode;
+
+/**
+ * Select if the search mode is the query type.
+ *
+ * @param  {Object} state Redux state
+ * @return {Boolean}      True if query
+ */
+export const selectIsSearchModeQuery = (state) =>
+  selectSearchMode(state) === 'query';

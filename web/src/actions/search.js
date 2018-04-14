@@ -24,3 +24,14 @@ export const SET_SEARCH_IS_PENDING = 'SET_SEARCH_IS_PENDING';
 export function setSearchIsPending(isPending) {
   return { type: SET_SEARCH_IS_PENDING, isPending };
 }
+
+export const SET_SEARCH_MODE = 'SET_SEARCH_MODE';
+
+/**
+ * Set the search mode to either 'query' or 'geo'.
+ *
+ * @param {String} mode Mode type
+ */
+export function setSearchMode(mode) {
+  return { type: SET_SEARCH_MODE, mode };
+}

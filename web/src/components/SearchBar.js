@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Rivet from '../hoc/Rivet';
+import { setSearchMode } from '../actions';
 import AlgoliaSearch from '../hoc/AlgoliaSearch';
 import { FlexAcross } from '../blocks/Flex';
 import {
@@ -19,8 +20,12 @@ const SearchInput = styled(TextInput)`
 `;
 
 const SearchBar = (props) => {
-  const { queryValue, onType } = props;
-  const onChange = (event) => onType(event.target.value);
+  const { queryValue, onType, setSearchMode } = props;
+  
+  const onChange = (event) => {
+    setSearchMode('query');
+    onType(event.target.value);
+  };
 
   return (
     <TextInputContainer>
@@ -31,5 +36,9 @@ const SearchBar = (props) => {
     </TextInputContainer>
   );
 }
+
+SearchBar.actionCreators = {
+  setSearchMode,
+};
 
 export default AlgoliaSearch(Rivet(SearchBar));

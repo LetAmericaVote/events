@@ -25,6 +25,7 @@ const initialState = {
     order: [],
     query: '',
     isPending: false,
+    mode: 'query',
   },
   signups: {
     items: {},

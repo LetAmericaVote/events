@@ -51,6 +51,7 @@ function AlgoliaSearchHOC(InnerComponent) {
         setSearchResultOrder,
         storeEvents,
         fetchEventById,
+        setSearchIsPending,
       } = this.props;
 
       this.setState({

@@ -10,6 +10,8 @@ import {
   selectSearchResultsOrder,
   selectSearchQueryValue,
   selectIsSearchPending,
+  selectIsSearchModeQuery,
+  selectEventsSortedByDistance,
 } from '../selectors';
 
 const SearchRow = styled.div`
@@ -42,6 +44,8 @@ const Search = (props) => {
     searchResultOrder,
     searchResultQuery,
     isSearchPending,
+    isQuery,
+    nearbyEvents,
   } = props;
 
   const noResults = searchResultOrder &&
@@ -49,6 +53,9 @@ const Search = (props) => {
     searchResultQuery &&
     searchResultQuery.length &&
     ! isSearchPending;
+
+  const results = isQuery ?
+    searchResultOrder : nearbyEvents.map(event => event.id);
 
   return (
     <Section>
@@ -61,7 +68,8 @@ const Search = (props) => {
           <GeoLocationButton copy="Find nearby events" />
         </SearchColumn>
       </SearchRow>
-      {searchResultOrder.map(eventId => (
+      {isSearchPending ? <p>...</p> : null}
+      {results.map(eventId => (
         <SearchResult eventId={eventId} key={eventId} />
       ))}
       {noResults ? <p>No results</p> : null}
@@ -73,6 +81,8 @@ Search.mapStateToProps = (state) => ({
   isSearchPending: selectIsSearchPending(state),
   searchResultOrder: selectSearchResultsOrder(state),
   searchResultQuery: selectSearchQueryValue(state),
+  isQuery: selectIsSearchModeQuery(state),
+  nearbyEvents: selectEventsSortedByDistance(state),
 });
 
 export default Rivet(Search);
