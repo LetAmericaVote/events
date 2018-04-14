@@ -16,4 +16,5 @@ export const CallToActionButton = styled.button`
 export const SecondaryCallToAction = styled(CallToActionButton)`
   ${props => props.theme.fg.action}
   ${props => props.theme.bg.paper}
+  border: 1px solid ${props => props.theme.action}
 `;

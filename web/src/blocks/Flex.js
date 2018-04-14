@@ -15,6 +15,10 @@ export const FlexAcrossSpaceEvenly = styled(FlexAcross)`
   justify-content: space-evenly;
 `;
 
+export const FlexAcrossAlignCenter = styled(FlexAcross)`
+  align-items: center;
+`;
+
 export const FlexHalfColumn = styled.div`
   ${props => props.theme.reset}
 

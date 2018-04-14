@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Rivet from '../hoc/Rivet';
 import { selectIsAuthenticated } from '../selectors';
-import Logo from '../blocks/Logo';
+import { Logo } from '../blocks/Icons';
 import Section from '../blocks/Section';
 import InternalLink from '../routing/InternalLink';
 import { CallToActionButton } from '../blocks/Button';
