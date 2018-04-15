@@ -1,11 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
 import Rivet from '../hoc/Rivet';
 import Punch from '../blocks/Punch';
-import { FlexAcross } from '../blocks/Flex';
-import { GoogleIcon } from '../blocks/Icons';
+import SignupButton from './SignupButton';
+import FaceRow from './FaceRow';
 import { InvertedSectionHeader } from '../blocks/Type';
-import { SecondaryCallToAction } from '../blocks/Button';
+import { FlexAcrossJustifyCenter } from '../blocks/Flex';
 import {
   selectSignupsForEventSortedByCreatedAt,
 } from '../selectors';
@@ -13,40 +12,10 @@ import {
   fetchPaginatedEventSignups,
 } from '../actions';
 
-const FaceRow = styled.div`
-  ${props => props.theme.reset}
-
-  display: flex;
-  flex-direction: row;
-
-  flex-wrap: wrap;
-  justify-content: center;
-`;
-
-const Face = styled.div`
-  ${props => props.theme.reset}
-
-  width: 32px;
-  height: 32px;
-
-  background-size: cover;
-  background-image: url(${props => props.src});
-
-  margin-right: -4px;
-
-  border-radius: 50%;
-  border: 2px solid ${props => props.theme.paper};
-`;
-
-const SignupButton = styled(SecondaryCallToAction)`
-  ${props => props.theme.baseMarginTop}
-  margin-left: auto;
-  margin-right: auto;
-`;
-
 const Signup = (props) => {
   const {
     signups,
+    eventId,
   } = props;
 
   const copy = signups.length < 5 ?
@@ -56,17 +25,10 @@ const Signup = (props) => {
   return (
     <Punch>
       <InvertedSectionHeader>{copy}</InvertedSectionHeader>
-      <FaceRow>
-        {signups.map(signup => (
-          <Face key={signup.user.id} src={signup.user.profilePhoto} />
-        ))}
-      </FaceRow>
-      <SignupButton>
-        <FlexAcross>
-          <GoogleIcon />
-          Sign Up With Google
-        </FlexAcross>
-      </SignupButton>
+      <FaceRow userIds={signups.map(signup => signup.user.id || signup.user)} />
+      <FlexAcrossJustifyCenter>
+        <SignupButton eventId={eventId} />
+      </FlexAcrossJustifyCenter>
     </Punch>
   );
 };
@@ -75,8 +37,7 @@ Signup.mapStateToProps = (state, ownProps) => ({
   signups: selectSignupsForEventSortedByCreatedAt(ownProps.eventId, state),
 });
 
-// TODO: Make this better...?
-class SignupHack extends React.Component {
+class SignupConnector extends React.Component {
   constructor(props) {
     super(props);
 
@@ -93,8 +54,8 @@ class SignupHack extends React.Component {
     }
   }
 
-  componentDidRecieveProps(nextProps, prevProps) {
-    if (!!nextProps.eventId && !prevProps.eventId) {
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (!!this.eventId && !prevProps.eventId) {
       this.fetchSignups();
     }
   }
@@ -108,8 +69,8 @@ class SignupHack extends React.Component {
   }
 }
 
-SignupHack.actionCreators = {
+SignupConnector.actionCreators = {
   fetchPaginatedEventSignups,
 };
 
-export default Rivet(SignupHack);
+export default Rivet(SignupConnector);

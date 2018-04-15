@@ -93,7 +93,7 @@ function GoogleAuthHOC(InnerComponent) {
       };
 
       return (
-        <InnerComponent {...innerProps} />
+        <InnerComponent {...innerProps} {...this.props} />
       );
     }
   }

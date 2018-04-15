@@ -17,4 +17,8 @@ export const SecondaryCallToAction = styled(CallToActionButton)`
   ${props => props.theme.fg.action}
   ${props => props.theme.bg.paper}
   ${props => props.theme.actionBorderStyle}
+
+  &:disabled {
+    ${props => props.theme.fg.cloud}
+  }
 `;

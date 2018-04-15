@@ -22,6 +22,10 @@ export const FlexAcrossAlignCenter = styled(FlexAcross)`
   align-items: center;
 `;
 
+export const FlexAcrossJustifyCenter = styled(FlexAcross)`
+  justify-content: center;
+`;
+
 export const FlexDown = styled.div`
   ${props => props.theme.reset}
 
