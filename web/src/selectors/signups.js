@@ -30,9 +30,9 @@ export const selectSignupExists = (signupId, state) =>
 export const selectSignup = (signupId, state) =>
   selectSignupExists(signupId, state) ? ({
     ...selectSignups(state)[signupId],
-    user: selectUser(selectSignups(state)[signupId].user) ||
+    user: selectUser(selectSignups(state)[signupId].user, state) ||
       selectSignups(state)[signupId].user || null,
-    event: selectEvent(selectSignups(state)[signupId].event) ||
+    event: selectEvent(selectSignups(state)[signupId].event, state) ||
       selectSignups(state)[signupId].event || null,
   }) : null;
 

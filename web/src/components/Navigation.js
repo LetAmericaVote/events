@@ -46,7 +46,7 @@ const Navigation = (props) => {
     align-self: center;
 
     ${props => props.theme.baseMarginLeft}
-    ${props => props.theme.fg.primary}
+    ${props => props.theme.fg.night}
   `;
 
   const NavRow = styled(FlexAcrossSpaceBetween)`

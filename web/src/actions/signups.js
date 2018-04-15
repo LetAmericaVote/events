@@ -27,7 +27,7 @@ export const FETCH_PAGINAED_EVENT_SIGNUPS = 'FETCH_PAGINAED_EVENT_SIGNUPS';
  * @param  {Boolean} sortyBySignupDate Sort signups by when they were created
  */
 export function fetchPaginatedEventSignups(eventId, sortBySignupDate) {
-  return { type: FETCH_PAGINAED_EVENT_SIGNUPS, sortBySignupDate };
+  return { type: FETCH_PAGINAED_EVENT_SIGNUPS, eventId, sortBySignupDate };
 }
 
 export const SIGNUP_FOR_EVENT = 'SIGNUP_FOR_EVENT';

@@ -12,6 +12,10 @@ export const SectionHeader = styled.h1`
   ${props => props.theme.baseMarginBottom}
 `;
 
+export const InvertedSectionHeader = styled(SectionHeader)`
+  ${props => props.theme.fg.paper}
+`;
+
 export const Header = styled.h1`
   ${props => props.theme.reset}
 
@@ -37,6 +41,10 @@ export const Paragraph = styled.p`
   font-size: ${props => props.theme.regularFontSize};
 
   ${props => props.theme.baseMarginBottom}
+`;
+
+export const InvertedParagraph = styled(SectionHeader)`
+  ${props => props.theme.fg.paper}
 `;
 
 export const Detail = styled.span`

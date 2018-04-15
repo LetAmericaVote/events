@@ -1,6 +1,7 @@
 import React from 'react';
 import Byline from '../components/Byline';
 import EventTimePlace from '../components/EventTimePlace';
+import Signup from '../components/Signup';
 import Rivet from '../hoc/Rivet';
 import Section from '../blocks/Section';
 import Spacer from '../blocks/Spacer';
@@ -23,6 +24,9 @@ import {
   selectEventSlug,
   selectEventExists,
   selectEventHostUserId,
+  selectEventDateTime,
+  selectIsAuthenticated,
+  selectSignupsForAuthenticatedUser,
 } from '../selectors';
 import { fetchEventBySlug } from '../actions';
 
@@ -35,6 +39,9 @@ const Event = (props) => {
     description,
     headerPhoto,
     hostUserId,
+    dateTime,
+    isAuthenticated,
+    isSignedUp,
   } = props;
 
   if (! eventExists) {
@@ -42,9 +49,15 @@ const Event = (props) => {
     return null;
   }
 
-  // You're going
-  // Sign up
-  // This event is closed
+  const ActiveComponent = (() => {
+    if (new Date(dateTime).getTime() < Date.now()) {
+      return null;
+    } else if (! isAuthenticated || ! isSignedUp) {
+      return Signup;
+    } else {
+      return null;
+    }
+  })();
 
   return (
     <Section>
@@ -55,13 +68,14 @@ const Event = (props) => {
             <Spacer />
             <EventTimePlace eventId={eventId} />
             <Spacer />
-            <Byline userId={hostUserId} tagline="Is hosting this event" />
+            <Byline userId={hostUserId} tagline="Is hosting this house party" />
           </FlexDown>
         </FlexResponsiveThirdColumn>
         <FlexResponsiveTwoThirdsColumn>
           <FlexDown fill>
             <Header>{title}</Header>
             <Paragraph>{description}</Paragraph>
+            <ActiveComponent eventId={eventId} />
           </FlexDown>
         </FlexResponsiveTwoThirdsColumn>
       </FlexResponsiveRow>
@@ -76,6 +90,10 @@ Event.mapStateToProps = (state, ownProps) => ({
   slug: selectEventSlug(ownProps.eventId, state),
   headerPhoto: selectEventHeaderPhoto(ownProps.eventId, state),
   hostUserId: selectEventHostUserId(ownProps.eventId, state),
+  dateTime: selectEventDateTime(ownProps.eventId, state),
+  isAuthenticated: selectIsAuthenticated(state),
+  isSignedUp: !! selectSignupsForAuthenticatedUser(state)
+    .find(signup => signup.event === ownProps.eventId)
 });
 
 const EventWrapper = (props) => {

@@ -98,7 +98,7 @@ const SearchResult = (props) => {
             </FlexResponsiveHalfColumn>
             <FlexResponsiveHalfColumn>
               {hostUserId ? (
-                <Byline userId={hostUserId} tagline="Is hosting this event" />
+                <Byline userId={hostUserId} tagline="Is hosting this house party" />
               ) : null}
             </FlexResponsiveHalfColumn>
           </FlexResponsiveRow>
