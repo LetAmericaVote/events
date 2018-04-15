@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Rivet from '../hoc/Rivet';
 import Section from '../blocks/Section';
-import { SectionHeader } from '../blocks/Type';
+import { SectionHeader, Paragraph } from '../blocks/Type';
 import SearchBar from '../components/SearchBar';
 import SearchResult from '../components/SearchResult';
 import GeoLocationButton from '../components/GeoLocationButton';
@@ -68,7 +68,7 @@ const Search = (props) => {
           <GeoLocationButton copy="Find nearby events" />
         </SearchColumn>
       </SearchRow>
-      {isSearchPending ? <p>...</p> : null}
+      {isSearchPending ? <Paragraph>Searching...</Paragraph> : null}
       {results.map(eventId => (
         <SearchResult eventId={eventId} key={eventId} />
       ))}
