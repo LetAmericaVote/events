@@ -97,7 +97,8 @@ export const selectEventDateTime = (eventId, state) =>
  */
 export const selectEventDistance = (eventId, state) =>
   selectEventExists(eventId, state) ?
-    selectEvent(eventId, state).distance : null;
+    (selectEvent(eventId, state).distance === undefined ?
+      null : selectEvent(eventId, state).distance) : null;
 
 /**
  * Select a list of events sorted by distance.

@@ -8,6 +8,8 @@ import Search from './routes/Search';
 import Event from './routes/Event';
 import Profile from './routes/Profile';
 import HostLink from './routes/HostLink';
+/* eslint-disable react/jsx-pascal-case */
+import _404 from './routes/404';
 
 const App = (props) => {
   const appRoutes = {
@@ -21,7 +23,7 @@ const App = (props) => {
   return (
     <Page>
       <Navigation />
-      <RouteSwitch routes={appRoutes} />
+      <RouteSwitch routes={appRoutes} defaultRouteRender={() => <_404 />} />
     </Page>
   );
 };

@@ -5,6 +5,7 @@ import InternalLink from '../routing/InternalLink';
 import { makeEventRoute } from '../routing/routes';
 import EventTimePlace from './EventTimePlace';
 import Byline from './Byline';
+import ResponsiveImage from '../blocks/ResponsiveImage';
 import {
   Header,
   UnstyledAnchor,
@@ -43,22 +44,6 @@ const ResultContainer = styled.article`
 const ResultPhotoContainer = styled.div`
   ${props => props.theme.reset}
   ${props => props.theme.basePadding}
-`;
-
-const ResultPhoto = styled.div`
-  ${props => props.theme.reset}
-
-  width: 100%;
-  padding-top: 100%;
-
-  background-size: cover;
-  background-image: url(${props => props.src});
-
-  ${props => props.theme.tablet`
-    padding-top: 0;
-    width: 128px;
-    height: 128px;
-  `}
 `;
 
 const ResultInformationContainer = styled.div`
@@ -102,7 +87,7 @@ const SearchResult = (props) => {
     }}>
       <ResultContainer>
         <ResultPhotoContainer>
-          <ResultPhoto src={headerPhoto} />
+          <ResponsiveImage src={headerPhoto} width="128px" height="128px" />
         </ResultPhotoContainer>
         <ResultInformationContainer>
           <Header>{title}</Header>
@@ -113,7 +98,7 @@ const SearchResult = (props) => {
             </FlexResponsiveHalfColumn>
             <FlexResponsiveHalfColumn>
               {hostUserId ? (
-                <Byline userId={hostUserId} tagline="Is Hosting This Event" />
+                <Byline userId={hostUserId} tagline="Is hosting this event" />
               ) : null}
             </FlexResponsiveHalfColumn>
           </FlexResponsiveRow>

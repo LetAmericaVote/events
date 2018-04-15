@@ -15,13 +15,13 @@ import { Detail } from '../blocks/Type';
 const ProfilePhoto = styled.div`
   ${props => props.theme.reset}
 
-  width: 48px;
-  height: 48px;
+  width: 36px;
+  height: 36px;
 
   background-size: cover;
   background-image: url(${props => props.src});
 
-  ${props => props.theme.smallMarginRight}
+  ${props => props.theme.tinyMarginRight}
 
   border-radius: 50%;
   ${props => props.theme.defaultBorderStyle}
