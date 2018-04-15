@@ -89,6 +89,18 @@ export const selectEventDateTime = (eventId, state) =>
     selectEvent(eventId, state).dateTime : null;
 
 /**
+ * Select if the given event is open for signups.
+ *
+ * @param  {String} eventId Event id
+ * @param  {Object} state   Redux state
+ * @return {Boolean}        True if open
+ */
+export const selectEventIsOpen = (eventId, state) =>
+  selectEventExists(eventId, state) ?
+    new Date(selectEventDateTime(eventId, state))
+      .getTime() > Date.now() : false;
+
+/**
  * Select the distance of an event.
  *
  * @param  {String} eventId Event id

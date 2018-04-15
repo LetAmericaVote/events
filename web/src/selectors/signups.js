@@ -108,6 +108,17 @@ export const selectSignupsForAuthenticatedUser = (state) =>
   selectSignupsForUser(selectAuthUserId(state), state);
 
 /**
+ * Select if the user is signed up for the event.
+ *
+ * @param  {String} eventId Event id
+ * @param  {Object} state   Redux state
+ * @return {Boolean}        True if signed up
+ */
+export const selectIsAuthenticatedUserSignedUpForEvent = (eventId, state) =>
+  !!selectSignupsForAuthenticatedUser(state)
+    .find(signup => signup.event === eventId);
+
+/**
  * Select all signups for the authenticated user sorted by
  * the event dateTime.
  *

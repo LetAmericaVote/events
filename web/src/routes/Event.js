@@ -2,6 +2,7 @@ import React from 'react';
 import Byline from '../components/Byline';
 import EventTimePlace from '../components/EventTimePlace';
 import Signup from '../components/Signup';
+import EventClosed from '../components/EventClosed';
 import Rivet from '../hoc/Rivet';
 import Section from '../blocks/Section';
 import Spacer from '../blocks/Spacer';
@@ -24,9 +25,8 @@ import {
   selectEventSlug,
   selectEventExists,
   selectEventHostUserId,
-  selectEventDateTime,
-  selectIsAuthenticated,
-  selectSignupsForAuthenticatedUser,
+  selectIsAuthenticatedUserSignedUpForEvent,
+  selectEventIsOpen,
 } from '../selectors';
 import { fetchEventBySlug } from '../actions';
 
@@ -39,9 +39,8 @@ const Event = (props) => {
     description,
     headerPhoto,
     hostUserId,
-    dateTime,
-    isAuthenticated,
     isSignedUp,
+    isEventOpen,
   } = props;
 
   if (! eventExists) {
@@ -50,12 +49,12 @@ const Event = (props) => {
   }
 
   const ActiveComponent = (() => {
-    if (new Date(dateTime).getTime() < Date.now()) {
+    if (isSignedUp) {
       return null;
-    } else if (! isAuthenticated || ! isSignedUp) {
-      return Signup;
+    } else if (! isEventOpen) {
+      return EventClosed;
     } else {
-      return null;
+      return Signup;
     }
   })();
 
@@ -90,10 +89,8 @@ Event.mapStateToProps = (state, ownProps) => ({
   slug: selectEventSlug(ownProps.eventId, state),
   headerPhoto: selectEventHeaderPhoto(ownProps.eventId, state),
   hostUserId: selectEventHostUserId(ownProps.eventId, state),
-  dateTime: selectEventDateTime(ownProps.eventId, state),
-  isAuthenticated: selectIsAuthenticated(state),
-  isSignedUp: !! selectSignupsForAuthenticatedUser(state)
-    .find(signup => signup.event === ownProps.eventId)
+  isSignedUp: selectIsAuthenticatedUserSignedUpForEvent(ownProps.eventId, state),
+  isEventOpen: selectEventIsOpen(ownProps.eventId, state),
 });
 
 const EventWrapper = (props) => {
