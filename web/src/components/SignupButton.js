@@ -5,7 +5,10 @@ import Face from './Face';
 import { FlexAcross, FlexAcrossAlignCenter } from '../blocks/Flex';
 import { GoogleIcon } from '../blocks/Icons';
 import { SecondaryCallToAction } from '../blocks/Button';
-import { signupForEvent } from '../actions';
+import {
+  signupForEvent,
+  openSignupModal,
+} from '../actions';
 import {
   selectIsAuthenticated,
   selectAuthUserId,
@@ -27,6 +30,7 @@ class SignupButton extends React.Component {
 
     if (triggger && condition) {
       this.props.signupForEvent(this.props.eventId);
+      this.props.openSignupModal(this.props.eventId);
     }
   }
 
@@ -103,6 +107,7 @@ SignupButton.mapStateToProps = (state, ownProps) => ({
 
 SignupButton.actionCreators = {
   signupForEvent,
+  openSignupModal,
 };
 
 export default Rivet(SignupButton);

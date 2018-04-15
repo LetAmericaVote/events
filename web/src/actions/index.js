@@ -4,6 +4,7 @@ export * from './comment';
 export * from './events';
 export * from './hostLink';
 export * from './location';
+export * from './modal';
 export * from './routing';
 export * from './search';
 export * from './signups';

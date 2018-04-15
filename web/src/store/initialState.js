@@ -17,6 +17,11 @@ const initialState = {
     city: null,
     state: null
   },
+  modal: {
+    isOpen: false,
+    type: false,
+    props: null,
+  },
   routing: {
     pathname: '',
     history: [],
