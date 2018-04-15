@@ -21,7 +21,7 @@ const SearchInput = styled(TextInput)`
 
 const SearchBar = (props) => {
   const { queryValue, onType, setSearchMode } = props;
-  
+
   const onChange = (event) => {
     setSearchMode('query');
     onType(event.target.value);
@@ -29,9 +29,15 @@ const SearchBar = (props) => {
 
   return (
     <TextInputContainer>
-      <FlexAcross>
+      <FlexAcross fill>
         <SizedSearchIcon />
-        <SearchInput type="text" value={queryValue} onChange={onChange} placeholder="Search..." />
+        <SearchInput
+          type="text"
+          value={queryValue}
+          onChange={onChange}
+          placeholder="Search..."
+          indent 
+        />
       </FlexAcross>
     </TextInputContainer>
   );

@@ -55,7 +55,8 @@ const ModalDot = styled.div`
 
 const ModalSubmitButton = styled(CallToActionButton)`
   width: 100%;
-  border-radius: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
   text-align: center;
   ${props => props.theme.bg.primary}
   ${props => props.theme.smallPaddingVertical}
@@ -72,6 +73,8 @@ const ModalCancelButton = styled.a`
   text-decoration: underline;
   text-align: center;
 
+  cursor: pointer;
+
   ${props => props.theme.baseMarginTop}
 `;
 
@@ -85,7 +88,21 @@ const BaseModal = (props) => {
     cancelMessage,
     children,
     closeModal,
+    SubmitWrapper,
   } = props;
+
+  const SubmitButtonType = SubmitWrapper ?
+    SubmitWrapper(ModalSubmitButton) : ModalSubmitButton;
+
+  const SubmitButton = (props) => {
+    const { onClick } = props;
+
+    return (
+      <SubmitButtonType onClick={onClick ? onClick : onSubmit}>
+        {submitCopy}
+      </SubmitButtonType>
+    );
+  }
 
   return (
     <FlexDown fill>
@@ -106,7 +123,7 @@ const BaseModal = (props) => {
           <ModalSpacer>
             {children}
           </ModalSpacer>
-          <ModalSubmitButton onClick={onSubmit}>{submitCopy}</ModalSubmitButton>
+          <SubmitButton />
         </FlexDown>
       </ModalContainer>
       {cancelMessage ? (

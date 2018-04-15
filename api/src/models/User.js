@@ -82,9 +82,8 @@ UserSchema.statics.formatArrayOfUsers = async function(users, requestUser) {
 
 UserSchema.methods.getApiResponse = async function (requestingUser) {
   // TODO: Add fields for admins only?
-  // TODO: Add more fields if same user?
 
-  return {
+  const response = {
     id: this.id,
     firstName: this.firstName,
     lastName: this.lastName,
@@ -92,6 +91,13 @@ UserSchema.methods.getApiResponse = async function (requestingUser) {
     profilePhoto: this.profilePhoto,
     role: this.role,
   };
+
+  if (requestingUser.id === this.id) {
+    response.zipcode = this.zipcode;
+    response.mobile = this.mobile;
+  }
+
+  return response;
 };
 
 const User = mongoose.model('user', UserSchema);

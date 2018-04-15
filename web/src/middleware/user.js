@@ -24,8 +24,8 @@ const usersOutgoingRequest = (store, action) => {
 }
 
 const usersIncomingRequest = (store, action) => {
-  const { metaActionName } = action;
-  switch (metaActionName) {
+  const { metaAction } = action;
+  switch (metaAction) {
     case FETCH_USER_BY_ID:
     case UPDATE_AUTHENTICATED_USER: {
       const { data } = action;

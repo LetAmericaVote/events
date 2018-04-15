@@ -151,3 +151,25 @@ export const selectAuthenticatedUserRole = (state) =>
   selectUserExists(selectAuthUserId(state), state) &&
   selectIsAuthenticated(state) ?
     selectUser(selectAuthUserId(state), state).role : null;
+
+/**
+ * Select the authenticated users mobile.
+ *
+ * @param  {Object} state  Redux state
+ * @return {String|null}   null if user is false-y
+ */
+export const selectAuthenticatedUserMobile = (state) =>
+  selectUserExists(selectAuthUserId(state), state) &&
+  selectIsAuthenticated(state) ?
+    selectUser(selectAuthUserId(state), state).mobile : null;
+
+/**
+ * Select the authenticated users zipcide.
+ *
+ * @param  {Object} state  Redux state
+ * @return {String|null}   null if user is false-y
+ */
+export const selectAuthenticatedUserZipcode = (state) =>
+  selectUserExists(selectAuthUserId(state), state) &&
+  selectIsAuthenticated(state) ?
+    selectUser(selectAuthUserId(state), state).zipcode : null;

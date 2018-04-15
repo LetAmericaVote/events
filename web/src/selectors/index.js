@@ -1,6 +1,7 @@
 export * from './api';
 export * from './auth';
 export * from './events';
+export * from './forms';
 export * from './hostLink';
 export * from './location';
 export * from './modal';

@@ -10,6 +10,9 @@ const initialState = {
   events: {
     items: {},
   },
+  forms: {
+    items: {},
+  },
   hostLink: null,
   location: {
     lon: null,
