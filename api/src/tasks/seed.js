@@ -1,4 +1,7 @@
 const faker = require('faker');
+const randomEmoji = require('random-emoji');
+const superagent = require('superagent');
+const addresses = require('rrad/addresses-us-all.json').addresses
 const User = require('../models/User');
 const Event = require('../models/Event');
 const Signup = require('../models/Signup');
@@ -6,20 +9,13 @@ const Comment = require('../models/Comment');
 const common = require('../lib/common');
 const { USER_ROLE, ADMIN_ROLE } = require('../lib/roles');
 
-const PROFILE_PHOTO = 'https://collaborativecbt.com/wp-content/uploads/2016/12/default-avatar.png';
-const EVENT_PHOTOS = [
-  'https://antongorlin.com/wp-content/uploads/2018/04/fig-tree-fog-1920.jpg',
-  'https://i.redd.it/dzmrwnhvuyq01.jpg',
-  'https://i.redd.it/lxpqa7tvprq01.jpg',
-  'https://i.redd.it/hzenut8udvq01.jpg',
-];
-
-const USER_GOAL = 200;
-const EVENTS_GOAL = 10;
-const SIGNUPS_GOAL = 100;
-const COMMENTS_GOAL = 150;
+// Let's start with smaller values and test this slowly...
+const USER_GOAL = 4000;
+const EVENTS_GOAL = 50;
+const SIGNUPS_GOAL = 2000;
+const COMMENTS_GOAL = 2000;
 const COMMENT_REPLY_MIN = 0;
-const COMMENT_REPLY_MAX = 100;
+const COMMENT_REPLY_MAX = 25;
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -32,16 +28,23 @@ async function generateUser(count) {
 
   console.log(`Generating user ${count} of ${USER_GOAL}...`);
 
+  const role = Math.random() > 0.95 ? ADMIN_ROLE : USER_ROLE;
+  const isBanned = role === USER_ROLE ? Math.random() >= 0.95 : false;
+  const randomAddress = addresses[Math.floor(Math.random() * addresses.length)];
+
+  const zipcode = (('' + randomAddress.postalCode).length === 4 ? '0' : '') + randomAddress.postalCode;
+
   try {
     const user = new User({
       email: faker.internet.email(),
       firstName: faker.name.firstName(),
       lastName: faker.name.lastName(),
-      zipcode: faker.address.zipCode(),
-      profilePhoto: PROFILE_PHOTO,
+      zipcode,
+      profilePhoto: faker.image.avatar(),
       mobile: faker.phone.phoneNumber(),
       mobileCommonsProfileId: 'seed',
-      role: Math.random() > 0.8 ? ADMIN_ROLE : USER_ROLE,
+      role,
+      isBanned,
     });
 
     await user.save();
@@ -49,7 +52,7 @@ async function generateUser(count) {
     return generateUser(count + 1);
   } catch(error) {
     console.error(error);
-    return;
+    return generateUser(count + 1);
   }
 }
 
@@ -66,32 +69,40 @@ async function generateEvent(count) {
     const day = 1000 * 60 * 60 * 24;
     const dateTime = Date.now() + (getRandomInt(-15, 15) * day);
 
-    const headerPhoto = EVENT_PHOTOS[getRandomInt(0, EVENT_PHOTOS.length - 1)];
+    const { redirects } = await superagent('https://source.unsplash.com/1600x900/?house,mansion');
+    const headerPhoto = redirects[0];
 
     const totalUsers = await User.count();
     const hostUser = await User.findOne().skip(getRandomInt(0, totalUsers - 1));
 
+    const randomAddress = addresses[Math.floor(Math.random() * addresses.length)];
+
+    const zipcode = (('' + randomAddress.postalCode).length === 4 ? '0' : '') + randomAddress.postalCode;
+
     const event = new Event({
       title,
-      contentfulId: faker.random.uuid(),
       slug: faker.helpers.slugify(title),
       description: faker.lorem.paragraphs(getRandomInt(1, 3)),
       headerPhoto,
       dateTime,
-      streetAddress: faker.address.streetAddress(),
-      city: faker.address.city(),
-      state: faker.address.state(),
-      zipcode: faker.address.zipCode('#####'),
       hostUser,
-      geoLocation: [faker.address.longitude(), faker.address.latitude()],
+      streetAddress: `${randomAddress.address1} ${randomAddress.address2}`,
+      city: randomAddress.city,
+      state: randomAddress.state,
+      zipcode,
+      geoLocation: [
+        randomAddress.coordinates.lng,
+        randomAddress.coordinates.lat,
+      ],
     });
 
     await event.save();
+    await event.syncToContentful();
 
     return generateEvent(count + 1);
   } catch(error) {
     console.error(error);
-    return;
+    return generateEvent(count + 1);
   }
 }
 
@@ -116,6 +127,7 @@ async function generateSignup(count) {
     return generateSignup(count + 1);
   } catch (error) {
     console.error(error);
+    return generateSignup(count + 1);
   }
 }
 
@@ -134,11 +146,20 @@ async function generateReply(count, host, target) {
 
     const { user } = signup;
 
+    const emojiCount = getRandomInt(0, 3);
+    const emoji = randomEmoji.random({ count: emojiCount });
+
+    const minLorem = emojiCount ? 0 : 1;
+    const lorem = faker.lorem.words(getRandomInt(minLorem, 3));
+
+    const isFlagged = Math.random() >= 0.95;
+
     const comment = new Comment({
       event,
       user,
       inReplyTo: host,
-      message: faker.lorem.sentence(getRandomInt(1, 20)),
+      message: `${lorem} ${emoji.map(emoji => emoji.character).join(' ')}`,
+      isFlagged,
     });
 
     await comment.save();
@@ -146,6 +167,7 @@ async function generateReply(count, host, target) {
     return generateReply(count + 1, host, target);
   } catch (error) {
     console.error(error);
+    return generateReply(count + 1, host, target);
   }
 }
 
@@ -163,11 +185,14 @@ async function generateComment(count) {
     const totalEvents = await Event.count();
     const event = await Event.findOne().skip(getRandomInt(0, totalEvents - 1));
 
+    const isFlagged = Math.random() >= 0.95;
+
     const comment = new Comment({
       user,
       event,
       inReplyTo: null,
       message: faker.lorem.paragraphs(getRandomInt(1, 3)),
+      isFlagged,
     });
 
     await comment.save();
@@ -177,6 +202,7 @@ async function generateComment(count) {
     return generateComment(count + 1);
   } catch (error) {
     console.error(error);
+    return generateComment(count + 1);
   }
 }
 
@@ -188,7 +214,7 @@ async function execute() {
     await generateEvent(0);
     await generateSignup(0);
     await generateComment(0);
-    process.exit();
+    // process.exit();
   } catch (error) {
     console.error(error);
   }

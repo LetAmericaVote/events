@@ -47,7 +47,9 @@ HostLinkSchema.methods.sync = async function(requestUser) {
     });
 
     const space = await client.getSpace(process.env.CONTENTFUL_SPACE);
-    const entry = await space.getEntry(contentfulId);
+    const environment = await space.getEnvironment('master');
+
+    const entry = await environment.getEntry(contentfulId);
     entry.fields.hostUser['en-US'] = requestUser;
 
     await entry.update();

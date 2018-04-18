@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
+const contentful = require('contentful-management');
 const User = require('./User');
+const Signup = require('./Signup');
 const algolia = require('../lib/algolia');
 
 const EventSchema = mongoose.Schema({
   contentfulId: {
     type: String,
-    required: true,
-    unique: true,
     index: true,
   },
   title: {
@@ -45,7 +45,7 @@ const EventSchema = mongoose.Schema({
     required: true,
   },
   zipcode: {
-    type: Number,
+    type: String,
     required: true,
   },
   hostUser: {
@@ -196,7 +196,6 @@ EventSchema.methods.getApiResponse = async function(requestUser) {
     description: this.description,
     headerPhoto: this.headerPhoto,
     dateTime: this.dateTime,
-    streetAddress: this.streetAddress,
     city: this.city,
     state: this.state,
     zipcode: this.zipcode,
@@ -212,9 +211,13 @@ EventSchema.methods.getApiResponse = async function(requestUser) {
     const hostUser = this.hostUser && this.hostUser.getApiResponse ?
       await this.hostUser.getApiResponse(requestUser) : (this.hostUser || null);
 
+    const signup = await Signup.findOne({ user: requestUser, event: this });
+    const isSignedUp = signup && signup.id;
+
     return {
       ...baseEventResponse,
       hostUser,
+      streetAddress: isSignedUp ? this.streetAddress : null,
     };
   } catch (error) {
     console.error(error);
@@ -237,6 +240,99 @@ EventSchema.methods.getAlgoliaIndex = async function() {
       lastName: hostUser.lastName,
     },
   };
+};
+
+EventSchema.methods.syncToContentful = async function() {
+  const lang = 'en-US';
+
+  if (this.contentfulId) {
+    console.error('Aborting Contentful Sync - Duplicate.');
+    return false;
+  }
+
+  try {
+    const client = contentful.createClient({
+      accessToken: process.env.CONTENTFUL_MANAGEMENT_KEY,
+    });
+
+    const space = await client.getSpace(process.env.CONTENTFUL_SPACE);
+    const environment = await space.getEnvironment('master');
+
+    const headerPhotoUpload = await environment.createAsset({
+      fields: {
+        title: {
+          [lang]: `${this.title} header photo`,
+        },
+        file: {
+          [lang]: {
+            contentType: 'image/jpeg',
+            fileName: `${this.slug}.jpeg`,
+            upload: this.headerPhoto,
+          },
+        },
+      },
+    });
+
+    const headerPhotoAsset = await headerPhotoUpload.processForLocale(lang);
+    await headerPhotoAsset.publish();
+
+    const fields = {
+      title: {
+        [lang]: this.title,
+      },
+      slug: {
+        [lang]: this.slug,
+      },
+      description: {
+        [lang]: this.description,
+      },
+      headerPhoto: {
+        [lang]: {
+          sys: {
+            id: headerPhotoAsset.sys.id,
+            linkType: "Asset",
+            type: "Link",
+          },
+        },
+      },
+      dateTime: {
+        [lang]: this.dateTime,
+      },
+      hostUser: {
+        [lang]: this.hostUser.id,
+      },
+      streetAddress: {
+        [lang]: this.streetAddress,
+      },
+      city: {
+        [lang]: this.city,
+      },
+      state: {
+        [lang]: this.state,
+      },
+      zipcode: {
+        [lang]: this.zipcode + '',
+      },
+      geoLocation: {
+        [lang]: {
+          lon: this.geoLocation[0],
+          lat: this.geoLocation[1],
+        },
+      },
+    };
+
+    const entry = await environment.createEntry('event', { fields });
+    await entry.publish();
+
+    this.contentfulId = entry.sys.id;
+
+    await this.save();
+
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
 };
 
 const Event = mongoose.model('event', EventSchema);
