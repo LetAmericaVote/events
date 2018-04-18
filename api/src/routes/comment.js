@@ -2,23 +2,33 @@ const Comment = require('../models/Comment');
 const Signup = require('../models/Signup');
 const { requiresAuth } = require('../middleware/auth');
 
+const MAX_EDITS = 5;
+const MAX_REPLY_LENGTH = 24;
+
 async function getUserComments(req, res) {
   const { requestUser } = res.locals;
-  const { start, limit, sortByRecent } = req.query;
+  const { start, limit, sortByPosted } = req.query;
+  const parsedSort = parseInt(sortByPosted);
   const parsedLimit = Math.max(parseInt(limit), 0);
+
+  if (sortByPosted && (parsedSort !== 1 || parsedSort !== 1)) {
+    return res.status(400).json({ error: true, message: 'Invalid sort direction' });
+  }
 
   const findQuery = {
     user: requestUser,
   };
 
   if (start) {
+    const symbol = parsedSort === -1 ? '$lt': '$gt';
+
     findQuery['_id'] = {
-      '$gt': start,
+      [symbol]: start,
     };
   }
 
   const limitCount = parsedLimit > 25 ? 25 : parsedLimit;
-  const sortQuery = (sortByRecent === 'true') ? { '_id': -1 } : {};
+  const sortQuery = !!parsedSort ? { '_id': parsedSort } : {};
 
   const comments = await Comment.find(findQuery)
     .populate('user event inReplyTo')
@@ -35,8 +45,13 @@ async function getUserComments(req, res) {
 async function getEventComments(req, res) {
   const { requestUser } = res.locals;
   const { eventId } = req.params;
-  const { start, limit, sortByRecent, inReplyTo } = req.query;
+  const { start, limit, sortByPosted, inReplyTo } = req.query;
+  const parsedSort = parseInt(sortByPosted);
   const parsedLimit = Math.max(parseInt(limit), 0);
+
+  if (sortByPosted && (parsedSort !== 1 || parsedSort !== 1)) {
+    return res.status(400).json({ error: true, message: 'Invalid sort direction' });
+  }
 
   const signup = await Signup.findOne({ user: requestUser, event: eventId });
   if (! signup || ! signup.id) {
@@ -48,8 +63,10 @@ async function getEventComments(req, res) {
   };
 
   if (start) {
+    const symbol = parsedSort === -1 ? '$lt': '$gt';
+
     findQuery['_id'] = {
-      '$gt': start,
+      [symbol]: start,
     };
   }
 
@@ -62,7 +79,7 @@ async function getEventComments(req, res) {
   }
 
   const limitCount = parsedLimit > 25 ? 25 : parsedLimit;
-  const sortQuery = (sortByRecent === 'true') ? { '_id': -1 } : {};
+  const sortQuery = (sortByRecent === 'true') ? { '_id': parsedSort } : {};
 
   const comments = await Comment.find(findQuery)
     .populate('user event inReplyTo')
@@ -130,6 +147,10 @@ async function postEventComment(req, res) {
       return res.status(400).json({ error: true, message: 'You can\'t reply to that comment' });
     }
 
+    if (message.length >= MAX_REPLY_LENGTH) {
+      return res.status(400).json({ error: true, message: 'Replies are capped to 24 characters' });
+    }
+
     comment.inReplyTo = comment;
   }
 
@@ -140,6 +161,90 @@ async function postEventComment(req, res) {
 
   res.json({
     comment: formattedComment,
+  });
+}
+
+async function updateEventComment(req, res) {
+  const { requestUser } = res.locals;
+  const { eventId, commentId } = req.params;
+  const { message } = req.body;
+
+  const signup = await Signup.findOne({ user: requestUser, event: eventId });
+  if (! signup || ! signup.id) {
+    return res.status(401).json({ error: true, message: 'You must be signed up for this event' });
+  }
+
+  const findQuery = {
+    _id: commentId,
+    event: eventId,
+  };
+
+  const comment = await Comment.find(findQuery)
+    .populate('user event inReplyTo');
+
+  if (! comment || ! comment.id) {
+    return res.status(404).json({ error: true, message: 'Comment not found' });
+  }
+
+  if (comment.user.id !== requestUser.id) {
+    return res.status(401).json({ error: true, message: 'You are not authorized to edit other user comments' });
+  }
+
+  if (comment.inReplyTo && message.length > MAX_REPLY_LENGTH) {
+    return res.status(400).json({ error: true, message: 'Replies are capped to 24 characters' });
+  }
+
+  if (comment.edits && comment.edits.length >= MAX_EDITS) {
+    return res.status(400).json({ error: true, message: 'Max edits reached for this comment' });
+  }
+
+  if (! comment.edits) {
+    comment.edits = [];
+  }
+
+  comment.edits.push(comment.message);
+  comment.message = message;
+
+  await comment.save();
+
+  const formattedComment = await populatedComment.getApiResponse(requestUser);
+
+  res.json({
+    comment: formattedComment,
+  });
+}
+
+async function deleteEventComment(req, res) {
+  const { requestUser } = res.locals;
+  const { eventId, commentId } = req.params;
+  const { message } = req.body;
+
+  const signup = await Signup.findOne({ user: requestUser, event: eventId });
+  if (! signup || ! signup.id) {
+    return res.status(401).json({ error: true, message: 'You must be signed up for this event' });
+  }
+
+  const findQuery = {
+    _id: commentId,
+    event: eventId,
+  };
+
+  const comment = await Comment.find(findQuery)
+    .populate('user event inReplyTo');
+
+  if (! comment || ! comment.id) {
+    return res.status(404).json({ error: true, message: 'Comment not found' });
+  }
+
+  if (comment.user.id !== requestUser.id) {
+    return res.status(401).json({ error: true, message: 'You are not authorized to edit other user comments' });
+  }
+
+  await comment.remove();
+
+  res.json({
+    ok: true,
+    deleted: commentId,
   });
 }
 
@@ -154,6 +259,18 @@ module.exports = [
     route: '/v1/comments/id/:commentId/event/:eventId',
     method: 'get',
     handler: getEventComment,
+    middleware: requiresAuth,
+  },
+  {
+    route: '/v1/comments/id/:commentId/event/:eventId',
+    method: 'put',
+    handler: updateEventComment,
+    middleware: requiresAuth,
+  },
+  {
+    route: '/v1/comments/id/:commentId/event/:eventId',
+    method: 'delete',
+    handler: deleteEventComment,
     middleware: requiresAuth,
   },
   {

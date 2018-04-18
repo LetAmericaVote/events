@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { ADMIN_ROLE } = require('../lib/common');
 
 const CommentSchema = mongoose.Schema({
   user: {
@@ -22,6 +23,16 @@ const CommentSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  isFlagged: {
+    type: Boolean,
+    default: false,
+  },
+  edits: [
+    {
+      type: String,
+      default: [],
+    }
+  ],
 }, {
   timestamps: true,
 });
@@ -38,10 +49,18 @@ CommentSchema.methods.getApiResponse = async function(requestUser) {
   const baseEventResponse = {
     id: this.id,
     message: this.message,
+    edits: this.edits,
+    isFlagged: this.isFlagged,
+    createdAt: this.createdAt,
+    updatedAt: this.updatedAt,
   };
 
+  if (this.isFlagged && requestUser.role !== ADMIN_ROLE) {
+    baseEventResponse.message = 'This comment was deleted by a moderator.';
+  }
+
   try {
-    const user = this.user && this.user.getApiResponse ?
+    const user = !this.isFlagged && this.user && this.user.getApiResponse ?
       await this.user.getApiResponse(requestUser) : (this.user || null);
 
     const event = this.event && this.event.getApiResponse ?
@@ -62,7 +81,6 @@ CommentSchema.methods.getApiResponse = async function(requestUser) {
   }
 };
 
-// TODO: we gotta change this at some point...
-const Comment = mongoose.model('post', CommentSchema);
+const Comment = mongoose.model('comment', CommentSchema);
 
 module.exports = Comment;
