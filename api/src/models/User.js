@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { USER_ROLE, ROLES_LIST } = require('../lib/roles');
+const { USER_ROLE, ADMIN_ROLE, ROLES_LIST } = require('../lib/roles');
 
 const UserSchema = mongoose.Schema({
   googleId: {
@@ -38,8 +38,9 @@ const UserSchema = mongoose.Schema({
     enum: ROLES_LIST,
     default: USER_ROLE,
   },
-  isTest: {
+  isBanned: {
     type: Boolean,
+    default: false,
   },
 }, {
   timestamps: true,
@@ -81,7 +82,12 @@ UserSchema.statics.formatArrayOfUsers = async function(users, requestUser) {
 };
 
 UserSchema.methods.getApiResponse = async function (requestingUser) {
-  // TODO: Add fields for admins only?
+  if (this.isbanned && this.role !== ADMIN_ROLE) {
+    return {
+      id: this.id,
+      isBanned: true,
+    };
+  }
 
   const response = {
     id: this.id,
@@ -90,6 +96,9 @@ UserSchema.methods.getApiResponse = async function (requestingUser) {
     fullName: this.fullName,
     profilePhoto: this.profilePhoto,
     role: this.role,
+    isBanned: this.isBanned,
+    updatedAt: this.updatedAt,
+    createdAt: this.createdAt,
   };
 
   if (requestingUser.id === this.id) {

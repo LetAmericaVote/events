@@ -42,7 +42,6 @@ async function generateUser(count) {
       mobile: faker.phone.phoneNumber(),
       mobileCommonsProfileId: 'seed',
       role: Math.random() > 0.8 ? ADMIN_ROLE : USER_ROLE,
-      isTest: true,
     });
 
     await user.save();
