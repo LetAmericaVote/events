@@ -121,7 +121,7 @@ export const SET_API_ACTION_META_PROPERTY = 'SET_API_ACTION_META_PROPERTY';
  * @param {Mixed} value Meta value
  */
 export function setApiActionMetaProperty(metaAction, space, property, value) {
-  return { type: SET_API_ACTION_META_PROPERTY, metaAction, property, value };
+  return { type: SET_API_ACTION_META_PROPERTY, metaAction, space, property, value };
 }
 
 export const SET_API_ACTION_META_ENDPOINT = 'SET_API_ACTION_META_ENDPOINT';

@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import api from './api';
 import auth from './auth';
+import comments from './comments';
 import events from './events';
 import forms from './forms';
 import hostLink from './hostLink';
@@ -14,6 +15,7 @@ import users from './users';
 const reducers = combineReducers({
   api,
   auth,
+  comments,
   events,
   forms,
   hostLink,

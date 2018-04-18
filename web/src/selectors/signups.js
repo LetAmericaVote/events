@@ -116,7 +116,8 @@ export const selectSignupsForAuthenticatedUser = (state) =>
  */
 export const selectIsAuthenticatedUserSignedUpForEvent = (eventId, state) =>
   !!selectSignupsForAuthenticatedUser(state)
-    .find(signup => signup.event === eventId);
+    .find(signup => signup.event.id === eventId ||
+      signup.event === eventId);
 
 /**
  * Select all signups for the authenticated user sorted by

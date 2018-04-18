@@ -7,6 +7,9 @@ const initialState = {
     userId: null,
     token: null,
   },
+  comments: {
+    items: {},
+  },
   events: {
     items: {},
   },

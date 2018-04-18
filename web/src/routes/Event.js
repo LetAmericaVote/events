@@ -3,6 +3,7 @@ import Byline from '../components/Byline';
 import EventTimePlace from '../components/EventTimePlace';
 import Signup from '../components/Signup';
 import EventClosed from '../components/EventClosed';
+import Community from '../components/Community';
 import Rivet from '../hoc/Rivet';
 import Section from '../blocks/Section';
 import Spacer from '../blocks/Spacer';
@@ -30,7 +31,6 @@ import {
 } from '../selectors';
 import { fetchEventBySlug } from '../actions';
 
-
 const Event = (props) => {
   const {
     eventId,
@@ -50,7 +50,7 @@ const Event = (props) => {
 
   const ActiveComponent = (() => {
     if (isSignedUp) {
-      return null;
+      return Community;
     } else if (! isEventOpen) {
       return EventClosed;
     } else {
