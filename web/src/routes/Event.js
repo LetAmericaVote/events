@@ -83,40 +83,23 @@ const Event = (props) => {
 }
 
 Event.mapStateToProps = (state, ownProps) => ({
-  eventExists: selectEventExists(ownProps.eventId, state),
-  title: selectEventTitle(ownProps.eventId, state),
-  description: selectEventDescription(ownProps.eventId, state),
-  slug: selectEventSlug(ownProps.eventId, state),
-  headerPhoto: selectEventHeaderPhoto(ownProps.eventId, state),
-  hostUserId: selectEventHostUserId(ownProps.eventId, state),
-  isSignedUp: selectIsAuthenticatedUserSignedUpForEvent(ownProps.eventId, state),
-  isEventOpen: selectEventIsOpen(ownProps.eventId, state),
-});
-
-const EventWrapper = (props) => {
-  const {
-    eventId,
-    eventSlug,
-    fetchEventBySlug,
-  } = props;
-
-  const WrappedEvent = Rivet(Event);
-
-  if (! eventId) {
-    fetchEventBySlug(eventSlug);
-  }
-
-  return (
-    <WrappedEvent {...props} />
-  );
-};
-
-EventWrapper.mapStateToProps = (state, ownProps) => ({
   eventId: selectEventIdBySlug(ownProps.eventSlug, state),
+  eventExists: selectEventExists(
+    selectEventIdBySlug(ownProps.eventSlug, state), state),
+  title: selectEventTitle(
+    selectEventIdBySlug(ownProps.eventSlug, state), state),
+  description: selectEventDescription(
+    selectEventIdBySlug(ownProps.eventSlug, state), state),
+  slug: selectEventSlug(
+    selectEventIdBySlug(ownProps.eventSlug, state), state),
+  headerPhoto: selectEventHeaderPhoto(
+    selectEventIdBySlug(ownProps.eventSlug, state), state),
+  hostUserId: selectEventHostUserId(
+    selectEventIdBySlug(ownProps.eventSlug, state), state),
+  isSignedUp: selectIsAuthenticatedUserSignedUpForEvent(
+    selectEventIdBySlug(ownProps.eventSlug, state), state),
+  isEventOpen: selectEventIsOpen(
+    selectEventIdBySlug(ownProps.eventSlug, state), state),
 });
 
-EventWrapper.actionCreators = {
-  fetchEventBySlug,
-};
-
-export default Rivet(EventWrapper);
+export default Rivet(Event);

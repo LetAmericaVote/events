@@ -18,6 +18,7 @@ import {
   selectLocationState,
   selectEventExists,
   selectSignupsForEventSortedByCreatedAt,
+  selectEventIdBySlug,
 } from '../selectors';
 
 const REQUESTED_MAP_EVENTS = 'REQUESTED_MAP_EVENTS';
@@ -63,8 +64,9 @@ const init = store => next => action => {
     store.dispatch(fetchGeoLocationFromRemote());
   }
 
-  const { eventId } = new UrlPattern(EVENT_ROUTE).match(selectRoutingPathname(store.getState()));
-  const isEventRoute = !!eventId;
+  const { eventSlug } = new UrlPattern(EVENT_ROUTE).match(selectRoutingPathname(store.getState()));
+  const isEventRoute = !!eventSlug;
+  const eventId = isEventRoute ? selectEventIdBySlug(eventSlug, store.getState()) : false;
   const hasEventData = isEventRoute ? selectEventExists(eventId, store.getState()) : false;
   const eventRouteInitKey = `${REQUESTED_EVENT_DATA}_${eventId}`;
   const hasRequestedEventData = selectInitValue(eventRouteInitKey, store.getState());
