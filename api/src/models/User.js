@@ -101,7 +101,7 @@ UserSchema.methods.getApiResponse = async function (requestingUser) {
     createdAt: this.createdAt,
   };
 
-  if (requestingUser.id === this.id) {
+  if (requestingUser && requestingUser.id === this.id) {
     response.zipcode = this.zipcode;
     response.mobile = this.mobile;
   }

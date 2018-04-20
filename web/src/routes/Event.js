@@ -29,7 +29,6 @@ import {
   selectIsAuthenticatedUserSignedUpForEvent,
   selectEventIsOpen,
 } from '../selectors';
-import { fetchEventBySlug } from '../actions';
 
 const Event = (props) => {
   const {

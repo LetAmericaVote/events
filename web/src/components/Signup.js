@@ -34,4 +34,4 @@ Signup.mapStateToProps = (state, ownProps) => ({
   signups: selectSignupsForEventSortedByCreatedAt(ownProps.eventId, state),
 });
 
-export default Rivet(SignupConnector);
+export default Rivet(Signup);
