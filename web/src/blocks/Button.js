@@ -11,6 +11,8 @@ export const CallToActionButton = styled.button`
   ${props => props.theme.tinyPaddingVertical}
   ${props => props.theme.borderRadius}
   cursor: pointer;
+
+  ${props => props.centered ? 'text-align: center;' : ''}
 `;
 
 export const SecondaryCallToAction = styled(CallToActionButton)`

@@ -1,4 +1,5 @@
-const heroFontSize = '52px';
+const heroFontSizeSmall = '56px';
+const heroFontSizeLarge = '72px';
 const largeFontSize = '32px';
 const mediumFontSize = '24px';
 const regularFontSize = '18px';
@@ -17,7 +18,8 @@ const rootTypography = `
 `;
 
 const font = {
-  heroFontSize,
+  heroFontSizeSmall,
+  heroFontSizeLarge,
   largeFontSize,
   mediumFontSize,
   regularFontSize,

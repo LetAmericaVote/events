@@ -7,3 +7,11 @@ export const ICEBREAKER_INTRO = `Let everyone know why you're going to the house
 export const CLOSED_EVENT_HEADER = `This house party has already happened!`;
 
 export const COMMUNITY_TITLE = 'House Party Community Feed';
+
+export const HOME_HERO = 'Join the party.';
+
+export const HOME_HEADER = 'Exhausted from our democracy being under constant attack?';
+
+export const HOME_SUB_1 = 'Let America Vote Supporters are hosting voting rights house parties across the country to standup for our democracy. Will you join them?';
+
+export const HOME_SUB_2 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nam libero justo laoreet sit amet cursus. Nunc scelerisque viverra mauris in. Non sodales neque sodales ut etiam sit amet.';

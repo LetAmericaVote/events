@@ -33,6 +33,16 @@ export const selectEvent = (eventId, state) =>
   }) : null;
 
 /**
+ * Select all of the events in the store as an array.
+ *
+ * @param  {Object} state Redux state
+ * @return {Array<Object>}
+ */
+export const selectEventsAsArray = (state) =>
+  Object.keys(selectEvents(state))
+    .map(eventId => selectEvent(eventId, state));
+
+/**
  * Select an event by its slug.
  *
  * @param  {String} eventSlug Event slug
@@ -40,9 +50,9 @@ export const selectEvent = (eventId, state) =>
  * @return {String|null}      Event id if found, otherwise null
  */
 export const selectEventIdBySlug = (eventSlug, state) =>
-  Object.keys(selectEvents(state)).find(eventId =>
-    selectEvent(eventId, state).slug === eventSlug
-  );
+  (selectEventsAsArray(state).find(event =>
+    event.slug === eventSlug
+  ) || {}).id || null;
 
 /**
  * Select the title of an event.
@@ -120,7 +130,7 @@ export const selectEventDistance = (eventId, state) =>
  * @return {Array<Object>} List of events
  */
 export const selectEventsSortedByDistance = (state) =>
-  Object.keys(selectEvents(state))
+  selectEventsAsArray(state)
     .filter(eventId => selectEventDistance(eventId, state) !== null)
     .map(eventId => selectEvent(eventId, state))
     .sort((eventA, eventB) => eventA.distance - eventB.distance);

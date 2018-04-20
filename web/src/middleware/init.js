@@ -7,7 +7,7 @@ import {
 import {
   setInitValue,
   fetchPaginatedEvents,
-  fetchEventById,
+  fetchEventBySlug,
   fetchPaginatedEventSignups,
   fetchGeoLocationFromRemote,
   fetchEventByGeoLocation,
@@ -18,7 +18,6 @@ import {
   selectLocationLon,
   selectLocationLat,
   selectLocationState,
-  selectEventExists,
   selectEventIdBySlug,
 } from '../selectors';
 
@@ -32,8 +31,9 @@ const REQUESTED_EVENT_SIGNUP_DATA = 'REQUESTED_EVENT_SIGNUP_DATA';
 // TODO: This could probably be optimized so the logic only runs for relevant page.
 
 const init = store => next => action => {
-  const isHomeRoute = selectRoutingPathname(store.getState()) === HOME_ROUTE ||
-    selectRoutingPathname(store.getState()) === '';
+  next(action);
+
+  const isHomeRoute = selectRoutingPathname(store.getState()) === HOME_ROUTE;
   const hasRequestedMapEvents = selectInitValue(REQUESTED_MAP_EVENTS, store.getState());
 
   if (isHomeRoute && ! hasRequestedMapEvents) {
@@ -73,18 +73,17 @@ const init = store => next => action => {
 
     return next(action);
   }
-
   const eventMatch = new UrlPattern(EVENT_ROUTE).match(selectRoutingPathname(store.getState()));
   const eventSlug = eventMatch ? eventMatch.eventSlug : false;
   const isEventRoute = !!eventSlug;
   const eventId = isEventRoute ? selectEventIdBySlug(eventSlug, store.getState()) : false;
-  const hasEventData = isEventRoute ? selectEventExists(eventId, store.getState()) : false;
-  const eventRouteInitKey = `${REQUESTED_EVENT_DATA}_${eventId}`;
+  const hasEventData = !!eventId;
+  const eventRouteInitKey = `${REQUESTED_EVENT_DATA}_${eventSlug}`;
   const hasRequestedEventData = selectInitValue(eventRouteInitKey, store.getState());
 
   if (isEventRoute && ! hasEventData && ! hasRequestedEventData) {
     next(setInitValue(eventRouteInitKey, true));
-    store.dispatch(fetchEventById(eventId));
+    store.dispatch(fetchEventBySlug(eventSlug));
 
     return next(action);
   }
@@ -92,14 +91,12 @@ const init = store => next => action => {
   const eventSignupKey = `${REQUESTED_EVENT_SIGNUP_DATA}_${eventId}`;
   const hasRequestedEventSignupData = selectInitValue(eventSignupKey, store.getState());
 
-  if (isEventRoute && ! hasRequestedEventSignupData) {
+  if (isEventRoute && hasEventData && ! hasRequestedEventSignupData) {
     next(setInitValue(eventSignupKey, true));
     store.dispatch(fetchPaginatedEventSignups(eventId, true));
 
     return next(action);
   }
-
-  return next(action);
 
   // TODO: Comment data.
 };
