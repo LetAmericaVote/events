@@ -5,6 +5,7 @@ import comments from './comments';
 import events from './events';
 import forms from './forms';
 import hostLink from './hostLink';
+import init from './init';
 import location from './location';
 import modal from './modal';
 import routing from './routing';
@@ -19,6 +20,7 @@ const reducers = combineReducers({
   events,
   forms,
   hostLink,
+  init,
   location,
   modal,
   routing,

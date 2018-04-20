@@ -17,6 +17,7 @@ const initialState = {
     items: {},
   },
   hostLink: null,
+  init: {},
   location: {
     lon: null,
     lat: null,

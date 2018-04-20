@@ -26,6 +26,8 @@ const Community = (props) => {
     topLevelComments,
   } = props;
 
+  // fetchPaginatedEventComments(eventId, true, null);
+
   return (
     <FlexDown>
       <Header>{COMMUNITY_TITLE}</Header>
@@ -43,38 +45,8 @@ Community.mapStateToProps = (state, ownProps) => ({
   topLevelComments: selectTopLevelCommentsForEventSortedByRecent(ownProps.eventId, state),
 });
 
-class CommunityConnector extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.loadMoreComments = this.loadMoreComments.bind(this);
-  }
-
-  loadMoreComments() {
-    const { eventId, fetchPaginatedEventComments } = this.props;
-
-    fetchPaginatedEventComments(eventId, true, null);
-  }
-
-  componentDidMount() {
-    this.loadMoreComments();
-  }
-
-  render() {
-    const ConnectedCommunity = Rivet(Community);
-    const props = {
-      ...this.props,
-      loadMoreComments: this.loadMoreComments,
-    };
-
-    return (
-      <ConnectedCommunity {...props} />
-    );
-  }
-}
-
-CommunityConnector.actionCreators = {
+Community.actionCreators = {
   fetchPaginatedEventComments,
 };
 
-export default Rivet(CommunityConnector);
+export default Rivet(Community);

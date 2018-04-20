@@ -4,6 +4,7 @@ export * from './comment';
 export * from './events';
 export * from './forms';
 export * from './hostLink';
+export * from './init';
 export * from './location';
 export * from './modal';
 export * from './routing';

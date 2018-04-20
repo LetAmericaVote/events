@@ -8,9 +8,6 @@ import { FlexAcrossJustifyCenter } from '../blocks/Flex';
 import {
   selectSignupsForEventSortedByCreatedAt,
 } from '../selectors';
-import {
-  fetchPaginatedEventSignups,
-} from '../actions';
 
 const Signup = (props) => {
   const {
@@ -36,41 +33,5 @@ const Signup = (props) => {
 Signup.mapStateToProps = (state, ownProps) => ({
   signups: selectSignupsForEventSortedByCreatedAt(ownProps.eventId, state),
 });
-
-class SignupConnector extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.fetchSignups = this.fetchSignups.bind(this);
-  }
-
-  fetchSignups() {
-    this.props.fetchPaginatedEventSignups(this.props.eventId, true);
-  }
-
-  componentDidMount() {
-    if (!!this.props.eventId) {
-      this.fetchSignups();
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (!!this.eventId && !prevProps.eventId) {
-      this.fetchSignups();
-    }
-  }
-
-  render() {
-    const WrappedSignup = Rivet(Signup);
-
-    return (
-      <WrappedSignup {...this.props} />
-    )
-  }
-}
-
-SignupConnector.actionCreators = {
-  fetchPaginatedEventSignups,
-};
 
 export default Rivet(SignupConnector);
