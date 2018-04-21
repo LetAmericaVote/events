@@ -15,6 +15,7 @@ import {
   selectEventState,
   selectEventZipcode,
   selectEventDateTime,
+  selectEventStreetAddress,
 } from '../selectors';
 
 const DetailEnd = styled(Detail)`
@@ -27,6 +28,7 @@ const EventTimePlace = (props) => {
     state,
     zipcode,
     dateTime,
+    streetAddress,
   } = props;
 
   const formattedTime = dateTime ? (
@@ -47,13 +49,14 @@ const EventTimePlace = (props) => {
       </FlexAcross>
       <FlexAcross>
         <HouseIcon />
-        <DetailEnd indent>{city}, {state} {zipcode}</DetailEnd>
+        <DetailEnd indent>{streetAddress} {city}, {state} {zipcode}</DetailEnd>
       </FlexAcross>
     </FlexDown>
   );
 };
 
 EventTimePlace.mapStateToProps = (state, ownProps) => ({
+  streetAddress: selectEventStreetAddress(ownProps.eventId, state),
   city: selectEventCity(ownProps.eventId, state),
   state: selectEventState(ownProps.eventId, state),
   zipcode: selectEventZipcode(ownProps.eventId, state),
