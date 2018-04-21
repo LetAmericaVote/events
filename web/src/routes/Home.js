@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import Rivet from '../hoc/Rivet';
 import Section from '../blocks/Section';
+import Punch from '../blocks/Punch';
+import SignupButton from '../components/SignupButton';
 import EventMap from '../components/EventMap';
 import SearchBar from '../components/SearchBar';
 import SearchResult from '../components/SearchResult';
@@ -28,6 +30,7 @@ import {
   InvertedSectionHeader,
   InvertedStyledAnchor,
   InvertedDetail,
+  InvertedParagraph,
 } from '../blocks/Type';
 import {
   FlexDown,
@@ -49,6 +52,10 @@ import {
   HOME_STRAT,
   HOME_EVENT_HEADER,
   QUOTE_SOURCE_AKA_PUTINS_ASSET,
+  HOME_COMMUNITY_HERO,
+  HOME_COMMUNITY_HERO_BOLD,
+  HOME_COMMUNITY_SIGNUP_HEADER,
+  HOME_COMMUNITY_SIGNUP_COPY,
 } from '../copy';
 
 const SearchBarContainer = styled.div`
@@ -170,17 +177,28 @@ const Home = (props) => {
       </QuoteContainer>
       <Spacer />
       <Section>
-        <FlexResponsiveRow>
-          <FlexResponsiveHalfColumn>
-            <FlexDown>
-              <Hero>This is not just about resisting.</Hero>
-              <HeroBold>This is about building a community.</HeroBold>
-            </FlexDown>
-          </FlexResponsiveHalfColumn>
-          <FlexResponsiveHalfColumn>
-            <CommunityScroll />
-          </FlexResponsiveHalfColumn>
-        </FlexResponsiveRow>
+        <FlexDown>
+          <FlexResponsiveRow>
+            <FlexResponsiveHalfColumn>
+              <FlexDown>
+                <Hero>{HOME_COMMUNITY_HERO}</Hero>
+                <HeroBold>{HOME_COMMUNITY_HERO_BOLD}</HeroBold>
+              </FlexDown>
+            </FlexResponsiveHalfColumn>
+            <FlexResponsiveHalfColumn>
+              <CommunityScroll />
+            </FlexResponsiveHalfColumn>
+          </FlexResponsiveRow>
+          <Spacer medium />
+          <Punch>
+            <InvertedSectionHeader centered>{HOME_COMMUNITY_SIGNUP_HEADER}</InvertedSectionHeader>
+            <InvertedParagraph>{HOME_COMMUNITY_SIGNUP_COPY[0]}</InvertedParagraph>
+            <InvertedParagraph>{HOME_COMMUNITY_SIGNUP_COPY[1]}</InvertedParagraph>
+            <FlexAcrossJustifyCenter>
+              <SignupButton />
+            </FlexAcrossJustifyCenter>
+          </Punch>
+        </FlexDown>
       </Section>
     </FlexDown>
   );

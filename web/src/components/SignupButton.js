@@ -28,7 +28,7 @@ class SignupButton extends React.Component {
     const triggger = ! prevState.hasClicked || ! prevProps.isAuthenticated;
     const condition = this.state.hasClicked && this.props.isAuthenticated;
 
-    if (triggger && condition) {
+    if (triggger && condition && this.props.eventId) {
       this.props.signupForEvent(this.props.eventId);
       this.props.openSignupModal(this.props.eventId);
     }

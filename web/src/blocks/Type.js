@@ -104,7 +104,7 @@ export const Paragraph = styled.p`
   ${props => props.theme.baseMarginBottom}
 `;
 
-export const InvertedParagraph = styled(SectionHeader)`
+export const InvertedParagraph = styled(Paragraph)`
   ${props => props.theme.fg.paper}
 `;
 

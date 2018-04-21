@@ -38,3 +38,14 @@ export const HOME_STRAT = [
 ];
 
 export const HOME_EVENT_HEADER = 'Join an upcoming voting rights house party and make sure that politicians who want to make it harder to vote don\'t get reelected.';
+
+export const HOME_COMMUNITY_HERO = 'This is not just about resisting.';
+
+export const HOME_COMMUNITY_HERO_BOLD = 'This is about building a community to protect voting rights.';
+
+export const HOME_COMMUNITY_SIGNUP_HEADER = 'Signup now to get access to the Let America Vote online community';
+
+export const HOME_COMMUNITY_SIGNUP_COPY = [
+  'Join our digital space where you can chat with other activists, share something interested you read, and get regular updates from the Let America Vote team.',
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tincidunt eget nullam non nisi est sit amet facilisis magna.',
+];

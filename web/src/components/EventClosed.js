@@ -13,9 +13,7 @@ import {
 const EventClosed = (props) => {
   return (
     <Punch>
-      <InvertedSectionHeader>
-        {CLOSED_EVENT_HEADER}
-      </InvertedSectionHeader>
+      <InvertedSectionHeader centered>{CLOSED_EVENT_HEADER}</InvertedSectionHeader>
       <FlexAcrossJustifyCenter>
         <InternalLink to={SEARCH_ROUTE}>
           <SecondaryCallToAction>Find A House Party</SecondaryCallToAction>
