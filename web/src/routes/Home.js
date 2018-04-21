@@ -26,7 +26,10 @@ import {
 } from '../blocks/Flex';
 import {
   HOME_HERO,
-  HOME_HEADER,
+  HOME_HERO_2,
+  HOME_DESCRIPTION,
+  HOME_CALL_TO_ACTION,
+  HOME_SUB_HEADER,
   HOME_SUB_1,
   HOME_SUB_2,
 } from '../copy';
@@ -49,15 +52,15 @@ const Home = (props) => {
   return (
       <Section>
         <FlexDown>
-          <Hero>Are you tired of <HeroHighlight>Republicans</HeroHighlight> taking away your <HeroHighlight>right to vote?</HeroHighlight></Hero>
-          <HeroBold>Join the party.</HeroBold>
-          <Paragraph centered>Find a voting rights house party near you and stand up for voting rights.</Paragraph>
+          <Hero>{HOME_HERO[0]}<HeroHighlight>{HOME_HERO[1]}</HeroHighlight>{HOME_HERO[2]}<HeroHighlight>{HOME_HERO[3]}</HeroHighlight></Hero>
+          <HeroBold>{HOME_HERO_2}</HeroBold>
+          <Paragraph centered>{HOME_DESCRIPTION}</Paragraph>
           <FlexResponsiveRow>
             <SearchBarContainer>
               <SearchBar />
             </SearchBarContainer>
             <InternalLink to={SEARCH_ROUTE}>
-              <CallToActionButton centered>Search For House Party</CallToActionButton>
+              <CallToActionButton centered>{HOME_CALL_TO_ACTION}</CallToActionButton>
             </InternalLink>
           </FlexResponsiveRow>
           <Spacer large />
@@ -65,7 +68,7 @@ const Home = (props) => {
           <FlexResponsiveRow>
             <FlexResponsiveHalfColumn>
               <FlexDown>
-                <SectionHeader>We're throwing parties across the nation</SectionHeader>
+                <SectionHeader>{HOME_SUB_HEADER}</SectionHeader>
                 <Paragraph>{HOME_SUB_1}</Paragraph>
                 <Paragraph>{HOME_SUB_2}</Paragraph>
               </FlexDown>
