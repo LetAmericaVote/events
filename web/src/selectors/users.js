@@ -32,6 +32,16 @@ export const selectUser = (userId, state) =>
   selectUsers(state)[userId] || null;
 
 /**
+ * Select the users in the store as an array.
+ *
+ * @param  {Object} state Redux state
+ * @return {Array<Object>} Array of users
+ */
+export const selectUsersAsArray = (state) =>
+  Object.keys(selectUsers(state))
+    .map(userId => selectUser(userId, state));
+
+/**
  * Select the users first name.
  *
  * @param  {String} userId User id

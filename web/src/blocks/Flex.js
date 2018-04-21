@@ -112,5 +112,7 @@ export const FlexResponsiveRow = styled.div`
   ${props => props.theme.tablet`
     flex-direction: row;
     justify-content: space-between;
+
+    ${props => props.wrap ? 'flex-wrap: wrap;' : ''}
   `}
 `;

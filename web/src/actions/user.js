@@ -9,6 +9,24 @@ export function fetchUserById(userId) {
   return { type: FETCH_USER_BY_ID, userId };
 }
 
+export const FETCH_PAGINATED_USERS = 'FETCH_USERS';
+
+/**
+ * Fetch an array of paginated users.
+ */
+export function fetchPaginatedUsers() {
+  return { type: FETCH_PAGINATED_USERS };
+}
+
+export const FETCH_RANDOM_USERS = 'FETCH_RANDOM_USERS';
+
+/**
+ * Fetch a random assortment of users.
+ */
+export function fetchRandomUsers() {
+  return { type: FETCH_RANDOM_USERS };
+}
+
 export const UPDATE_AUTHENTICATED_USER = 'UPDATE_AUTHENTICATED_USER';
 
 /**

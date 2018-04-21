@@ -2,20 +2,65 @@ import {
   API_REQUEST_SUCCEEDED,
   FETCH_USER_BY_ID,
   UPDATE_AUTHENTICATED_USER,
+  FETCH_PAGINATED_USERS,
+  FETCH_RANDOM_USERS,
   storeUser,
+  storeUsers,
   getFromApi,
   postToApi,
+  setApiActionMetaProperty,
 } from '../actions';
+import {
+  selectApiMetaCustomProperty,
+  selectAuthUserId,
+} from '../selectors';
+
+const META_USER_START = 'userStart';
 
 const usersOutgoingRequest = (store, action) => {
   switch (action.type) {
+    case FETCH_PAGINATED_USERS: {
+      const userId = selectAuthUserId(store.getState());
+      const spaceName = `userId=${userId}`;
+
+      const start = selectApiMetaCustomProperty(
+        FETCH_PAGINATED_USERS,
+        spaceName,
+        META_USER_START,
+        store.getState()
+      );
+
+      const query = {};
+
+      if (start) {
+        query.start = start;
+      }
+
+      const endpoint = '/v1/users';
+      store.dispatch(getFromApi(
+        FETCH_PAGINATED_USERS, spaceName, endpoint, query,
+      ));
+      break;
+    }
+
+    case FETCH_RANDOM_USERS: {
+      store.dispatch(getFromApi(
+        FETCH_RANDOM_USERS, 'random', `/v1/users/random`,
+      ));
+      break;
+    }
+
     case FETCH_USER_BY_ID: {
-      store.dispatch(getFromApi(FETCH_USER_BY_ID, 'id', `/v1/users/id/${action.userId}`));
+      store.dispatch(getFromApi(
+        FETCH_USER_BY_ID, action.userId, `/v1/users/id/${action.userId}`,
+      ));
       break;
     }
 
     case UPDATE_AUTHENTICATED_USER: {
-      store.dispatch(postToApi(UPDATE_AUTHENTICATED_USER, 'update', '/v1/users', action.fields));
+      store.dispatch(postToApi(
+        UPDATE_AUTHENTICATED_USER, 'update', '/v1/users', action.fields,
+      ));
       break;
     }
 
@@ -24,7 +69,8 @@ const usersOutgoingRequest = (store, action) => {
 }
 
 const usersIncomingRequest = (store, action) => {
-  const { metaAction } = action;
+  const { metaAction, space } = action;
+
   switch (metaAction) {
     case FETCH_USER_BY_ID:
     case UPDATE_AUTHENTICATED_USER: {
@@ -37,6 +83,27 @@ const usersIncomingRequest = (store, action) => {
 
       store.dispatch(storeUser(user));
 
+      break;
+    }
+
+    case FETCH_RANDOM_USERS:
+    case FETCH_PAGINATED_USERS: {
+      const { data } = action;
+      const { users } = data;
+
+      if (! users || ! users.length) {
+        break;
+      }
+
+      if (metaAction === FETCH_PAGINATED_USERS) {
+        const lastUser = users[users.length - 1];
+
+        store.dispatch(setApiActionMetaProperty(
+          FETCH_PAGINATED_USERS, space, META_USER_START, lastUser.id,
+        ));
+      }
+
+      store.dispatch(storeUsers(users));
       break;
     }
 

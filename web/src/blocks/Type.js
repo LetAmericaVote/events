@@ -5,7 +5,7 @@ export const Hero = styled.h1`
 
   ${props => props.theme.fg.night}
 
-  text-align: center;
+  ${props => props.centered ? 'text-align: center;' : 'text-align: left;'}
 
   font-family: ${props => props.theme.thinFontFamily};
   font-size: ${props => props.theme.heroFontSizeSmall};
@@ -70,6 +70,25 @@ export const Header = styled.h1`
 export const UnstyledAnchor = styled.a`
   ${props => props.theme.reset}
   cursor: pointer;
+`;
+
+export const StyledAnchor = styled.a`
+  ${props => props.theme.reset}
+
+  ${props => props.theme.fg.night}
+
+  font-family: ${props => props.theme.regularFontFamily};
+  font-size: ${props => props.theme.regularFontSize};
+
+  text-decoration: underline;
+
+  ${props => props.theme.baseMarginBottom}
+
+  cursor: pointer;
+`;
+
+export const InvertedStyledAnchor = styled(StyledAnchor)`
+  ${props => props.theme.fg.paper}
 `;
 
 export const Paragraph = styled.p`

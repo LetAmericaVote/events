@@ -11,6 +11,7 @@ import {
   fetchPaginatedEventSignups,
   fetchGeoLocationFromRemote,
   fetchEventByGeoLocation,
+  fetchRandomUsers,
 } from '../actions';
 import {
   selectInitValue,
@@ -19,6 +20,7 @@ import {
   selectLocationLat,
   selectLocationState,
   selectEventIdBySlug,
+  selectUsersAsArray,
 } from '../selectors';
 
 const REQUESTED_MAP_EVENTS = 'REQUESTED_MAP_EVENTS';
@@ -27,6 +29,7 @@ const REQUESTED_NEARBY_EVENTS = 'REQUESTED_NEARBY_EVENTS';
 const REQUESTED_LOCATION_STATE = 'REQUESTED_LOCATION_STATE';
 const REQUESTED_EVENT_DATA = 'REQUESTED_EVENT_DATA';
 const REQUESTED_EVENT_SIGNUP_DATA = 'REQUESTED_EVENT_SIGNUP_DATA';
+const REQUESTED_USER_GALLERY = 'REQUESTED_USER_GALLERY';
 
 // TODO: This could probably be optimized so the logic only runs for relevant page.
 
@@ -73,6 +76,18 @@ const init = store => next => action => {
 
     return next(action);
   }
+
+  const hasRequestedUserGallery = selectInitValue(REQUESTED_USER_GALLERY, store.getState());
+  const totalUsersInStore = selectUsersAsArray(store.getState());
+
+  // TODO: Can we randomize this?
+  if (isHomeRoute && totalUsersInStore < 25 && ! hasRequestedUserGallery) {
+    next(setInitValue(REQUESTED_USER_GALLERY, true));
+    store.dispatch(fetchRandomUsers());
+
+    return next(action);
+  }
+
   const eventMatch = new UrlPattern(EVENT_ROUTE).match(selectRoutingPathname(store.getState()));
   const eventSlug = eventMatch ? eventMatch.eventSlug : false;
   const isEventRoute = !!eventSlug;

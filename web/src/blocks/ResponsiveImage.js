@@ -7,6 +7,7 @@ export const Image = styled.div`
   padding-top: 100%;
 
   background-size: cover;
+  background-position: center;
   background-image: url(${props => props.src});
 `;
 

@@ -16,6 +16,19 @@ const getUsers = async (req, res) => {
   res.json({ users: formattedUsers });
 };
 
+const getRandomUsers = async (req, res) => {
+  const { requestUser } = res.locals;
+
+  const users = await User.aggregate([
+    { '$sample': { size: 50 } }
+  ]);
+
+  const hydratedUsers = users.map(user => User.hydrate(user));
+  const formattedUsers = await User.formatArrayOfUsers(hydratedUsers, requestUser);
+
+  res.json({ users: formattedUsers });
+};
+
 const getUserById = async (req, res) => {
   const { requestUser } = res.locals;
   const { userId } = req.params;
@@ -84,6 +97,12 @@ module.exports = [
     route: '/v1/users',
     method: 'get',
     handler: getUsers,
+    middleware: loadUser,
+  },
+  {
+    route: '/v1/users/random',
+    method: 'get',
+    handler: getRandomUsers,
     middleware: loadUser,
   },
   {

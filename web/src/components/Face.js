@@ -49,6 +49,7 @@ Face.mapStateToProps = (state, ownProps) => ({
   profilePhoto: selectUserProfilePhoto(ownProps.userId, state),
 });
 
+// TODO: Move this to init.js middleware
 class FaceConnector extends React.Component {
   constructor(props) {
     super(props);

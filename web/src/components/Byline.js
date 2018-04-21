@@ -27,10 +27,6 @@ const ProfilePhoto = styled.div`
   ${props => props.theme.defaultBorderStyle}
 `;
 
-const Tagline = styled(Detail)`
-  ${props => props.theme.extraTinyMarginTop}
-`;
-
 const Byline = (props) => {
   const {
     exists,
@@ -49,7 +45,7 @@ const Byline = (props) => {
       <ProfilePhoto src={profilePhoto} />
       <FlexDown>
         <Detail enlarge boldend>{fullName}</Detail>
-        {tagline ? <Tagline>{tagline}</Tagline> : null}
+        {tagline ? <Detail>{tagline}</Detail> : null}
       </FlexDown>
     </FlexAcross>
   );

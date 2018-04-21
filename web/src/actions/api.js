@@ -63,6 +63,7 @@ export function initiateApiRequest(metaAction, space, endpoint, options = {}) {
  * @param  {String} metaAction Action name
  * @param  {String} space Space name
  * @param  {String} path Resource to fetch from the API.
+ * @param  {Object} query key:value pairs to transform into a query string
  */
 export function getFromApi(metaAction, space, path, query) {
   const queryString = query ? `?${qs.stringify(query)}` : '';

@@ -157,6 +157,7 @@ const signupIncomingRequest = (store, action) => {
       const lastSignup = processedData.signups[processedData.signups.length - 1];
 
       if (metaAction === FETCH_PAGINAED_EVENT_SIGNUPS) {
+        // TODO: Shouldn't these be based on user.id ??
         store.dispatch(setApiActionMetaProperty(
           FETCH_PAGINAED_EVENT_SIGNUPS, space, META_EVENT_START, lastSignup.user,
         ));

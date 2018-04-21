@@ -99,6 +99,20 @@ export const selectEventDateTime = (eventId, state) =>
     selectEvent(eventId, state).dateTime : null;
 
 /**
+ * Select a list of events sorted by date time.
+ * Excludes event that don't have a date time property or
+ * have already passed.
+ *
+ * @param  {Object} state Redux state
+ * @return {Array<Object>} List of events
+ */
+export const selectEventsSortedByDatetime = (state) =>
+  selectEventsAsArray(state)
+    .filter(event => selectEventDateTime(event.id, state) !== null &&
+      new Date(selectEventDateTime(event.id, state)).getTime() > Date.now())
+    .sort((eventA, eventB) => eventA.dateTime - eventB.dateTime);
+
+/**
  * Select if the given event is open for signups.
  *
  * @param  {String} eventId Event id
@@ -131,8 +145,7 @@ export const selectEventDistance = (eventId, state) =>
  */
 export const selectEventsSortedByDistance = (state) =>
   selectEventsAsArray(state)
-    .filter(eventId => selectEventDistance(eventId, state) !== null)
-    .map(eventId => selectEvent(eventId, state))
+    .filter(event => selectEventDistance(event.id, state) !== null)
     .sort((eventA, eventB) => eventA.distance - eventB.distance);
 
 /**
