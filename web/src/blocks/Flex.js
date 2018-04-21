@@ -26,6 +26,11 @@ export const FlexAcrossJustifyCenter = styled(FlexAcross)`
   justify-content: center;
 `;
 
+export const FlexAcrossCenter = styled(FlexAcross)`
+  align-items: center;
+  justify-content: center;
+`;
+
 export const FlexDown = styled.div`
   ${props => props.theme.reset}
 
@@ -37,6 +42,11 @@ export const FlexDown = styled.div`
 `;
 
 export const FlexDownJustifyCenter = styled(FlexDown)`
+  justify-content: center;
+`;
+
+export const FlexDownCenter = styled(FlexDown)`
+  align-items: center;
   justify-content: center;
 `;
 

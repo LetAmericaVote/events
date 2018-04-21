@@ -18,6 +18,10 @@ export const Hero = styled.h1`
   `}
 `;
 
+export const HeroInverted = styled(Hero)`
+  ${props => props.theme.fg.paper}
+`;
+
 export const HeroHighlight = styled.span`
   ${props => props.theme.reset}
 
@@ -42,6 +46,8 @@ export const SectionHeader = styled.h1`
   font-family: ${props => props.theme.regularFontFamily};
   font-size: ${props => props.theme.largeFontSize};
   font-weight: 900;
+
+  ${props => props.centered ? 'text-align: center;' : ''}
 
   ${props => props.theme.baseMarginBottom}
 `;

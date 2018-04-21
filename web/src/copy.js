@@ -26,3 +26,13 @@ export const HOME_SUB_1 = 'Let America Vote Supporters are hosting voting rights
 export const HOME_SUB_2 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nam libero justo laoreet sit amet cursus. Nunc scelerisque viverra mauris in. Non sodales neque sodales ut etiam sit amet.';
 
 export const HOME_CALL_TO_ACTION = 'Search For House Party';
+
+export const HOME_QUOTE = '"In addition to winning the Electoral College in a landslide, I won the popular vote if you deduct the millions of people who voted illegally"';
+
+export const HOME_STRAT = [
+  'Step one in ',
+  'Trumps reelection strategy ',
+  'is to lie about our elections.',
+];
+
+export const HOME_EVENT_HEADER = 'Join an upcoming voting rights house party and make sure that politicians who want to make it harder to vote don\'t get reelected.';
