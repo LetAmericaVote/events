@@ -119,3 +119,7 @@ export const Detail = styled.span`
   font-size: ${props => props.enlarge ? props.theme.regularFontSize : props.theme.smallFontSize};
   font-weight: ${props => props.boldend ? 900 : 100};
 `;
+
+export const InvertedDetail = styled(Detail)`
+  ${props => props.theme.fg.paper}
+`;

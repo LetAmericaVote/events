@@ -41,19 +41,27 @@ class EventMap extends React.Component {
       width: calculateWidth(),
       dimensions: null,
     };
+
+    this.listener = this.listener.bind(this);
   }
 
   // @SEE: https://medium.freecodecamp.org/what-i-learned-from-reading-defer-render-hoc-8c2e9dc2b07a
   componentDidMount() {
-    window.addEventListener('resize', () => {
-      this.setState({ width: calculateWidth() });
-    });
+    window.addEventListener('resize', this.listener);
 
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         this.setState({ deferRender: false });
       });
     });
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.listener);
+  }
+
+  listener() {
+    this.setState({ width: calculateWidth() });
   }
 
   render() {
@@ -114,7 +122,7 @@ class EventMap extends React.Component {
                 if (! event.geoLocation || event.geoLocation[0] === undefined) {
                   return null;
                 }
-                
+
                 const marker = {
                   coordinates: event.geoLocation,
                   name: event.title,

@@ -27,6 +27,7 @@ import {
   Paragraph,
   InvertedSectionHeader,
   InvertedStyledAnchor,
+  InvertedDetail,
 } from '../blocks/Type';
 import {
   FlexDown,
@@ -47,6 +48,7 @@ import {
   HOME_QUOTE,
   HOME_STRAT,
   HOME_EVENT_HEADER,
+  QUOTE_SOURCE_AKA_PUTINS_ASSET,
 } from '../copy';
 
 const SearchBarContainer = styled.div`
@@ -146,6 +148,7 @@ const Home = (props) => {
           <FlexDownCenter>
             <Spacer />
             <Quote centered>{HOME_QUOTE}</Quote>
+            <InvertedDetail>{QUOTE_SOURCE_AKA_PUTINS_ASSET}</InvertedDetail>
             <Spacer />
             <HeroInverted centered>{HOME_STRAT[0]}<HeroHighlight>{HOME_STRAT[1]}</HeroHighlight>{HOME_STRAT[2]}</HeroInverted>
           </FlexDownCenter>
@@ -165,6 +168,7 @@ const Home = (props) => {
           </FlexDown>
         </Section>
       </QuoteContainer>
+      <Spacer />
       <Section>
         <FlexResponsiveRow>
           <FlexResponsiveHalfColumn>

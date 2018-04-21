@@ -29,6 +29,8 @@ export const HOME_CALL_TO_ACTION = 'Search For House Party';
 
 export const HOME_QUOTE = '"In addition to winning the Electoral College in a landslide, I won the popular vote if you deduct the millions of people who voted illegally"';
 
+export const QUOTE_SOURCE_AKA_PUTINS_ASSET = '-Donald Trump, Nov. 2016';
+
 export const HOME_STRAT = [
   'Step one in ',
   'Trumps reelection strategy ',

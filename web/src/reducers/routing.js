@@ -6,7 +6,7 @@ import {
 const setPathName = (state, { pathname }) => ({
   ...state,
   pathname,
-  history: !!state.pathname ? [
+  history: !!state.pathname && state.pathname !== pathname ? [
     state.pathname,
     ...state.history
   ] : [

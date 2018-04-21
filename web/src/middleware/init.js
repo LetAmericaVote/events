@@ -80,7 +80,6 @@ const init = store => next => action => {
   const hasRequestedUserGallery = selectInitValue(REQUESTED_USER_GALLERY, store.getState());
   const totalUsersInStore = selectUsersAsArray(store.getState());
 
-  // TODO: Can we randomize this?
   if (isHomeRoute && totalUsersInStore < 25 && ! hasRequestedUserGallery) {
     next(setInitValue(REQUESTED_USER_GALLERY, true));
     store.dispatch(fetchRandomUsers());

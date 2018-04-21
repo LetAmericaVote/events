@@ -1,6 +1,7 @@
 import createHistory from 'history/createBrowserHistory';
 import {
   selectIsModalOpen,
+  selectRoutingPathname,
 } from '../selectors';
 import {
   SET_PATH_NAME,
@@ -9,7 +10,11 @@ import {
 } from '../actions';
 
 const routing = store => next => action => {
-  if (action.type === SET_PATH_NAME) {
+  const activePath = selectRoutingPathname(store.getState());
+
+  if (action.type === SET_PATH_NAME &&
+      activePath !== action.pathname) {
+
     const history = createHistory();
     history.push(action.pathname);
   }
