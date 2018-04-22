@@ -1,4 +1,5 @@
 const faker = require('faker');
+const postal = require('postal-abbreviations');
 const randomEmoji = require('random-emoji');
 const superagent = require('superagent');
 const addresses = require('rrad/addresses-us-all.json').addresses
@@ -88,7 +89,7 @@ async function generateEvent(count) {
       hostUser,
       streetAddress: `${randomAddress.address1} ${randomAddress.address2}`,
       city: randomAddress.city,
-      state: randomAddress.state,
+      state: postal(randomAddress.state),
       zipcode,
       geoLocation: [
         randomAddress.coordinates.lng,

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const contentful = require('contentful-management');
+const postal = require('postal-abbreviations');
 const User = require('./User');
 const Signup = require('./Signup');
 const algolia = require('../lib/algolia');
@@ -60,6 +61,10 @@ const EventSchema = mongoose.Schema({
   },
 }, {
   timestamps: true,
+});
+
+EventSchema.virtual('stateAbbr', () => {
+  return postal(this.state);
 });
 
 EventSchema.post('save', async function(doc, next) {
@@ -198,6 +203,7 @@ EventSchema.methods.getApiResponse = async function(requestUser) {
     dateTime: this.dateTime,
     city: this.city,
     state: this.state,
+    stateAbbr: this.stateAbbr,
     zipcode: this.zipcode,
     geoLocation: this.geoLocation,
     createdAt: this.createdAt,
@@ -235,6 +241,7 @@ EventSchema.methods.getAlgoliaIndex = async function() {
     streetAddress: this.streetAddress,
     city: this.city,
     state: this.state,
+    stateAbbr: this.stateAbbr,
     hostUser: {
       firstName: hostUser.firstName,
       lastName: hostUser.lastName,
