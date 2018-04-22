@@ -12,7 +12,6 @@ import Search from './routes/Search';
 import Event from './routes/Event';
 import Profile from './routes/Profile';
 import HostLink from './routes/HostLink';
-import GoogleAuth from './routes/GoogleAuth';
 import { selectIsModalOpen } from './selectors';
 /* eslint-disable react/jsx-pascal-case */
 import _404 from './routes/404';
@@ -26,7 +25,6 @@ const App = (props) => {
     [routes.EVENT_ROUTE]: props => <Event {...props} />,
     [routes.PROFILE_ROUTE]: props => <Profile {...props} />,
     [routes.HOST_ROUTE]: props => <HostLink {...props} />,
-    [routes.GOOGLE_AUTH_ROUTE]: props => <GoogleAuth {...props} />,
   };
 
   return [
