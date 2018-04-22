@@ -62,11 +62,14 @@ function AlgoliaSearchHOC(InnerComponent) {
       try {
         const result = await this.index.search({ query: this.props.queryValue });
         if (! result || ! result.hits) {
+          setSearchResultOrder([]);
+          setSearchIsPending(false);
           return;
         }
 
         if (! result.hits.length) {
           setSearchResultOrder([]);
+          setSearchIsPending(false);
           return;
         }
 

@@ -2,12 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import Rivet from '../hoc/Rivet';
 import Section from '../blocks/Section';
-import Punch from '../blocks/Punch';
-import SignupButton from '../components/SignupButton';
 import EventMap from '../components/EventMap';
 import SearchBar from '../components/SearchBar';
 import SearchResult from '../components/SearchResult';
 import CommunityScroll from '../components/CommunityScroll';
+import CommunitySignup from '../components/CommunitySignup';
 import Spacer from '../blocks/Spacer';
 import InternalLink from '../routing/InternalLink';
 import {
@@ -30,7 +29,6 @@ import {
   InvertedSectionHeader,
   InvertedStyledAnchor,
   InvertedDetail,
-  InvertedParagraph,
 } from '../blocks/Type';
 import {
   FlexDown,
@@ -54,8 +52,6 @@ import {
   QUOTE_SOURCE_AKA_PUTINS_ASSET,
   HOME_COMMUNITY_HERO,
   HOME_COMMUNITY_HERO_BOLD,
-  HOME_COMMUNITY_SIGNUP_HEADER,
-  HOME_COMMUNITY_SIGNUP_COPY,
 } from '../copy';
 
 const SearchBarContainer = styled.div`
@@ -98,7 +94,6 @@ const HomeSearchResultsComponent = (props) => {
   const { events } = props;
 
   if (! events || ! events.length) {
-    // TODO: Join the community instead
     return null;
   }
 
@@ -190,14 +185,7 @@ const Home = (props) => {
             </FlexResponsiveHalfColumn>
           </FlexResponsiveRow>
           <Spacer medium />
-          <Punch>
-            <InvertedSectionHeader centered>{HOME_COMMUNITY_SIGNUP_HEADER}</InvertedSectionHeader>
-            <InvertedParagraph>{HOME_COMMUNITY_SIGNUP_COPY[0]}</InvertedParagraph>
-            <InvertedParagraph>{HOME_COMMUNITY_SIGNUP_COPY[1]}</InvertedParagraph>
-            <FlexAcrossJustifyCenter>
-              <SignupButton />
-            </FlexAcrossJustifyCenter>
-          </Punch>
+          <CommunitySignup />
         </FlexDown>
       </Section>
     </FlexDown>

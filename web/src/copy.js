@@ -49,3 +49,19 @@ export const HOME_COMMUNITY_SIGNUP_COPY = [
   'Join our digital space where you can chat with other activists, share something interested you read, and get regular updates from the Let America Vote team.',
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tincidunt eget nullam non nisi est sit amet facilisis magna.',
 ];
+
+export const SEARCH_HEADER = 'Search for a voting rights house party near you';
+
+export const SEARCH_GEO_CTA = 'Find nearby events';
+
+export const SEARCH_MISSING = 'We couldn\'t find any parties for';
+
+export const SEARCH_JOIN_COMMUNITY = 'If you can\'t find any events near you, you can still join our online community!';
+
+export const _404_HERO = 'Pee tape not found';
+
+export const _404_COPY = 'In all seriousness, the page you are looking for cannot be found.';
+
+export const _404_BACK = 'Go Back';
+
+export const _404_FIND_HOUSE_PARTY = 'Find a voting rights house party';

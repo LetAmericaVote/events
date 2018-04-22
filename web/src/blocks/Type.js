@@ -81,6 +81,7 @@ export const StyledAnchor = styled.a`
   font-size: ${props => props.theme.regularFontSize};
 
   text-decoration: underline;
+  ${props => props.centered ? 'text-align: center;' : 'text-align: left;'}
 
   ${props => props.theme.baseMarginBottom}
 

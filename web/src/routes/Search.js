@@ -2,17 +2,33 @@ import React from 'react';
 import styled from 'styled-components';
 import Rivet from '../hoc/Rivet';
 import Section from '../blocks/Section';
-import { SectionHeader, Paragraph } from '../blocks/Type';
 import SearchBar from '../components/SearchBar';
 import SearchResult from '../components/SearchResult';
 import GeoLocationButton from '../components/GeoLocationButton';
+import CommunitySignup from '../components/CommunitySignup';
+import HouseParty from '../blocks/HouseParty';
+import {
+  FlexDown,
+} from '../blocks/Flex';
+import {
+  SectionHeader,
+  Paragraph,
+  Hero,
+} from '../blocks/Type';
 import {
   selectSearchResultsOrder,
   selectSearchQueryValue,
   selectIsSearchPending,
   selectIsSearchModeQuery,
   selectEventsSortedByDistance,
+  selectIsAuthenticated,
 } from '../selectors';
+import {
+  SEARCH_HEADER,
+  SEARCH_GEO_CTA,
+  SEARCH_MISSING,
+  SEARCH_JOIN_COMMUNITY,
+} from '../copy';
 
 const SearchRow = styled.div`
   ${props => props.theme.reset}
@@ -46,6 +62,7 @@ const Search = (props) => {
     isSearchPending,
     isQuery,
     nearbyEvents,
+    isAuthenticated,
   } = props;
 
   const noResults = searchResultOrder &&
@@ -59,25 +76,38 @@ const Search = (props) => {
 
   return (
     <Section>
-      <SectionHeader>Search for a voting rights house party near you</SectionHeader>
+      <SectionHeader>{SEARCH_HEADER}</SectionHeader>
       <SearchRow>
         <SearchColumn>
           <SearchBar />
         </SearchColumn>
         <SearchColumn>
-          <GeoLocationButton copy="Find nearby events" />
+          <GeoLocationButton copy={SEARCH_GEO_CTA} />
         </SearchColumn>
       </SearchRow>
       {isSearchPending ? <Paragraph>Searching...</Paragraph> : null}
       {results.map(eventId => (
         <SearchResult eventId={eventId} key={eventId} />
       ))}
-      {noResults ? <p>No results</p> : null}
+      {noResults ? (
+        <FlexDown>
+          <Hero centered>{SEARCH_MISSING} "{searchResultQuery}".</Hero>
+          {isAuthenticated ? (
+            <HouseParty />
+          ) : (
+            <FlexDown>
+              <SectionHeader centered>{SEARCH_JOIN_COMMUNITY}</SectionHeader>
+              <CommunitySignup />
+            </FlexDown>
+          )}
+        </FlexDown>
+      ) : null}
     </Section>
   );
 }
 
 Search.mapStateToProps = (state) => ({
+  isAuthenticated: selectIsAuthenticated(state),
   isSearchPending: selectIsSearchPending(state),
   searchResultOrder: selectSearchResultsOrder(state),
   searchResultQuery: selectSearchQueryValue(state),

@@ -12,6 +12,8 @@ export const Image = styled.div`
 `;
 
 const ResponsiveImage = styled(Image)`
+  ${props => props.fill ? 'background-size: 100% 100%;' : ''}
+  
   ${props => props.theme.tablet`
     padding-top: 0;
     width: ${props => props.width};
