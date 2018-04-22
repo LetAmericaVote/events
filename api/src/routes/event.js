@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const { loadUser } = require('../middleware/auth');
 const Event = require('../models/Event');
 
@@ -101,13 +102,38 @@ async function getEventsByGeoLocation(req, res) {
   });
 }
 
-// TODO: Bulk id find
+async function getBulkEvents(req, res) {
+  const { requestUser } = res.locals;
+  const { eventIds } = req.query;
+
+  if (! eventIds || ! eventIds.length || ! Array.isArray(eventIds) || eventIds.length > 25) {
+    return res.status(400).json({ error: true, message: 'Invalid event ids' });
+  }
+
+  const events = await Event.find({
+    '_id': {
+      '$in': eventIds.map(eventId => mongoose.Types.ObjectId(eventId)),
+    },
+  });
+
+  const formattedEvents = await Event.formatArrayOfEvents(events, requestUser);
+
+  res.json({
+    events: formattedEvents,
+  });
+}
 
 module.exports = [
   {
     route: '/v1/events',
     method: 'get',
     handler: getEvents,
+    middleware: loadUser,
+  },
+  {
+    route: '/v1/events/bulk',
+    method: 'get',
+    handler: getBulkEvents,
     middleware: loadUser,
   },
   {

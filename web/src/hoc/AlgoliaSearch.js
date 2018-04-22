@@ -6,11 +6,9 @@ import {
   setSearchQueryValue,
   setSearchIsPending,
   storeEvents,
-  fetchEventById,
 } from '../actions';
 import {
   selectSearchQueryValue,
-  selectEvents,
 } from '../selectors';
 
 function AlgoliaSearchHOC(InnerComponent) {
@@ -50,7 +48,6 @@ function AlgoliaSearchHOC(InnerComponent) {
       const {
         setSearchResultOrder,
         storeEvents,
-        fetchEventById,
         setSearchIsPending,
       } = this.props;
 
@@ -80,19 +77,11 @@ function AlgoliaSearchHOC(InnerComponent) {
           state: event.state,
           streetAddress: event.streetAddress,
           title: event.title,
+          dateTime: event.dateTime,
         }));
 
         setSearchResultOrder(order);
         storeEvents(events);
-
-        events.forEach(event => {
-          const storeEvent = this.props.events[event.id];
-
-          if (! storeEvent || ! storeEvent.createdAt) {
-            fetchEventById(event.id);
-          }
-        });
-
         setSearchIsPending(false);
       } catch (error) {
         console.error(error);
@@ -124,7 +113,6 @@ function AlgoliaSearchHOC(InnerComponent) {
 
   AlgoliaSearch.mapStateToProps = (state) => ({
     queryValue: selectSearchQueryValue(state),
-    events: selectEvents(state),
   });
 
   AlgoliaSearch.actionCreators = {
@@ -132,7 +120,6 @@ function AlgoliaSearchHOC(InnerComponent) {
     setSearchQueryValue,
     setSearchIsPending,
     storeEvents,
-    fetchEventById,
   };
 
   return Rivet(AlgoliaSearch);

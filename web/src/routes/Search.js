@@ -27,6 +27,7 @@ import {
   SEARCH_HEADER,
   SEARCH_GEO_CTA,
   SEARCH_MISSING,
+  SEARCH_GEO_MISSING,
   SEARCH_JOIN_COMMUNITY,
 } from '../copy';
 
@@ -65,11 +66,17 @@ const Search = (props) => {
     isAuthenticated,
   } = props;
 
-  const noResults = searchResultOrder &&
+  const noQueryResults = searchResultOrder &&
     ! searchResultOrder.length &&
     searchResultQuery &&
     searchResultQuery.length &&
     ! isSearchPending;
+
+  const noGeoResults = nearbyEvents &&
+    ! nearbyEvents.length &&
+    ! isSearchPending;
+
+  const noResults = isQuery ? noQueryResults : noGeoResults;
 
   const results = isQuery ?
     searchResultOrder : nearbyEvents.map(event => event.id);
@@ -89,12 +96,16 @@ const Search = (props) => {
       {results.map(eventId => (
         <SearchResult eventId={eventId} key={eventId} />
       ))}
-      {! noResults && (! searchResultQuery || ! searchResultQuery.length) ? (
+      {! results.length && ! noResults && (! searchResultQuery || ! searchResultQuery.length) ? (
         <HouseParty />
       ) : null}
       {noResults ? (
         <FlexDown>
-          <Hero centered>{SEARCH_MISSING} "{searchResultQuery}".</Hero>
+          {isQuery ? (
+            <Hero centered>{SEARCH_MISSING} "{searchResultQuery}".</Hero>
+          ) : (
+            <Hero centered>{SEARCH_GEO_MISSING}</Hero>
+          )}
           {isAuthenticated ? (
             <HouseParty />
           ) : (

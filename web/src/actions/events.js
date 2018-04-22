@@ -46,6 +46,17 @@ export function fetchEventByGeoLocation(lon, lat, maxDistance) {
   return { type: FETCH_EVENT_BY_GEO_LOCATION, lon, lat, maxDistance };
 }
 
+export const FETCH_BULK_EVENTS = 'FETCH_BULK_EVENTS';
+
+/**
+ * Fetch a bulk array of events for the array of event ids.
+ *
+ * @param  {Array<String>} eventIds Array of event ids
+ */
+export function fetchBulkEvents(eventIds) {
+  return { type: FETCH_BULK_EVENTS, eventIds };
+}
+
 export const STORE_EVENT = 'STORE_EVENT';
 
 /**

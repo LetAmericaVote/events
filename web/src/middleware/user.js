@@ -4,6 +4,7 @@ import {
   UPDATE_AUTHENTICATED_USER,
   FETCH_PAGINATED_USERS,
   FETCH_RANDOM_USERS,
+  FETCH_BULK_USERS,
   storeUser,
   storeUsers,
   getFromApi,
@@ -40,6 +41,20 @@ const usersOutgoingRequest = (store, action) => {
       store.dispatch(getFromApi(
         FETCH_PAGINATED_USERS, spaceName, endpoint, query,
       ));
+
+      break;
+    }
+
+    case FETCH_BULK_USERS: {
+      const { userIds } = action;
+      const spaceName = `userIds=${userIds}`;
+
+      const query = { userIds };
+
+      store.dispatch(getFromApi(
+        FETCH_BULK_USERS, spaceName, '/v1/users/bulk', query,
+      ));
+
       break;
     }
 
@@ -47,6 +62,7 @@ const usersOutgoingRequest = (store, action) => {
       store.dispatch(getFromApi(
         FETCH_RANDOM_USERS, 'random', `/v1/users/random`,
       ));
+
       break;
     }
 
@@ -54,6 +70,7 @@ const usersOutgoingRequest = (store, action) => {
       store.dispatch(getFromApi(
         FETCH_USER_BY_ID, action.userId, `/v1/users/id/${action.userId}`,
       ));
+
       break;
     }
 
@@ -61,6 +78,7 @@ const usersOutgoingRequest = (store, action) => {
       store.dispatch(postToApi(
         UPDATE_AUTHENTICATED_USER, 'update', '/v1/users', action.fields,
       ));
+
       break;
     }
 
@@ -86,6 +104,7 @@ const usersIncomingRequest = (store, action) => {
       break;
     }
 
+    case FETCH_BULK_USERS:
     case FETCH_RANDOM_USERS:
     case FETCH_PAGINATED_USERS: {
       const { data } = action;

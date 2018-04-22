@@ -52,7 +52,6 @@ const EventSchema = mongoose.Schema({
   hostUser: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
-    required: true,
   },
   geoLocation: {
     type: [Number],
@@ -61,6 +60,12 @@ const EventSchema = mongoose.Schema({
   },
 }, {
   timestamps: true,
+  toObject: {
+    virtuals: true,
+  },
+  toJSON: {
+    virtuals: true,
+  },
 });
 
 EventSchema.virtual('stateAbbr', () => {
@@ -129,6 +134,8 @@ EventSchema.statics.findByLatLong = async function(long, lat, minDistance, maxDi
               '$gte': new Date(),
             },
           },
+          minDistance,
+          maxDistance,
           limit: 25,
           distanceField: 'distance',
         }
@@ -166,7 +173,7 @@ EventSchema.statics.syncFromContentful = async function(entry) {
     event.description = fields.description[lang];
     event.headerPhoto = fields.headerPhoto[lang].fields.file[lang].url;
     event.dateTime = fields.dateTime[lang];
-    event.hostUser = fields.hostUser[lang];
+    event.hostUser = fields.hostUser ? fields.hostUser[lang] : null;
     event.streetAddress = fields.streetAddress[lang];
     event.city = fields.city[lang];
     event.state = fields.state[lang];
@@ -233,20 +240,25 @@ EventSchema.methods.getApiResponse = async function(requestUser) {
 
 EventSchema.methods.getAlgoliaIndex = async function() {
   const hostUser = await User.findOne({ _id: this.hostUser });
-  // TODO: Should we add state abbreviations to the index?
 
-  return {
+  const index = {
     objectID: this.id,
     title: this.title,
     streetAddress: this.streetAddress,
     city: this.city,
     state: this.state,
     stateAbbr: this.stateAbbr,
-    hostUser: {
+    dateTime: new Date(this.dateTime).getTime(),
+  };
+
+  if (hostUser && hostUser.id) {
+    index.hostUser = {
       firstName: hostUser.firstName,
       lastName: hostUser.lastName,
-    },
-  };
+    };
+  }
+
+  return index;
 };
 
 EventSchema.methods.syncToContentful = async function() {

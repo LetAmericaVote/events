@@ -4,6 +4,7 @@ import {
   FETCH_EVENT_BY_SLUG,
   FETCH_EVENT_BY_GEO_LOCATION,
   API_REQUEST_SUCCEEDED,
+  FETCH_BULK_EVENTS,
   // API_REQUEST_FAILED, // TODO: Where should we handle errors?
   setApiActionMetaProperty,
   storeEvent,
@@ -43,6 +44,19 @@ const eventOutgoingRequest = (store, action) => {
       store.dispatch(getFromApi(
         FETCH_PAGINATED_EVENTS, spaceName, '/v1/events', query,
       ));
+
+      break;
+    }
+
+    case FETCH_BULK_EVENTS: {
+      const { eventIds } = action;
+      const spaceName = `eventIds=${eventIds}`;
+
+      const query = { eventIds };
+      store.dispatch(getFromApi(
+        FETCH_BULK_EVENTS, spaceName, '/v1/events/bulk', query,
+      ));
+
       break;
     }
 
@@ -124,6 +138,7 @@ const eventsIncomingRequest = (store, action) => {
       break;
     }
 
+    case FETCH_BULK_EVENTS:
     case FETCH_EVENT_BY_GEO_LOCATION:
     case FETCH_PAGINATED_EVENTS: {
       const { data } = action;

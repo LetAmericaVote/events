@@ -1,10 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import Rivet from '../hoc/Rivet';
-import {
-  PlaceholderRect,
-  PlaceholderRectContainer,
-} from '../blocks/Placeholder';
+import Punch from '../blocks/Punch';
+import Spacer from '../blocks/Spacer';
 import {
   FlexDown,
   FlexAcross,
@@ -13,7 +11,10 @@ import {
   CalendarIcon,
   HouseIcon,
 } from '../blocks/Icons';
-import { Detail } from '../blocks/Type';
+import {
+  Detail,
+  InvertedParagraph,
+} from '../blocks/Type';
 import {
   selectEventCity,
   selectEventState,
@@ -22,9 +23,16 @@ import {
   selectEventStreetAddress,
   selectEventExists,
 } from '../selectors';
+import {
+  CLOSED_EVENT_HEADER
+} from '../copy';
 
 const DetailEnd = styled(Detail)`
   align-self: flex-end;
+`;
+
+const Warning = styled(InvertedParagraph)`
+  margin-bottom: 0;
 `;
 
 const EventTimePlace = (props) => {
@@ -35,17 +43,11 @@ const EventTimePlace = (props) => {
     zipcode,
     dateTime,
     streetAddress,
+    warnIfEventOver,
   } = props;
 
   if (! exists) {
-    return (
-      <PlaceholderRectContainer height="120px">
-        <FlexDown fill>
-          <PlaceholderRect width="44px" bottomSpacing />
-          <PlaceholderRect width="64px" bottomSpacing />
-        </FlexDown>
-      </PlaceholderRectContainer>
-    );
+    return null;
   }
 
   const formattedTime = dateTime ? (
@@ -68,6 +70,14 @@ const EventTimePlace = (props) => {
         <HouseIcon />
         <DetailEnd indent>{streetAddress} {city}, {state} {zipcode}</DetailEnd>
       </FlexAcross>
+      {warnIfEventOver && new Date(dateTime).getTime() < Date.now() ? (
+        <FlexDown>
+          <Spacer />
+          <Punch>
+            <Warning>{CLOSED_EVENT_HEADER}</Warning>
+          </Punch>
+        </FlexDown>
+      ) : null}
     </FlexDown>
   );
 };

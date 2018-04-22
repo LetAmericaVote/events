@@ -2,11 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import Rivet from '../hoc/Rivet';
 import {
-  PlaceholderRect,
-  PlaceholderRectContainer,
-  PlaceholderCircle,
-} from '../blocks/Placeholder';
-import {
   FlexAcross,
   FlexDown,
 } from '../blocks/Flex';
@@ -41,17 +36,7 @@ const Byline = (props) => {
   } = props;
 
   if (! exists) {
-    return (
-      <PlaceholderRectContainer height="80px">
-        <FlexAcross fill>
-          <PlaceholderCircle width="36px" height="30px" />
-          <FlexDown fill>
-            <PlaceholderRect width="64px" darken indent bottomSpacing />
-            <PlaceholderRect width="75px" indent bottomSpacing />
-          </FlexDown>
-        </FlexAcross>
-      </PlaceholderRectContainer>
-    );
+    return null;
   }
 
   return (

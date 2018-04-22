@@ -56,6 +56,8 @@ export const SEARCH_GEO_CTA = 'Find nearby events';
 
 export const SEARCH_MISSING = 'We couldn\'t find any parties for';
 
+export const SEARCH_GEO_MISSING = 'We couldn\'t find any parties near you.';
+
 export const SEARCH_JOIN_COMMUNITY = 'If you can\'t find any events near you, you can still join our online community!';
 
 export const _404_HERO = 'Pee tape not found';

@@ -12,6 +12,12 @@ import {
   fetchGeoLocationFromRemote,
   fetchEventByGeoLocation,
   fetchRandomUsers,
+  fetchUserById,
+  fetchBulkUsers,
+  fetchEventById,
+  fetchBulkEvents,
+  STORE_SIGNUP,
+  STORE_SIGNUPS,
 } from '../actions';
 import {
   selectInitValue,
@@ -21,7 +27,10 @@ import {
   selectLocationState,
   selectEventIdBySlug,
   selectUsersAsArray,
+  selectUser,
+  selectEvent,
 } from '../selectors';
+import { batchItems } from '../util';
 
 const REQUESTED_MAP_EVENTS = 'REQUESTED_MAP_EVENTS';
 const REQUESTED_LOCATION_COORDS = 'REQUESTED_LOCATION_COORDS';
@@ -112,7 +121,55 @@ const init = store => next => action => {
     return next(action);
   }
 
-  // TODO: Comment data.
+  if (action.type === STORE_SIGNUP) {
+    const { signup } = action;
+    const missingUser = ! selectUser(signup.user, store.getState()) ||
+      ! selectUser(signup.user, store.getState()).createdAt;
+
+    if (missingUser) {
+      store.dispatch(fetchUserById(signup.user));
+    }
+
+    const missingEvent = ! selectEvent(signup.event, store.getState()) ||
+      ! selectEvent(signup.event, store.getState()).createdAt;
+
+    if (missingEvent) {
+      store.dispatch(fetchEventById(signup.event));
+    }
+
+    return;
+  }
+
+  if (action.type === STORE_SIGNUPS) {
+    const { signups } = action;
+    const missingUsers = signups.filter(signup =>
+      ! selectUser(signup.user, store.getState()) ||
+      ! selectUser(signup.user, store.getState()).createdAt);
+
+    if (missingUsers.length) {
+      const batches = batchItems(missingUsers);
+
+      batches.forEach(batch =>
+        store.dispatch(fetchBulkUsers(
+          batch.map(signup => signup.user)
+        )));
+    }
+
+    const missingEvents = signups.filter(signup =>
+      ! selectEvent(signup.event, store.getState()) ||
+      ! selectEvent(signup.event, store.getState()).createdAt);
+
+    if (missingEvents.length) {
+      const batches = batchItems(missingEvents);
+
+      batches.forEach(batch =>
+        store.dispatch(fetchBulkEvents(
+          batch.map(signup => signup.event)
+        )));
+    }
+
+    return;
+  }
 };
 
 export default init;

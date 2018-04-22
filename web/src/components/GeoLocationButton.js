@@ -56,7 +56,7 @@ const GeoLocationButton = (props) => {
 
       // TODO: Pagination
       fetchEventByGeoLocation(longitude, latitude, 50000);
-    }, null, { enableHighAccuracy: false });
+    }, null, { enableHighAccuracy: true });
   }
 
   return (

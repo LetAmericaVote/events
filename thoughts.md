@@ -21,8 +21,8 @@ https://www.mongodb.com/blog/post/schema-design-for-social-inboxes-in-mongodb
 
 ^ Im not sure I like the approaches outlined in that post, so -->
  1. Something generates a 'notification'.
-   * Has a message,
-   * Optionally references an ID of something like a comment or a user,
+   * Has a message, type,
+   * Optionally references an ID of something like a comment or a user, or maybe just a link. thats universal enough.
    * Set target parameters (eg: signup id, user id, 'all'),
  2. App polls notification endpoint for most recent notifications and api joins "read" records on it.
  3. User marks notifications as read. This hits the API and generates a new "read" record

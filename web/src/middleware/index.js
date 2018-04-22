@@ -6,6 +6,7 @@ import hostLink from './hostLink';
 import init from './init';
 import location from './location';
 import routing from './routing';
+import search from './search';
 import signups from './signups';
 import user from './user';
 
@@ -18,6 +19,7 @@ const middleware = [
   init,
   location,
   routing,
+  search,
   signups,
   user,
 ];

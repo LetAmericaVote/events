@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const User = require('../models/User');
 const { loadUser, requiresAuth, requiresAdmin } = require('../middleware/auth');
 
@@ -25,6 +26,25 @@ const getRandomUsers = async (req, res) => {
 
   const hydratedUsers = users.map(user => User.hydrate(user));
   const formattedUsers = await User.formatArrayOfUsers(hydratedUsers, requestUser);
+
+  res.json({ users: formattedUsers });
+};
+
+const getBulkUsers = async (req, res) => {
+  const { requestUser } = res.locals;
+  const { userIds } = req.query;
+
+  if (! userIds || ! userIds.length || ! Array.isArray(userIds) || userIds.length > 25) {
+    return res.status(400).json({ error: true, message: 'Invalid user ids' });
+  }
+
+  const users = await User.find({
+    '_id': {
+      '$in': userIds.map(userId => mongoose.Types.ObjectId(userId)),
+    },
+  });
+
+  const formattedUsers = await User.formatArrayOfUsers(users, requestUser);
 
   res.json({ users: formattedUsers });
 };
@@ -103,6 +123,12 @@ module.exports = [
     route: '/v1/users/random',
     method: 'get',
     handler: getRandomUsers,
+    middleware: loadUser,
+  },
+  {
+    route: '/v1/users/bulk',
+    method: 'get',
+    handler: getBulkUsers,
     middleware: loadUser,
   },
   {

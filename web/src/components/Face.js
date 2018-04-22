@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import Rivet from '../hoc/Rivet';
-import { fetchUserById } from '../actions';
-import { PlaceholderCircle } from '../blocks/Placeholder';
 import {
   selectUserExists,
   selectUserProfilePhoto,
@@ -33,9 +31,7 @@ const Face = (props) => {
   } = props;
 
   if (! userExists || ! profilePhoto) {
-    return (
-      <PlaceholderCircle width="32px" height="32px" />
-    );
+    return null;
   }
 
   return (
@@ -52,41 +48,4 @@ Face.mapStateToProps = (state, ownProps) => ({
   profilePhoto: selectUserProfilePhoto(ownProps.userId, state),
 });
 
-// TODO: Move this to init.js middleware
-class FaceConnector extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.fetchUser = this.fetchUser.bind(this);
-  }
-
-  fetchUser() {
-    this.props.fetchUserById(this.props.userId);
-  }
-
-  componentDidMount() {
-    if (!!this.props.userId) {
-      this.fetchUser();
-    }
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (!!this.userId && !prevProps.userId) {
-      this.fetchUser();
-    }
-  }
-
-  render() {
-    const WrappedFace = Rivet(Face);
-
-    return (
-      <WrappedFace {...this.props} />
-    )
-  }
-}
-
-FaceConnector.actionCreators = {
-  fetchUserById,
-};
-
-export default Rivet(FaceConnector);
+export default Rivet(Face);

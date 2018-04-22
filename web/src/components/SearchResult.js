@@ -8,11 +8,6 @@ import Byline from './Byline';
 import Spacer from '../blocks/Spacer';
 import ResponsiveImage, { Image } from '../blocks/ResponsiveImage';
 import {
-  PlaceholderRect,
-  PlaceholderRectContainer,
-  PlaceholderSquare,
-} from '../blocks/Placeholder';
-import {
   Header,
   UnstyledAnchor,
   Paragraph,
@@ -21,7 +16,6 @@ import {
   FlexResponsiveHalfColumn,
   FlexResponsiveRow,
   FlexDown,
-  FlexAcross,
 } from '../blocks/Flex';
 import {
   selectEventTitle,
@@ -99,17 +93,7 @@ const SearchResult = (props) => {
   } = props;
 
   if (! eventExists) {
-    return (
-      <PlaceholderRectContainer height="200px" bottomSpacing>
-        <FlexAcross fill>
-          <PlaceholderSquare width="128px" height="128px" />
-          <FlexDown fill>
-            <PlaceholderRect width="100%" height="36px" darken indent bottomSpacing />
-            <PlaceholderRect width="100%" height="48px" indent bottomSpacing />
-          </FlexDown>
-        </FlexAcross>
-      </PlaceholderRectContainer>
-    );
+    return null;
   }
 
   const route = makeEventRoute(slug);
@@ -130,7 +114,7 @@ const SearchResult = (props) => {
           {reduced ? null : <Paragraph>{description}</Paragraph>}
           {reduced ? (
             <FlexDown>
-              <EventTimePlace eventId={eventId} />
+              <EventTimePlace eventId={eventId} warnIfEventOver />
               {hostUserId ? (
                 <FlexDown>
                   <Spacer />
@@ -141,7 +125,7 @@ const SearchResult = (props) => {
           ) : (
             <FlexResponsiveRow>
               <FlexResponsiveHalfColumn useMargin>
-                <EventTimePlace eventId={eventId} />
+                <EventTimePlace eventId={eventId} warnIfEventOver />
               </FlexResponsiveHalfColumn>
               <FlexResponsiveHalfColumn>
                 {hostUserId ? (

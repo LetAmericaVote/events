@@ -27,6 +27,17 @@ export function fetchRandomUsers() {
   return { type: FETCH_RANDOM_USERS };
 }
 
+export const FETCH_BULK_USERS = 'FETCH_BULK_USERS';
+
+/**
+ * Fetch bulk array of users from given ids.
+ *
+ * @param  {Array<String>} userIds Array of user ids
+ */
+export function fetchBulkUsers(userIds) {
+  return { type: FETCH_BULK_USERS, userIds };
+}
+
 export const UPDATE_AUTHENTICATED_USER = 'UPDATE_AUTHENTICATED_USER';
 
 /**
