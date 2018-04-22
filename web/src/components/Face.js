@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Rivet from '../hoc/Rivet';
 import { fetchUserById } from '../actions';
+import { PlaceholderCircle } from '../blocks/Placeholder';
 import {
   selectUserExists,
   selectUserProfilePhoto,
@@ -32,7 +33,9 @@ const Face = (props) => {
   } = props;
 
   if (! userExists || ! profilePhoto) {
-    return null;
+    return (
+      <PlaceholderCircle width="32px" height="32px" />
+    );
   }
 
   return (

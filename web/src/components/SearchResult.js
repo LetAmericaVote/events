@@ -8,6 +8,11 @@ import Byline from './Byline';
 import Spacer from '../blocks/Spacer';
 import ResponsiveImage, { Image } from '../blocks/ResponsiveImage';
 import {
+  PlaceholderRect,
+  PlaceholderRectContainer,
+  PlaceholderSquare,
+} from '../blocks/Placeholder';
+import {
   Header,
   UnstyledAnchor,
   Paragraph,
@@ -16,6 +21,7 @@ import {
   FlexResponsiveHalfColumn,
   FlexResponsiveRow,
   FlexDown,
+  FlexAcross,
 } from '../blocks/Flex';
 import {
   selectEventTitle,
@@ -92,9 +98,18 @@ const SearchResult = (props) => {
     reduced,
   } = props;
 
-  if (! eventExists) {
-    // TODO: Return placeholder event result
-    return null;
+  if (eventExists) {
+    return (
+      <PlaceholderRectContainer height="200px" bottomSpacing>
+        <FlexAcross fill>
+          <PlaceholderSquare width="128px" height="128px" />
+          <FlexDown fill>
+            <PlaceholderRect width="100%" height="36px" darken indent bottomSpacing />
+            <PlaceholderRect width="100%" height="48px" indent bottomSpacing />
+          </FlexDown>
+        </FlexAcross>
+      </PlaceholderRectContainer>
+    );
   }
 
   const route = makeEventRoute(slug);

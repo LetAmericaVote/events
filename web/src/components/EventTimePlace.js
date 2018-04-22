@@ -2,6 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import Rivet from '../hoc/Rivet';
 import {
+  PlaceholderRect,
+  PlaceholderRectContainer,
+} from '../blocks/Placeholder';
+import {
   FlexDown,
   FlexAcross,
 } from '../blocks/Flex';
@@ -16,6 +20,7 @@ import {
   selectEventZipcode,
   selectEventDateTime,
   selectEventStreetAddress,
+  selectEventExists,
 } from '../selectors';
 
 const DetailEnd = styled(Detail)`
@@ -24,12 +29,24 @@ const DetailEnd = styled(Detail)`
 
 const EventTimePlace = (props) => {
   const {
+    exists,
     city,
     state,
     zipcode,
     dateTime,
     streetAddress,
   } = props;
+
+  if (! exists) {
+    return (
+      <PlaceholderRectContainer height="120px">
+        <FlexDown fill>
+          <PlaceholderRect width="44px" bottomSpacing />
+          <PlaceholderRect width="64px" bottomSpacing />
+        </FlexDown>
+      </PlaceholderRectContainer>
+    );
+  }
 
   const formattedTime = dateTime ? (
     new Date(dateTime).toLocaleDateString('en-US', {
@@ -56,6 +73,7 @@ const EventTimePlace = (props) => {
 };
 
 EventTimePlace.mapStateToProps = (state, ownProps) => ({
+  exists: selectEventExists(ownProps.eventId, state),
   streetAddress: selectEventStreetAddress(ownProps.eventId, state),
   city: selectEventCity(ownProps.eventId, state),
   state: selectEventState(ownProps.eventId, state),
