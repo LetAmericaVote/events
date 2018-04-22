@@ -98,7 +98,7 @@ const SearchResult = (props) => {
     reduced,
   } = props;
 
-  if (eventExists) {
+  if (! eventExists) {
     return (
       <PlaceholderRectContainer height="200px" bottomSpacing>
         <FlexAcross fill>
