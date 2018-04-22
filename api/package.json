@@ -23,17 +23,15 @@
     "postal-abbreviations": "^2.0.0",
     "qs": "^6.5.1",
     "superagent": "^3.8.2",
-    "unsplash-js": "^4.8.0"
-  },
-  "engines": {
-    "node": "9.5.x",
-    "npm": "5.x"
-  },
-  "devDependencies": {
+    "unsplash-js": "^4.8.0",
     "dotenv": "^5.0.1",
     "faker": "^4.1.0",
     "nodemon": "^1.17.3",
     "random-emoji": "^1.0.2",
     "rrad": "^1.1.0"
+  },
+  "engines": {
+    "node": "9.5.x",
+    "npm": "5.x"
   }
 }
