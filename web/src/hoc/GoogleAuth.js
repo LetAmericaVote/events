@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import Rivet from './Rivet';
-import { postGoogleIdToken } from '../actions';
-
-// TODO: Make sure we notify people if the pop-up blocker catches it for some reason.
+import { GOOGLE_AUTH_ROUTE } from '../routing/routes';
+import { setBackUrl } from '../routing/authRedirect';
 
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
@@ -54,7 +53,9 @@ function GoogleAuthHOC(InnerComponent) {
       const setupAuth = async () => {
         const authOptions = {
           fetch_basic_profile: true,
-          client_id: clientId
+          client_id: clientId,
+          ux_mode: 'redirect',
+          redirect_uri: `${window.location.origin}${GOOGLE_AUTH_ROUTE}`,
         };
 
         window.gapi.auth2.init(authOptions).then((googleAuth) => {
@@ -70,20 +71,15 @@ function GoogleAuthHOC(InnerComponent) {
     }
 
     onLogin () {
-      const login = async () => {
-        try {
-          const user = await this.googleAuth.signIn();
-          const token = user.getAuthResponse().id_token;
+      setBackUrl(window.location.pathname);
 
-          this.props.postGoogleIdToken(token);
-        } catch (error) {
-          // TODO: Handle error.
-          // More info here: https://developers.google.com/api-client-library/javascript/reference/referencedocs#googleauthsignin
-          console.error(error);
-        }
-      };
-
-      login();
+      try {
+        this.googleAuth.signIn();
+      } catch (error) {
+        // TODO: Handle error.
+        // More info here: https://developers.google.com/api-client-library/javascript/reference/referencedocs#googleauthsignin
+        console.error(error);
+      }
     }
 
     render() {
@@ -97,10 +93,6 @@ function GoogleAuthHOC(InnerComponent) {
       );
     }
   }
-
-  GoogleAuthButton.actionCreators = {
-    postGoogleIdToken,
-  };
 
   return Rivet(GoogleAuthButton)
 }
