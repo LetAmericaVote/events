@@ -1,3 +1,4 @@
+const fs = require('fs');
 const cmd = require('node-cmd');
 
 const { TARGET_ENV } = process.env;
@@ -11,21 +12,17 @@ const DEPLOY_SECRET_FILE = '.env.production.local';
 const STAGING_SECRET_FILE = '.env.staging';
 const PRODUCTION_SECRET_FILE = '.env.prod';
 
-const SURGE_DEPLOY = 'surge ./build';
-
 const WIPE_TMP_SECRET_FILE = `rm ${DEPLOY_SECRET_FILE}`;
 
 const PRODUCTION_DEPLOY = `
-  cp ${PRODUCTION_SECRET_FILE} ${DEPLOY_SECRET_FILE} &&
+  cp ${PRODUCTION_SECRET_FILE} ${DEPLOY_SECRET_FILE}
   ${BUILD_STEP}
-  ${SURGE_DEPLOY} https://votingrightshouseparty.com &&
   ${WIPE_TMP_SECRET_FILE}
 `;
 
 const STAGING_DEPLOY = `
-  cp ${STAGING_SECRET_FILE} ${DEPLOY_SECRET_FILE} &&
+  cp ${STAGING_SECRET_FILE} ${DEPLOY_SECRET_FILE}
   ${BUILD_STEP}
-  ${SURGE_DEPLOY} https://staging.votingrightshouseparty.com &&
   ${WIPE_TMP_SECRET_FILE}
 `;
 
@@ -41,7 +38,7 @@ const pipelineProcess = cmd.get(pipeline, (err, data, stderr) => {
   if (err) {
     console.error(err);
   } else {
-    console.log(`Built & deployed app to ${isProduction ? 'production' : 'staging'} successfully!`);
+    console.log(`Built app for ${isProduction ? 'production' : 'staging'} successfully!`);
   }
 
   process.exit();

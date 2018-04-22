@@ -19,11 +19,12 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "deploy:staging": "TARGET_ENV=staging node bin/deploy.js",
-    "deploy:production": "TARGET_ENV=production node bin/deploy.js"
+    "build:staging": "TARGET_ENV=staging node bin/build.js",
+    "build:prod": "TARGET_ENV=production node bin/build.js",
+    "deploy:staging": "now ./build --name rowboat-staging",
+    "deploy:prod": "now ./build --name rowboat-prod",
+    "alias:staging": "now alias $DOMAIN staging.votingrightshouseparty.com",
+    "alias:prod": "now alias $DOMAIN votingrightshouseparty.com"
   },
   "devDependencies": {
     "node-cmd": "^3.0.0"

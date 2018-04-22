@@ -2,7 +2,23 @@ import createHistory from 'history/createBrowserHistory';
 import { setInternalPathname } from '../actions';
 import { selectRoutingPathname } from '../selectors';
 
+function getUrlParams(search) {
+  const hashes = search.slice(search.indexOf('?') + 1).split('&');
+
+  return hashes.reduce((acc, hash) => {
+    const [key, val] = hash.split('=');
+    acc[key] = decodeURIComponent(val);
+
+    return acc;
+  }, {});
+}
+
 const sync = (store) => {
+  const { redirect } = getUrlParams(window.location.search);
+  if (document.location.pathname === '/' && redirect) {
+    document.location.assign(`${document.location.origin}/${redirect}`);
+  }
+
   const history = createHistory();
 
   const updatePathFromLocation = (location) =>
