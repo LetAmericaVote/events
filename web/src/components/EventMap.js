@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import colors from '../theme/colors';
+import Spinner from '../blocks/Spinner';
 import {
   ComposableMap,
   ZoomableGroup,
@@ -66,7 +67,9 @@ class EventMap extends React.Component {
 
   render() {
     if (this.state.deferRender) {
-      return null;
+      return (
+        <Spinner />
+      );
     }
 
     const {
