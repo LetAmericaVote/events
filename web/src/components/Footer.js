@@ -9,6 +9,7 @@ import {
 import {
   FlexDown,
   FlexAcrossCenter,
+  FlexAcrossJustifyCenter,
   FlexResponsiveRow,
   FlexResponsiveHalfColumn,
   FlexResponsiveQuarterColumn,
@@ -29,11 +30,7 @@ const FooterTitle = styled(Paragraph)`
   font-family: ${props => props.theme.heavyFontFamily}
 
   ${props => props.theme.extraTinyMarginBottom}
-  text-align: center;
-
-  ${props => props.theme.tablet`
-    ${props.right ? 'text-align: right;' : 'text-align: left;'}
-  `}
+  text-align: left;
 `;
 
 const FooterLink = styled(StyledAnchor)`
@@ -47,11 +44,7 @@ const FooterLink = styled(StyledAnchor)`
     ${props => props.theme.fg.action}
   }
 
-  text-align: center;
-
-  ${props => props.theme.tablet`
-    ${props.right ? 'text-align: right;' : 'text-align: left;'}
-  `}
+  text-align: left;
 `;
 
 const DisclaimerPadding = styled.div`
@@ -91,13 +84,6 @@ const Footer = (props) => {
             <FooterLink href={links.contact} right>Contact Us</FooterLink>
           </FlexDown>
         </FlexResponsiveQuarterColumn>
-        <FlexResponsiveHalfColumn>
-          <DisclaimerPadding>
-            <Disclaimer>
-              <DisclaimerCopy>Paid for by Let America Vote (www.letamericavote.org). Not authorized by any candidate or candidate’s committee</DisclaimerCopy>
-            </Disclaimer>
-          </DisclaimerPadding>
-        </FlexResponsiveHalfColumn>
         <FlexResponsiveQuarterColumn>
           <FlexDown fill>
             <FooterTitle>Voting Rights House Party</FooterTitle>
@@ -108,7 +94,19 @@ const Footer = (props) => {
             <FooterLink href={links.intern}>Host a house party</FooterLink>
           </FlexDown>
         </FlexResponsiveQuarterColumn>
+        <FlexResponsiveHalfColumn>
+          <Paragraph>TODO: Social Icons</Paragraph>
+        </FlexResponsiveHalfColumn>
       </FlexResponsiveRow>
+      <FlexAcrossJustifyCenter>
+        <FlexResponsiveHalfColumn>
+          <DisclaimerPadding>
+            <Disclaimer>
+              <DisclaimerCopy>Paid for by Let America Vote (www.letamericavote.org). Not authorized by any candidate or candidate’s committee</DisclaimerCopy>
+            </Disclaimer>
+          </DisclaimerPadding>
+        </FlexResponsiveHalfColumn>
+      </FlexAcrossJustifyCenter>
     </Section>
   );
 }

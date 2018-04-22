@@ -89,6 +89,9 @@ const Search = (props) => {
       {results.map(eventId => (
         <SearchResult eventId={eventId} key={eventId} />
       ))}
+      {! noResults && (! searchResultQuery || ! searchResultQuery.length) ? (
+        <HouseParty />
+      ) : null}
       {noResults ? (
         <FlexDown>
           <Hero centered>{SEARCH_MISSING} "{searchResultQuery}".</Hero>
