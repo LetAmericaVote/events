@@ -35,3 +35,11 @@ html, body {
   padding: 0;
   font-family: 'mreavesmodot-reg';
 }
+
+::selection {
+  background: #21c2de; /* WebKit/Blink Browsers */
+}
+
+::-moz-selection {
+  background: #21c2de; /* Gecko Browsers */
+}

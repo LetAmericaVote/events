@@ -72,6 +72,21 @@ export const FlexResponsiveHalfColumn = styled.div`
   `}
 `;
 
+export const FlexResponsiveQuarterColumn = styled.div`
+  ${props => props.theme.reset}
+
+  display: flex;
+  flex: 0 0 100%;
+
+  ${props => props.useMargin ? props.theme.baseMarginBottom : ''}
+
+  ${props => props.theme.tablet`
+    flex: 0 0 calc(25% - ${props => props.theme.baseSpacing}px);
+
+    ${props => props.useMargin ? 'margin-bottom: 0' : ''}
+  `}
+`;
+
 export const FlexResponsiveThirdColumn = styled.div`
   ${props => props.theme.reset}
 

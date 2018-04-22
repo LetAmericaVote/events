@@ -1,8 +1,10 @@
 import React from 'react';
 import Rivet from './hoc/Rivet';
 import Page from './blocks/Page';
+import Spacer from './blocks/Spacer';
 import Modal from './modal';
 import Navigation from './components/Navigation';
+import Footer from './components/Footer';
 import RouteSwitch from './routing/RouteSwitch';
 import routes from './routing/routes';
 import Home from './routes/Home';
@@ -30,6 +32,8 @@ const App = (props) => {
     <Page key="page" fixed={isModalOpen}>
       <Navigation />
       <RouteSwitch routes={appRoutes} defaultRouteRender={() => <_404 />} />
+      <Spacer large />
+      <Footer />
     </Page>,
   ];
 };
