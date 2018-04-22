@@ -6,13 +6,92 @@
     <meta name="theme-color" content="#000000">
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
-    <title>React App</title>
+    <title>Voting Rights House Party | Let America Vote</title>
+
+    <style type="text/css">
+      .spinner {
+        position: absolute;
+        width: 0;
+        height: 0;
+        top: calc(50% - 25px);
+        left: calc(50% - 25px);
+      }
+
+      .dot::after {
+        content: '';
+        display: block;
+        width: 20px;
+        height: 20px;
+        border-radius: 20px;
+      }
+
+      .dot.-alpha {
+        animation: xAlpha 2.5s infinite cubic-bezier(0.02, 0.01, 0.21, 1);
+      }
+
+      .dot.-alpha::after {
+        background-color: #ff4c4d;
+        animation: yAlpha 2.5s infinite cubic-bezier(0.3, 0.27, 0.07, 1.64);
+      }
+
+      .dot.-bravo {
+        animation: xBravo 2.5s infinite cubic-bezier(0.02, 0.01, 0.21, 1);
+      }
+
+      .dot.-bravo::after {
+        background-color: #21c2de;
+        animation: yAlpha 2.5s infinite cubic-bezier(0.3, 0.27, 0.07, 1.64);
+      }
+
+      .dot.-charlie {
+        animation: xAlpha 2.5s infinite cubic-bezier(0.02, 0.01, 0.21, 1);
+      }
+
+      .dot.-charlie::after {
+        background-color: #072c34;
+        animation: yBravo 2.5s infinite cubic-bezier(0.3, 0.27, 0.07, 1.64);
+      }
+
+      @keyframes xAlpha {
+        50% {
+          animation-timing-function: cubic-bezier(0.3, 0.27, 0.07, 1.64);
+          transform: translateX(50px);
+        }
+      }
+
+      @keyframes xBravo {
+        50% {
+          animation-timing-function: cubic-bezier(0.3, 0.27, 0.07, 1.64);
+          transform: translateX(-25px);
+        }
+      }
+
+      @keyframes yAlpha {
+        50% {
+          animation-timing-function: cubic-bezier(0.02, 0.01, 0.21, 1);
+          transform: translateY(25px);
+        }
+      }
+
+      @keyframes yBravo {
+        50% {
+          animation-timing-function: cubic-bezier(0.02, 0.01, 0.21, 1);
+          transform: translateY(-50px);
+        }
+      }
+    </style>
   </head>
   <body>
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
-    <div id="root"></div>
+    <div id="root">
+      <div class="spinner">
+        <div class="dot -alpha"></div>
+        <div class="dot -bravo"></div>
+        <div class="dot -charlie"></div>
+      </div>
+    </div>
     <script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
   </body>
 </html>

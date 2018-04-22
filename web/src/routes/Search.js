@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Rivet from '../hoc/Rivet';
 import Section from '../blocks/Section';
+import { FloatingSpinner } from '../blocks/Spinner';
 import SearchBar from '../components/SearchBar';
 import SearchResult from '../components/SearchResult';
 import GeoLocationButton from '../components/GeoLocationButton';
@@ -12,7 +13,6 @@ import {
 } from '../blocks/Flex';
 import {
   SectionHeader,
-  Paragraph,
   Hero,
 } from '../blocks/Type';
 import {
@@ -85,7 +85,7 @@ const Search = (props) => {
           <GeoLocationButton copy={SEARCH_GEO_CTA} />
         </SearchColumn>
       </SearchRow>
-      {isSearchPending ? <Paragraph>Searching...</Paragraph> : null}
+      {isSearchPending ? <FloatingSpinner /> : null}
       {results.map(eventId => (
         <SearchResult eventId={eventId} key={eventId} />
       ))}

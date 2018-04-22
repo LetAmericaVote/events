@@ -1,74 +1,79 @@
 import React from 'react';
-import styled from 'styled-components';
-import leftPart from '../assets/loader/left.svg';
-import rightPart from '../assets/loader/right.svg';
-import middlePart from '../assets/loader/middle.svg';
+import styled, { keyframes } from 'styled-components';
+import colors from '../theme/colors';
 
 // TODO: Finish this later
 // http://tobiasahlin.com/blog/curved-path-animations-in-css/
 
-const SpinnerPartContainer = styled.div`
-  ${props => props.theme.reset}
-  height: 37.15px;
-  position: absolute;
-  top: 0;
+const xAlpha = keyframes`
+  50% {
+    animation-timing-function: cubic-bezier(0.3, 0.27, 0.07, 1.64);
+    transform: translateX(50px);
+  }
 `;
 
-const SpinnerPart = styled.div`
-  ${props => props.theme.reset}
-  background-size: 100% 100%;
-  background-image: url(${props => props.src});
-  height: 100%;
+const xBravo = keyframes`
+  50% {
+    animation-timing-function: cubic-bezier(0.3, 0.27, 0.07, 1.64);
+    transform: translateX(-25px);
+  }
 `;
 
-const LeftContainer = styled(SpinnerPartContainer)`
-  left: 0;
+const yAlpha = keyframes`
+  50% {
+    animation-timing-function: cubic-bezier(0.02, 0.01, 0.21, 1);
+    transform: translateY(25px);
+  }
 `;
 
-const LeftPart = styled(SpinnerPart)`
-  width: 32.65px;
+const yBravo = keyframes`
+  50% {
+    animation-timing-function: cubic-bezier(0.02, 0.01, 0.21, 1);
+    transform: translateY(-50px);
+  }
 `;
 
-const MiddlePartContainer = styled(SpinnerPartContainer)`
-  left: 16.35px;
-`;
+const Dot = styled.div`
+  animation: ${props => props.xAxis} 2.5s infinite cubic-bezier(0.02, 0.01, 0.21, 1);
 
-const MiddlePart = styled(SpinnerPart)`
-  width: 27.75px;
-`;
-
-const RightPartContainer = styled(SpinnerPartContainer)`
-  left: 24px
-`;
-
-const RightPart = styled(SpinnerPart)`
-  width: 35.9px;
+  &:after {
+    content: '';
+    display: block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: ${props => props.color};
+    animation: ${props => props.yAxis} 2.5s infinite cubic-bezier(0.3, 0.27, 0.07, 1.64);
+  }
 `;
 
 const SpinnerContainer = styled.div`
   ${props => props.theme.reset};
-
   width: 100%;
-  height: 100%;
-  position: relative;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `;
 
-const Spinner = () => (
-  <SpinnerContainer>
-    <LeftContainer>
-      <LeftPart src={leftPart} />
-    </LeftContainer>
-    <MiddlePartContainer>
-      <MiddlePart src={middlePart} />
-    </MiddlePartContainer>
-    <RightPartContainer>
-      <RightPart src={rightPart} />
-    </RightPartContainer>
-  </SpinnerContainer>
+const Spinner = (props) => {
+  return (
+    <SpinnerContainer>
+      <Dot color={colors.action} xAxis={xAlpha} yAxis={yAlpha} />
+      <Dot color={colors.primary} xAxis={xBravo} yAxis={yAlpha} />
+      <Dot color={colors.secondary} xAxis={xAlpha} yAxis={yBravo} />
+    </SpinnerContainer>
+  );
+};
+
+const FloatingSpinnerContainer = styled.div`
+  ${props => props.theme.reset}
+
+  position: absolute;
+  top: calc(50%);
+  left: calc(50%);
+`;
+
+export const FloatingSpinner = (props) => (
+  <FloatingSpinnerContainer>
+    <Spinner />
+  </FloatingSpinnerContainer>
 );
 
 export default Spinner;
