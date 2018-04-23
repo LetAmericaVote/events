@@ -24,7 +24,7 @@ const Signup = (props) => {
       <InvertedSectionHeader centered>{copy}</InvertedSectionHeader>
       <FaceRow userIds={signups.map(signup => signup.user.id || signup.user)} />
       <FlexAcrossJustifyCenter>
-        {/* <SignupButton eventId={eventId} /> */}
+        <SignupButton eventId={eventId} />
       </FlexAcrossJustifyCenter>
     </Punch>
   );
