@@ -114,12 +114,25 @@ const HomeSearchResultsComponent = (props) => {
   });
 };
 
-HomeSearchResultsComponent.mapStateToProps = (state) => ({
-  events: selectEventsSortedByDistance(state)
+HomeSearchResultsComponent.mapStateToProps = (state) => {
+  const records = {};
+  const events = selectEventsSortedByDistance(state)
     .concat(selectEventsSortedByDatetime(state))
-    .filter(event => new Date(event.dateTime).getTime() > Date.now())
-    .slice(0, 12),
-});
+    .filter(event => new Date(event.dateTime).getTime() > Date.now());
+
+  const uniqueEvents = events.filter(event => {
+    if (records[event.id]) {
+      return false;
+    }
+
+    records[event.id] = true;
+    return true;
+  }).splice(0, 12);
+
+  return {
+    events: uniqueEvents,
+  };
+};
 
 const HomeSearchResults = Rivet(HomeSearchResultsComponent);
 

@@ -68,7 +68,7 @@ const EventSchema = mongoose.Schema({
   },
 });
 
-EventSchema.virtual('stateAbbr', () => {
+EventSchema.virtual('stateAbbr').get(function() {
   return postal(this.state);
 });
 
