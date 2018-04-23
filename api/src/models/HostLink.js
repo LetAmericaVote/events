@@ -63,8 +63,6 @@ HostLinkSchema.methods.sync = async function(requestUser) {
   }
 }
 
-// TODO: Add method function here for linking the event & the user, updating contentful, instead of in the signup route.
-
 const HostLink = mongoose.model('hostLink', HostLinkSchema);
 
 module.exports = HostLink;

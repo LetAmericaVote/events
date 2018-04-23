@@ -192,6 +192,12 @@ EventSchema.statics.syncFromContentful = async function(entry) {
   }
 };
 
+EventSchema.statics.isHostUser = async function(compareId, eventId) {
+  const event = await this.findOne({ _id: eventId });
+
+  return event.hostUser && event.hostUser === compareId;
+};
+
 EventSchema.statics.formatArrayOfEvents = async function(events, requestUser) {
   const formattedEvents = await Promise.all(events.map(async (event) =>
     await event.getApiResponse(requestUser)
@@ -200,7 +206,7 @@ EventSchema.statics.formatArrayOfEvents = async function(events, requestUser) {
   return formattedEvents;
 };
 
-EventSchema.methods.getApiResponse = async function(requestUser) {
+EventSchema.methods.getApiResponse = async function(requestUser, populate = false) {
   const baseEventResponse = {
     id: this.id,
     title: this.title,
@@ -221,6 +227,10 @@ EventSchema.methods.getApiResponse = async function(requestUser) {
   }
 
   try {
+    if (populate) {
+      await this.populate('hostUser');
+    }
+
     const hostUser = this.hostUser && this.hostUser.getApiResponse ?
       await this.hostUser.getApiResponse(requestUser) : (this.hostUser || null);
 

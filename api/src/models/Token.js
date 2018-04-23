@@ -63,14 +63,18 @@ TokenSchema.statics.generateToken = async function(user) {
   }
 };
 
-TokenSchema.methods.getApiResponse = async function(requestUser) {
+TokenSchema.methods.getApiResponse = async function(requestUser, populate = false) {
   const baseResponse = {
     value: this.value,
   };
 
   try {
+    if (populate) {
+      await this.populate('user');
+    }
+
     const user = !!this.user ? await this.user.getApiResponse(requestUser) : null;
-    
+
     return {
       ...baseResponse,
       user,

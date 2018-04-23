@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const Event = require('./Event');
+const Signup = require('./Signup');
 const { ADMIN_ROLE } = require('../lib/common');
 
 const CommentSchema = mongoose.Schema({
@@ -11,21 +13,20 @@ const CommentSchema = mongoose.Schema({
   event: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'event',
-    required: true,
     index: true,
   },
   inReplyTo: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'post',
+    ref: 'comment',
     index: true,
   },
   message: {
     type: String,
     required: true,
   },
-  isFlagged: {
-    type: Boolean,
-    default: false,
+  flag: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'flag',
   },
   edits: [
     {
@@ -37,30 +38,53 @@ const CommentSchema = mongoose.Schema({
   timestamps: true,
 });
 
-CommentSchema.statics.formatArrayOfComments = async function(comments, requestUser) {
+CommentSchema.statics.formatArrayOfComments = async function(comments, requestUser, populate = false) {
   const formattedComments = await Promise.all(comments.map(async (comment) =>
-    await comment.getApiResponse(requestUser)
+    await comment.getApiResponse(requestUser, populate)
   ));
 
   return formattedComments;
 };
 
-CommentSchema.methods.getApiResponse = async function(requestUser) {
+CommentSchema.methods.getApiResponse = async function(requestUser, populate = false) {
   const baseEventResponse = {
     id: this.id,
     message: this.message,
     edits: this.edits,
-    isFlagged: this.isFlagged,
+    isFlagged: !!this.flag,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
   };
 
-  if (this.isFlagged && requestUser.role !== ADMIN_ROLE) {
-    baseEventResponse.message = 'This comment was deleted by a moderator.';
-  }
-
   try {
-    const user = !this.isFlagged && this.user && this.user.getApiResponse ?
+    if (this.event && requestUser && requestUser.id) {
+      const signup = await Signup.findOne({ user: requestUser, event: this.event });
+
+      if (!signup || !!signup.flag) {
+        return {
+          id: this.id,
+          createdAt: this.createdAt,
+        };
+      }
+    }
+
+    // The flagged & event check is to prevent the unnecessary query if its false.
+    const isHostUser = (requestUser && requestUser.id && !!this.flag && this.event) ?
+      await Event.isHostUser(requestUser.id || requestUser) : false;
+
+    const hideDetails = !!this.flag && (
+      (requestUser || {}).role !== ADMIN_ROLE || ! isHostUser
+    );
+
+    if (hideDetails) {
+      baseEventResponse.message = 'This comment was deleted by a moderator.';
+    }
+
+    if (populate) {
+      await this.populate('user event inReplyTo flag');
+    }
+
+    const user = ! hideDetails && this.user && this.user.getApiResponse ?
       await this.user.getApiResponse(requestUser) : (this.user || null);
 
     const event = this.event && this.event.getApiResponse ?
@@ -69,11 +93,15 @@ CommentSchema.methods.getApiResponse = async function(requestUser) {
     const inReplyTo = this.inReplyTo && this.inReplyTo.getApiResponse ?
       await this.inReplyTo.getApiResponse(requestUser) : (this.inReplyTo || null);
 
+    const flag = this.flag && this.flag.getApiResponse ?
+      await this.flag.getApiResponse(requestUser) : (this.flag || null);
+
     return {
       ...baseEventResponse,
       user,
       event,
       inReplyTo,
+      flag,
     };
   } catch (error) {
     console.error(error);

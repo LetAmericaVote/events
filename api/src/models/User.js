@@ -38,9 +38,9 @@ const UserSchema = mongoose.Schema({
     enum: ROLES_LIST,
     default: USER_ROLE,
   },
-  isBanned: {
-    type: Boolean,
-    default: false,
+  flag: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'flag',
   },
 }, {
   timestamps: true,
@@ -81,22 +81,23 @@ UserSchema.statics.formatArrayOfUsers = async function(users, requestUser) {
   return formattedUsers;
 };
 
-UserSchema.methods.getApiResponse = async function (requestingUser) {
-  if (this.isbanned && this.role !== ADMIN_ROLE) {
-    return {
-      id: this.id,
-      isBanned: true,
-    };
+UserSchema.methods.getApiResponse = async function (requestingUser, populate = false) {
+  const baseUserResponse = {
+    id: this.id,
+    isFlagged: !!this.flag,
+  };
+
+  if (!!this.flag && (requestingUser || {}).role !== ADMIN_ROLE) {
+    return baseUserResponse;
   }
 
   const response = {
-    id: this.id,
+    ...baseUserResponse,
     firstName: this.firstName,
     lastName: this.lastName,
     fullName: this.fullName,
     profilePhoto: this.profilePhoto,
     role: this.role,
-    isBanned: this.isBanned,
     updatedAt: this.updatedAt,
     createdAt: this.createdAt,
   };
@@ -106,7 +107,19 @@ UserSchema.methods.getApiResponse = async function (requestingUser) {
     response.mobile = this.mobile;
   }
 
-  return response;
+  try {
+    if (populate) {
+      await this.populate('flag');
+    }
+
+    response.flag = this.flag && this.flag.getApiResponse ?
+      await this.flag.getApiResponse(requestUser) : (this.flag || null);
+
+    return response;
+  } catch (error) {
+    console.error(error);
+    return response;
+  }
 };
 
 const User = mongoose.model('user', UserSchema);

@@ -24,6 +24,7 @@ const controllers = [
   ...require('./src/routes/location'),
   ...require('./src/routes/signup'),
   ...require('./src/routes/user'),
+  ...require('./src/routes/flag'),
 ];
 
 controllers.forEach(controller => {

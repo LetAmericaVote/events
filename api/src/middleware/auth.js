@@ -21,6 +21,10 @@ async function requiresAuth(req, res, next) {
 
   const result = await Token.validateUserToken(lavAuthId, lavAuthToken);
 
+  if (result.user && result.user.flag) {
+    return res.status(401).json({ error: true, message: 'You\'re account has been suspended.' });
+  }
+
   if (result.isValid) {
     res.locals.requestUser = result.user;
     return next();
@@ -32,6 +36,12 @@ async function requiresAuth(req, res, next) {
 async function requiresAdmin(req, res, next) {
   const lavAuthId = req.headers.lav_auth_id;
   const lavAuthToken = req.headers.lav_auth_token;
+
+  const result = await Token.validateUserToken(lavAuthId, lavAuthToken);
+
+  if (result.user && result.user.flag) {
+    return res.status(401).json({ error: true, message: 'You\'re account has been suspended.' });
+  }
 
   if (result.isValid && result.user.role === ADMIN_ROLE) {
     res.locals.requestUser = result.user;

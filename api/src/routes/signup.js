@@ -16,10 +16,9 @@ async function getUserSignups(req, res) {
   const limitCount = parsedLimit > 25 ? 25 : parsedLimit;
 
   const signups = await Signup.find(findQuery)
-    .limit(limitCount)
-    .populate('user event');
+    .limit(limitCount);
 
-  const formattedSignups = await Signup.formatArrayOfSignups(signups, requestUser);
+  const formattedSignups = await Signup.formatArrayOfSignups(signups, requestUser, true);
 
   const remainingCount = await Signup.count(findQuery);
   const remaining = remainingCount - formattedSignups.length;
@@ -38,10 +37,9 @@ async function getUserStatus(req, res) {
   const { requestUser } = res.locals;
   const { eventId } = req.params;
 
-  const signup = await Signup.findOne({ user: requestUser, event: eventId })
-    .populate('user event');
+  const signup = await Signup.findOne({ user: requestUser, event: eventId });
 
-  const formattedSignup = await signup.getApiResponse(requestUser);
+  const formattedSignup = await signup.getApiResponse(requestUser, true);
 
   res.json({
     signupStatus: !!signup && !!signup.id,
@@ -67,9 +65,8 @@ async function getEventSignups(req, res) {
   const signups = await Signup.find(findQuery)
     .sort(sortyQuery)
     .limit(limitCount)
-    .populate('event user');
 
-  const formattedSignups = await Signup.formatArrayOfSignups(signups, requestUser);
+  const formattedSignups = await Signup.formatArrayOfSignups(signups, requestUser, true);
 
   const remainingCount = await Signup.count(findQuery);
   const remaining = remainingCount - formattedSignups.length;
@@ -104,7 +101,7 @@ async function postUserSignup(req, res) {
   }
 
   const signup = await Signup.makeSignup(requestUser, eventId);
-  const formattedSignup = await signup.getApiResponse(requestUser);
+  const formattedSignup = await signup.getApiResponse(requestUser, true);
 
   res.json({
     signup: formattedSignup,
