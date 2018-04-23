@@ -97,11 +97,21 @@ const HomeSearchResultsComponent = (props) => {
     return null;
   }
 
-  return events.map((event) => (
-    <FlexResponsiveThirdColumn key={event.id}>
-      <SearchResult reduced eventId={event.id} />
-    </FlexResponsiveThirdColumn>
-  ));
+  const record = {};
+
+  return events.map((event) => {
+    if (record[event.id]) {
+      return null;
+    }
+
+    record[event.id] = true;
+
+    return (
+      <FlexResponsiveThirdColumn key={event.id}>
+        <SearchResult reduced eventId={event.id} />
+      </FlexResponsiveThirdColumn>
+    );
+  });
 };
 
 HomeSearchResultsComponent.mapStateToProps = (state) => ({

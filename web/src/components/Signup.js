@@ -1,6 +1,7 @@
 import React from 'react';
 import Rivet from '../hoc/Rivet';
 import Punch from '../blocks/Punch';
+import Spacer from '../blocks/Spacer';
 import SignupButton from './SignupButton';
 import FaceRow from './FaceRow';
 import { InvertedSectionHeader } from '../blocks/Type';
@@ -23,6 +24,7 @@ const Signup = (props) => {
     <Punch>
       <InvertedSectionHeader centered>{copy}</InvertedSectionHeader>
       <FaceRow userIds={signups.map(signup => signup.user.id || signup.user)} />
+      <Spacer />
       <FlexAcrossJustifyCenter>
         <SignupButton eventId={eventId} />
       </FlexAcrossJustifyCenter>

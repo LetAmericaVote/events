@@ -10,9 +10,6 @@ const FaceRowStyled = styled.div`
 
   flex-wrap: wrap;
   justify-content: center;
-
-  ${'' /* TODO: This shouldn't go here */}
-  ${props => props.theme.baseMarginBottom}
 `;
 
 const FaceRow = (props) => {

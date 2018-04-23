@@ -2,9 +2,6 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import colors from '../theme/colors';
 
-// TODO: Finish this later
-// http://tobiasahlin.com/blog/curved-path-animations-in-css/
-
 const xAlpha = keyframes`
   50% {
     animation-timing-function: cubic-bezier(0.3, 0.27, 0.07, 1.64);

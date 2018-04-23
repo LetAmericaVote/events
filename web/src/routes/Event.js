@@ -7,6 +7,7 @@ import Community from '../components/Community';
 import Rivet from '../hoc/Rivet';
 import Section from '../blocks/Section';
 import Spacer from '../blocks/Spacer';
+import { FloatingSpinner } from '../blocks/Spinner';
 import {
   FlexResponsiveThirdColumn,
   FlexResponsiveTwoThirdsColumn,
@@ -43,8 +44,9 @@ const Event = (props) => {
   } = props;
 
   if (! eventExists) {
-    // TODO: Return block version
-    return null;
+    return (
+      <FloatingSpinner />
+    );
   }
 
   const ActiveComponent = (() => {
