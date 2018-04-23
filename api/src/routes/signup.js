@@ -6,11 +6,11 @@ const { loadUser, requiresAuth } = require('../middleware/auth');
 async function getUserSignups(req, res) {
   const { requestUser } = res.locals;
   const { start, limit } = req.query;
-  const parsedLimit = Math.max(parseInt(limit), 0);
+  const parsedLimit = Math.max(parseInt(limit), 0) || 25;
 
   const findQuery = { user: requestUser.id };
   if (start) {
-    findQuery.event = { '$gt': start };
+    findQuery._id = { '$gt': start };
   }
 
   const limitCount = parsedLimit > 25 ? 25 : parsedLimit;
@@ -21,8 +21,16 @@ async function getUserSignups(req, res) {
 
   const formattedSignups = await Signup.formatArrayOfSignups(signups, requestUser);
 
+  const remainingCount = await Signup.count(findQuery);
+  const remaining = remainingCount - formattedSignups.length;
+  const total = await Signup.count();
+
   return res.json({
     signups: formattedSignups,
+    meta: {
+      total,
+      remaining,
+    },
   });
 }
 
@@ -45,11 +53,11 @@ async function getEventSignups(req, res) {
   const { requestUser } = res.locals;
   const { eventId } = req.params;
   const { start, limit, sortBySignupDate } = req.query;
-  const parsedLimit = Math.max(parseInt(limit), 0);
+  const parsedLimit = Math.max(parseInt(limit), 0) || 25;
 
   const findQuery = { event: eventId };
   if (start) {
-    findQuery.user = { '$gt': start };
+    findQuery._id = { '$gt': start };
   }
 
   const sortyQuery = sortBySignupDate ? { '_id': 1 } : {};
@@ -63,8 +71,16 @@ async function getEventSignups(req, res) {
 
   const formattedSignups = await Signup.formatArrayOfSignups(signups, requestUser);
 
+  const remainingCount = await Signup.count(findQuery);
+  const remaining = remainingCount - formattedSignups.length;
+  const total = await Signup.count();
+
   return res.json({
     signups: formattedSignups,
+    meta: {
+      total,
+      remaining,
+    },
   });
 }
 

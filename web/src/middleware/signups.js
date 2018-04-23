@@ -1,6 +1,6 @@
 import {
   FETCH_PAGINATED_USER_SIGNUPS,
-  FETCH_PAGINAED_EVENT_SIGNUPS,
+  FETCH_PAGINATED_EVENT_SIGNUPS,
   FETCH_USER_SIGNUP_STATUS,
   SIGNUP_FOR_EVENT,
   API_REQUEST_SUCCEEDED,
@@ -21,8 +21,8 @@ import {
 } from '../selectors';
 import processSignup from '../processors/signup';
 
-const META_USER_START = 'userStart';
-const META_EVENT_START = 'eventStart';
+const META_START = 'start';
+const META_AUTOMATIC_ADVANCE = 'automaticAdvance';
 
 const signupOutgoingRequest = (store, action) => {
   switch (action.type) {
@@ -33,9 +33,15 @@ const signupOutgoingRequest = (store, action) => {
       const start = selectApiMetaCustomProperty(
         FETCH_PAGINATED_USER_SIGNUPS,
         spaceName,
-        META_USER_START,
+        META_START,
         store.getState()
       );
+
+      if (action.automaticAdvance) {
+        store.dispatch(setApiActionMetaProperty(
+          FETCH_PAGINATED_USER_SIGNUPS, spaceName, META_AUTOMATIC_ADVANCE, action,
+        ));
+      }
 
       const query = {};
 
@@ -50,16 +56,22 @@ const signupOutgoingRequest = (store, action) => {
       break;
     }
 
-    case FETCH_PAGINAED_EVENT_SIGNUPS: {
+    case FETCH_PAGINATED_EVENT_SIGNUPS: {
       const { eventId, sortBySignupDate } = action;
       const spaceName = `eventId=${eventId},sortBySignupDate=${sortBySignupDate}`;
 
       const start = selectApiMetaCustomProperty(
-        FETCH_PAGINAED_EVENT_SIGNUPS,
+        FETCH_PAGINATED_EVENT_SIGNUPS,
         spaceName,
-        META_EVENT_START,
+        META_START,
         store.getState()
       );
+
+      if (action.automaticAdvance) {
+        store.dispatch(setApiActionMetaProperty(
+          FETCH_PAGINATED_EVENT_SIGNUPS, spaceName, META_AUTOMATIC_ADVANCE, action,
+        ));
+      }
 
       const query = { sortBySignupDate };
 
@@ -69,7 +81,7 @@ const signupOutgoingRequest = (store, action) => {
 
       const endpoint = `/v1/signups/event/${eventId}`;
       store.dispatch(getFromApi(
-        FETCH_PAGINAED_EVENT_SIGNUPS, spaceName, endpoint, query
+        FETCH_PAGINATED_EVENT_SIGNUPS, spaceName, endpoint, query
       ));
       break;
     }
@@ -125,10 +137,10 @@ const signupIncomingRequest = (store, action) => {
       break;
     }
 
-    case FETCH_PAGINAED_EVENT_SIGNUPS:
+    case FETCH_PAGINATED_EVENT_SIGNUPS:
     case FETCH_PAGINATED_USER_SIGNUPS: {
       const { data } = action;
-      const { signups } = data;
+      const { signups, meta } = data;
 
       if (! signups || ! signups.length) {
         break;
@@ -156,18 +168,9 @@ const signupIncomingRequest = (store, action) => {
 
       const lastSignup = processedData.signups[processedData.signups.length - 1];
 
-      if (metaAction === FETCH_PAGINAED_EVENT_SIGNUPS) {
-        // TODO: Shouldn't these be based on user.id ??
-        store.dispatch(setApiActionMetaProperty(
-          FETCH_PAGINAED_EVENT_SIGNUPS, space, META_EVENT_START, lastSignup.user,
-        ));
-      }
-
-      if (metaAction === FETCH_PAGINATED_USER_SIGNUPS) {
-        store.dispatch(setApiActionMetaProperty(
-          FETCH_PAGINATED_USER_SIGNUPS, space, META_USER_START, lastSignup.event,
-        ));
-      }
+      store.dispatch(setApiActionMetaProperty(
+        metaAction, space, META_START, lastSignup.id,
+      ));
 
       if (processedData.signups.length) {
         store.dispatch(storeSignups(processedData.signups));
@@ -179,6 +182,17 @@ const signupIncomingRequest = (store, action) => {
 
       if (processedData.users.length) {
         store.dispatch(storeUsers(processedData.users));
+      }
+
+      const automaticAdvance = selectApiMetaCustomProperty(
+        metaAction,
+        space,
+        META_AUTOMATIC_ADVANCE,
+        store.getState()
+      );
+
+      if (automaticAdvance && meta.remaining > 0) {
+        store.dispatch(automaticAdvance);
       }
 
       break;

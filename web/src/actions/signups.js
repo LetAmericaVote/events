@@ -2,9 +2,11 @@ export const FETCH_PAGINATED_USER_SIGNUPS = 'FETCH_PAGINATED_USER_SIGNUPS';
 
 /**
  * Fetch a paginated list of the authenticated users signups.
+ *
+ * @param  {Boolean} [automaticAdvance=false] Automatically advance through the resource
  */
-export function fetchPaginatedUserSignups() {
-  return { type: FETCH_PAGINATED_USER_SIGNUPS };
+export function fetchPaginatedUserSignups(automaticAdvance = false) {
+  return { type: FETCH_PAGINATED_USER_SIGNUPS, automaticAdvance };
 }
 
 export const FETCH_USER_SIGNUP_STATUS = 'FETCH_USER_SIGNUP_STATUS';
@@ -18,16 +20,17 @@ export function fetchUserSignupStatus(eventId) {
   return { type: FETCH_USER_SIGNUP_STATUS, eventId };
 }
 
-export const FETCH_PAGINAED_EVENT_SIGNUPS = 'FETCH_PAGINAED_EVENT_SIGNUPS';
+export const FETCH_PAGINATED_EVENT_SIGNUPS = 'FETCH_PAGINATED_EVENT_SIGNUPS';
 
 /**
  * Fetch a paginated list of event signups.
  *
  * @param  {String} eventId            Event id to paginate for
  * @param  {Boolean} sortyBySignupDate Sort signups by when they were created
+ * @param  {Boolean} [automaticAdvance=false] Automatically advance through the resource
  */
-export function fetchPaginatedEventSignups(eventId, sortBySignupDate) {
-  return { type: FETCH_PAGINAED_EVENT_SIGNUPS, eventId, sortBySignupDate };
+export function fetchPaginatedEventSignups(eventId, sortBySignupDate, automaticAdvance = false) {
+  return { type: FETCH_PAGINATED_EVENT_SIGNUPS, eventId, sortBySignupDate, automaticAdvance };
 }
 
 export const SIGNUP_FOR_EVENT = 'SIGNUP_FOR_EVENT';

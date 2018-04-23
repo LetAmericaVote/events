@@ -116,7 +116,7 @@ const init = store => next => action => {
 
   if (isEventRoute && hasEventData && ! hasRequestedEventSignupData) {
     next(setInitValue(eventSignupKey, true));
-    store.dispatch(fetchPaginatedEventSignups(eventId, true));
+    store.dispatch(fetchPaginatedEventSignups(eventId, true, true));
 
     return next(action);
   }

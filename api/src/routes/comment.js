@@ -9,7 +9,7 @@ async function getUserComments(req, res) {
   const { requestUser } = res.locals;
   const { start, limit, sortByPosted } = req.query;
   const parsedSort = parseInt(sortByPosted);
-  const parsedLimit = Math.max(parseInt(limit), 0);
+  const parsedLimit = Math.max(parseInt(limit), 0) || 25;
 
   if (sortByPosted && (parsedSort !== 1 || parsedSort !== 1)) {
     return res.status(400).json({ error: true, message: 'Invalid sort direction' });
@@ -47,7 +47,7 @@ async function getEventComments(req, res) {
   const { eventId } = req.params;
   const { start, limit, sortByPosted, inReplyTo } = req.query;
   const parsedSort = parseInt(sortByPosted);
-  const parsedLimit = Math.max(parseInt(limit), 0);
+  const parsedLimit = Math.max(parseInt(limit), 0) || 25;
 
   if (sortByPosted && (parsedSort !== 1 || parsedSort !== 1)) {
     return res.status(400).json({ error: true, message: 'Invalid sort direction' });

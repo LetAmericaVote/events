@@ -5,7 +5,7 @@ const { loadUser, requiresAuth, requiresAdmin } = require('../middleware/auth');
 const getUsers = async (req, res) => {
   const { requestUser } = res.locals;
   const { start, limit } = req.query;
-  const parsedLimit = Math.max(parseInt(limit), 0);
+  const parsedLimit = Math.max(parseInt(limit), 0) || 25;
 
   const findQuery = start ? {'_id': { '$gt': start }} : {};
   const limitCount = parsedLimit > 25 ? 25 : parsedLimit;
@@ -14,7 +14,17 @@ const getUsers = async (req, res) => {
 
   const formattedUsers = await User.formatArrayOfUsers(users, requestUser);
 
-  res.json({ users: formattedUsers });
+  const remainingCount = await User.count(findQuery);
+  const remaining = remainingCount - formattedUsers.length;
+  const total = await User.count();
+
+  res.json({
+    users: formattedUsers,
+    meta: {
+      total,
+      remaining,
+    },
+  });
 };
 
 const getRandomUsers = async (req, res) => {
@@ -34,13 +44,15 @@ const getBulkUsers = async (req, res) => {
   const { requestUser } = res.locals;
   const { userIds } = req.query;
 
-  if (! userIds || ! userIds.length || ! Array.isArray(userIds) || userIds.length > 25) {
+  const parsedIds = Array.isArray(userIds) ? userIds : Object.values(userIds);
+
+  if (! parsedIds || ! parsedIds.length || parsedIds.length > 25) {
     return res.status(400).json({ error: true, message: 'Invalid user ids' });
   }
 
   const users = await User.find({
     '_id': {
-      '$in': userIds.map(userId => mongoose.Types.ObjectId(userId)),
+      '$in': parsedIds.map(userId => mongoose.Types.ObjectId(userId)),
     },
   });
 

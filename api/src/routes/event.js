@@ -5,7 +5,7 @@ const Event = require('../models/Event');
 async function getEvents(req, res) {
   const { requestUser } = res.locals;
   const { start, limit, sortByUpcoming } = req.query;
-  const parsedLimit = Math.max(parseInt(limit), 0);
+  const parsedLimit = Math.max(parseInt(limit), 0) || 25;
 
   const findQuery = {
     dateTime: {
@@ -29,8 +29,16 @@ async function getEvents(req, res) {
 
   const formattedEvents = await Event.formatArrayOfEvents(events, requestUser);
 
+  const remainingCount = await Event.count(findQuery);
+  const remaining = remainingCount - formattedEvents.length;
+  const total = await Event.count();
+
   res.json({
     events: formattedEvents,
+    meta: {
+      total,
+      remaining,
+    },
   });
 }
 
@@ -106,13 +114,15 @@ async function getBulkEvents(req, res) {
   const { requestUser } = res.locals;
   const { eventIds } = req.query;
 
-  if (! eventIds || ! eventIds.length || ! Array.isArray(eventIds) || eventIds.length > 25) {
+  const parsedIds = Array.isArray(eventIds) ? eventIds : Object.values(eventIds);
+
+  if (! parsedIds || ! parsedIds.length || parsedIds.length > 25) {
     return res.status(400).json({ error: true, message: 'Invalid event ids' });
   }
 
   const events = await Event.find({
     '_id': {
-      '$in': eventIds.map(eventId => mongoose.Types.ObjectId(eventId)),
+      '$in': parsedIds.map(eventId => mongoose.Types.ObjectId(eventId)),
     },
   });
 
