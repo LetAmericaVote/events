@@ -17,6 +17,7 @@ const SIGNUPS_GOAL = 2000;
 const COMMENTS_GOAL = 2000;
 const COMMENT_REPLY_MIN = 0;
 const COMMENT_REPLY_MAX = 25;
+const FLAG_GOAL = 200;
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -30,7 +31,6 @@ async function generateUser(count) {
   console.log(`Generating user ${count} of ${USER_GOAL}...`);
 
   const role = Math.random() > 0.95 ? ADMIN_ROLE : USER_ROLE;
-  const isBanned = role === USER_ROLE ? Math.random() >= 0.95 : false;
   const randomAddress = addresses[Math.floor(Math.random() * addresses.length)];
 
   const zipcode = (('' + randomAddress.postalCode).length === 4 ? '0' : '') + randomAddress.postalCode;
@@ -45,7 +45,6 @@ async function generateUser(count) {
       mobile: faker.phone.phoneNumber(),
       mobileCommonsProfileId: 'seed',
       role,
-      isBanned,
     });
 
     await user.save();
@@ -214,7 +213,7 @@ async function execute() {
     await generateUser(0);
     await generateEvent(0);
     await generateSignup(0);
-    // TODO: await generateComment(0); 
+    // TODO: await generateComment(0);
     // process.exit();
   } catch (error) {
     console.error(error);
