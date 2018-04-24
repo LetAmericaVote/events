@@ -50,6 +50,6 @@ FlagSchema.methods.getApiResponse = async function(requestUser, populate) {
   }
 };
 
-const Flag = mongoose.model('flag', Flag);
+const Flag = mongoose.model('flag', FlagSchema);
 
 module.exports = Flag;

@@ -103,7 +103,7 @@ async function getComment(req, res) {
   });
 }
 
-async function postEventComment(req, res) {
+async function postComment(req, res) {
   const { requestUser } = res.locals;
   const { eventId } = req.params;
   const { message, inReplyTo } = req.body;
