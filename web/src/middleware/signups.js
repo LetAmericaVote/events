@@ -11,6 +11,8 @@ import {
   storeUser,
   storeEvent,
   storeEvents,
+  storeFlag,
+  storeFlags,
   getFromApi,
   postToApi,
 } from '../actions';
@@ -124,7 +126,6 @@ const signupIncomingRequest = (store, action) => {
       }
 
       const processedItem = processSignup(signup);
-      store.dispatch(storeSignup(processedItem.signup));
 
       if (!!processedItem.event) {
         store.dispatch(storeEvent(processedItem.event));
@@ -133,6 +134,12 @@ const signupIncomingRequest = (store, action) => {
       if (!!processedItem.user) {
         store.dispatch(storeUser(processedItem.user));
       }
+
+      if (!!processedItem.flag) {
+        store.dispatch(storeFlag(processedItem.flag));
+      }
+
+      store.dispatch(storeSignup(processedItem.signup));
 
       break;
     }
@@ -159,11 +166,16 @@ const signupIncomingRequest = (store, action) => {
           acc.events.push(processedItem.event);
         }
 
+        if (!!processedItem.flag) {
+          acc.flags.push(processedItem.flag);
+        }
+
         return acc;
       }, {
         signups: [],
         events: [],
         users: [],
+        flags: [],
       });
 
       const lastSignup = processedData.signups[processedData.signups.length - 1];
@@ -172,16 +184,20 @@ const signupIncomingRequest = (store, action) => {
         metaAction, space, META_START, lastSignup.id,
       ));
 
-      if (processedData.signups.length) {
-        store.dispatch(storeSignups(processedData.signups));
-      }
-
       if (processedData.events.length) {
         store.dispatch(storeEvents(processedData.events));
       }
 
       if (processedData.users.length) {
         store.dispatch(storeUsers(processedData.users));
+      }
+
+      if (processedData.flags.length) {
+        store.dispatch(storeFlags(processedData.flags));
+      }
+
+      if (processedData.signups.length) {
+        store.dispatch(storeSignups(processedData.signups));
       }
 
       const automaticAdvance = selectApiMetaCustomProperty(

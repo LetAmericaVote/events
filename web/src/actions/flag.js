@@ -21,3 +21,20 @@ export const POST_FLAG = 'POST_FLAG';
 export function postFlag(reason, targetType, targetId) {
   return { type: POST_FLAG, reason, targetType, targetId };
 }
+
+export const STORE_FLAG = 'STORE_FLAG';
+
+/**
+ * Store a flag.
+ *
+ * @param  {Object} flag Flag to store
+ */
+export function storeFlag(flag) {
+  return { type: STORE_FLAG, flag };
+}
+
+export const STORE_FLAGS = 'STORE_FLAGS';
+
+export function storeFlags(flags) {
+  return { type: STORE_FLAGS, flags };
+}

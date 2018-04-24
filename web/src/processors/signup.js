@@ -1,9 +1,11 @@
 export default function processSignup(signup) {
   const hasUser = !!signup.user;
   const hasEvent = !!signup.event;
+  const isFlagged = !!signup.flag;
 
   const isUserFilled = hasUser && typeof signup.user === 'object';
   const isEventFilled = hasEvent && typeof signup.event === 'object';
+  const isFlagFilled = isFlagged && typeof signup.flag === 'object';
 
   const userId = hasUser ? (
     isUserFilled ? signup.user.id : signup.user
@@ -11,6 +13,10 @@ export default function processSignup(signup) {
 
   const eventId = hasUser ? (
     isEventFilled ? signup.event.id : signup.event
+  ) : null;
+
+  const flagId = isFlagged ? (
+    isFlagFilled ? signup.flag.id : signup.flag
   ) : null;
 
   const processedSignup = {
@@ -25,6 +31,10 @@ export default function processSignup(signup) {
     processedSignup.event = eventId;
   }
 
+  if (flagId) {
+    processSignup.flag = flagId;
+  }
+
   const processedData = {
     signup: processedSignup,
   };
@@ -35,6 +45,10 @@ export default function processSignup(signup) {
 
   if (isEventFilled) {
     processedData.event = signup.event;
+  }
+
+  if (isFlagFilled) {
+    processedData.flag = signup.flag;
   }
 
   return processedData;

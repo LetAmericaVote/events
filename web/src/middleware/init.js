@@ -140,33 +140,33 @@ const init = store => next => action => {
     return;
   }
 
-  if (action.type === STORE_SIGNUPS) {
-    const { signups } = action;
-    const missingUsers = signups.filter(signup =>
-      ! selectUser(signup.user, store.getState()) ||
-      ! selectUser(signup.user, store.getState()).createdAt);
-
-    if (missingUsers.length) {
-      const batches = batchItems(missingUsers);
-
-      batches.forEach(batch =>
-        store.dispatch(fetchBulkUsers(
-          batch.map(signup => signup.user)
-        )));
-    }
-
-    const missingEvents = signups.filter(signup =>
-      ! selectEvent(signup.event, store.getState()) ||
-      ! selectEvent(signup.event, store.getState()).createdAt);
-
-    if (missingEvents.length) {
-      const batches = batchItems(missingEvents);
-
-      batches.forEach(batch =>
-        store.dispatch(fetchBulkEvents(
-          batch.map(signup => signup.event)
-        )));
-    }
+  // if (action.type === STORE_SIGNUPS) {
+  //   const { signups } = action;
+  //   const missingUsers = signups.filter(signup =>
+  //     ! selectUser(signup.user, store.getState()) ||
+  //     ! selectUser(signup.user, store.getState()).createdAt);
+  //
+  //   if (missingUsers.length) {
+  //     const batches = batchItems(missingUsers);
+  //
+  //     batches.forEach(batch =>
+  //       store.dispatch(fetchBulkUsers(
+  //         batch.map(signup => signup.user)
+  //       )));
+  //   }
+  //
+  //   const missingEvents = signups.filter(signup =>
+  //     ! selectEvent(signup.event, store.getState()) ||
+  //     ! selectEvent(signup.event, store.getState()).createdAt);
+  //
+  //   if (missingEvents.length) {
+  //     const batches = batchItems(missingEvents);
+  //
+  //     batches.forEach(batch =>
+  //       store.dispatch(fetchBulkEvents(
+  //         batch.map(signup => signup.event)
+  //       )));
+  //   }
 
     return;
   }

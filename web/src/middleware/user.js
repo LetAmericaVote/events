@@ -7,6 +7,8 @@ import {
   FETCH_BULK_USERS,
   storeUser,
   storeUsers,
+  storeFlag,
+  storeFlags,
   getFromApi,
   postToApi,
   setApiActionMetaProperty,
@@ -15,6 +17,7 @@ import {
   selectApiMetaCustomProperty,
   selectAuthUserId,
 } from '../selectors';
+import processUser from '../processors/user';
 
 const META_USER_START = 'userStart';
 
@@ -99,6 +102,12 @@ const usersIncomingRequest = (store, action) => {
         break;
       }
 
+      const processedItem = processUser(user);
+
+      if (processedItem.flag) {
+        store.dispatch(storeFlag(processedItem.flag));
+      }
+
       store.dispatch(storeUser(user));
 
       break;
@@ -122,7 +131,34 @@ const usersIncomingRequest = (store, action) => {
         ));
       }
 
-      store.dispatch(storeUsers(users));
+      const processedData = users.reduce((acc, user) => {
+        const processedItem = processUser(user);
+
+        acc.users.push(processedItem.user);
+
+        if (!!processedItem.flag) {
+          acc.flags.push(processedItem.flag);
+        }
+
+        return acc;
+      }, {
+        users: [],
+        flags: [],
+      });
+
+      if (metaAction === FETCH_PAGINATED_USERS) {
+        const lastUser = processedData.users[processedData.users.length - 1];
+
+        store.dispatch(setApiActionMetaProperty(
+          metaAction, space, META_START, lastUser.id,
+        ));
+      }
+
+      if (processedData.flags.length) {
+        store.dispatch(storeFlags(processedData.flags));
+      }
+
+      store.dispatch(storeUsers(processedData.users));
       break;
     }
 

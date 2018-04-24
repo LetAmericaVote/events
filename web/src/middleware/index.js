@@ -2,6 +2,7 @@ import api from './api';
 import auth from './auth';
 import comments from './comments';
 import events from './events';
+import flag from './flag';
 import hostLink from './hostLink';
 import init from './init';
 import location from './location';
@@ -15,6 +16,7 @@ const middleware = [
   auth,
   comments,
   events,
+  flag,
   hostLink,
   init,
   location,

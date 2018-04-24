@@ -12,6 +12,8 @@ import {
   storeUser,
   storeEvent,
   storeEvents,
+  storeFlag,
+  storeFlags,
   getFromApi,
   postToApi,
   putToApi,
@@ -111,7 +113,7 @@ const commentOutgoingRequest = (store, action) => {
       store.dispatch(deleteFromApi(
         DELETE_COMMENT, space, endpoint,
       ));
-      
+
       break;
     }
 
@@ -134,7 +136,6 @@ const commentsIncomingRequest = (store, action) => {
       }
 
       const processedItem = processComment(comment);
-      store.dispatch(storeComment(processedItem.comment));
 
       if (!!processedItem.user) {
         store.dispatch(storeUser(processedItem.user));
@@ -143,6 +144,12 @@ const commentsIncomingRequest = (store, action) => {
       if (!!processedItem.event) {
         store.dispatch(storeEvent(processedItem.event));
       }
+
+      if (!!processedItem.flag) {
+        store.dispatch(storeFlag(processedItem.flag));
+      }
+
+      store.dispatch(storeComment(processedItem.comment));
 
       break;
     }
@@ -186,11 +193,16 @@ const commentsIncomingRequest = (store, action) => {
           acc.comments.push(processedItem.parentComment);
         }
 
+        if (!!processedItem.flag) {
+          acc.flags.push(processedItem.flag);
+        }
+
         return acc;
       }, {
         comments: [],
         events: [],
         users: [],
+        flags: [],
       });
 
       const lastComment = processedData.comments[processedData.comments.length - 1];
@@ -199,16 +211,20 @@ const commentsIncomingRequest = (store, action) => {
         metaAction, space, META_START, lastComment.id,
       ));
 
-      if (processedData.comments.length) {
-        store.dispatch(storeComments(processedData.comments));
+      if (processedData.users.length) {
+        store.dispatch(storeUsers(processedData.users));
       }
 
       if (processedData.events.length) {
         store.dispatch(storeEvents(processedData.events));
       }
 
-      if (processedData.users.length) {
-        store.dispatch(storeUsers(processedData.users));
+      if (processedData.flags.length) {
+        store.dispatch(storeFlags(processedData.flags));
+      }
+
+      if (processedData.comments.length) {
+        store.dispatch(storeComments(processedData.comments));
       }
 
       break;

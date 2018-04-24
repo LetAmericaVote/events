@@ -13,6 +13,9 @@ const initialState = {
   events: {
     items: {},
   },
+  flag: {
+    items: {},
+  },
   forms: {
     items: {},
   },
