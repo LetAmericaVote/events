@@ -31,7 +31,7 @@ const Face = (props) => {
     isFlagged,
   } = props;
 
-  if (! userExists || ! profilePhoto || ! isFlagged) {
+  if (! userExists || ! profilePhoto || isFlagged) {
     return null;
   }
 
