@@ -10,7 +10,7 @@ import {
   openSignupModal,
   closeModal,
   updateAuthenticatedUser,
-  postCommentToEvent,
+  postComment,
 } from '../actions';
 
 const TOTAL_STEPS = 2;
@@ -39,7 +39,7 @@ const SignupModal = (props) => {
         profileForm,
         icebreakerForm,
         updateAuthenticatedUser,
-        postCommentToEvent,
+        postComment,
       } = props;
 
       const onSubmit = isFirst ? (
@@ -52,7 +52,7 @@ const SignupModal = (props) => {
           const { answer, question } = icebreakerForm;
           const message = `"${question}" \n ${answer}`;
 
-          postCommentToEvent(eventId, message);
+          postComment(message, eventId);
           closeModal();
         }
       );
@@ -73,7 +73,7 @@ const SignupModal = (props) => {
       openSignupModal,
       closeModal,
       updateAuthenticatedUser,
-      postCommentToEvent,
+      postComment,
     };
 
     return Rivet(Wrapper);

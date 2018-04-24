@@ -9,6 +9,11 @@ const storeComments = (state, comments) => ({
   items: {
     ...state.items,
     ...comments.reduce((acc, comment) => {
+      if (comment._delete) {
+        acc[comment.id] = null;
+        return acc;
+      }
+
       acc[comment.id] = {
         ...(state.items[comment.id] || {}),
         ...comment,

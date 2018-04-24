@@ -2,6 +2,7 @@ export * from './api';
 export * from './auth';
 export * from './comment';
 export * from './events';
+export * from './flag';
 export * from './forms';
 export * from './hostLink';
 export * from './init';

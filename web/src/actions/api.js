@@ -111,6 +111,21 @@ export function putToApi(metaAction, space, path, data) {
   return initiateApiRequest(metaAction, space, `${ROWBOAT_API_URI}${path}`, options);
 }
 
+/**
+ * Delete a resource from the api.
+ *
+ * @param  {String} metaAction Action name
+ * @param  {String} space Space name
+ * @param  {String} path Resource on the api to put to.
+ */
+export function deleteFromApi(metaAction, space, path) {
+  const options = {
+    method: 'DELETE',
+  };
+
+  return initiateApiRequest(metaAction, space, `${ROWBOAT_API_URI}${path}`, options);
+}
+
 export const SET_API_ACTION_META_PROPERTY = 'SET_API_ACTION_META_PROPERTY';
 
 /**

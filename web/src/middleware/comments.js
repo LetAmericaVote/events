@@ -1,8 +1,9 @@
 import {
-  FETCH_PAGINATED_USER_COMMENTS,
-  FETCH_PAGINATED_EVENT_COMMENTS,
+  FETCH_PAGINATED_COMMENTS,
   FETCH_COMMENT,
-  POST_COMMENT_TO_EVENT,
+  POST_COMMENT,
+  UPDATE_COMMENT,
+  DELETE_COMMENT,
   API_REQUEST_SUCCEEDED,
   setApiActionMetaProperty,
   storeComment,
@@ -13,10 +14,11 @@ import {
   storeEvents,
   getFromApi,
   postToApi,
+  putToApi,
+  deleteFromApi,
 } from '../actions';
 import {
   selectApiMetaCustomProperty,
-  selectAuthUserId,
 } from '../selectors';
 import processComment from '../processors/comment';
 
@@ -24,82 +26,92 @@ const META_START = 'start';
 
 const commentOutgoingRequest = (store, action) => {
   switch (action.type) {
-    case FETCH_PAGINATED_USER_COMMENTS: {
-      const { sortByRecent } = action;
-      const userId = selectAuthUserId(store.getState());
-      const spaceName = `userId=${userId},sortByRecent=${sortByRecent}`;
+    case FETCH_PAGINATED_COMMENTS: {
+      const { sortByPosted, eventId, userId } = action;
+      const spaceName = `userId=${userId},sortByPosted=${sortByPosted},eventId=${eventId}`;
 
       const start = selectApiMetaCustomProperty(
-        FETCH_PAGINATED_USER_COMMENTS,
+        FETCH_PAGINATED_COMMENTS,
         spaceName,
         META_START,
         store.getState()
       );
 
-      const query = { sortByRecent };
+      const query = {};
 
       if (start) {
         query.start = start;
       }
 
-      store.dispatch(getFromApi(
-        FETCH_PAGINATED_USER_COMMENTS, spaceName, '/v1/comments/user', query,
-      ));
-      break;
-    }
-
-    case FETCH_PAGINATED_EVENT_COMMENTS: {
-      const { eventId, sortByRecent, inReplyTo } = action;
-      const spaceName = `eventId=${eventId},sortByRecent=${sortByRecent},inReplyTo=${inReplyTo}`;
-
-      const start = selectApiMetaCustomProperty(
-        FETCH_PAGINATED_EVENT_COMMENTS,
-        spaceName,
-        META_START,
-        store.getState()
-      );
-
-      const query = { sortByRecent };
-
-      if (start) {
-        query.start = start;
+      if (eventId) {
+        query.eventId = eventId;
       }
 
-      if (typeof inReplyTo !== 'undefined') {
-        if (inReplyTo === null) {
-          query.inReplyTo = 'null';
-        } else {
-          query.inReplyTo = inReplyTo;
-        }
+      if (userId) {
+        query.userId = userId;
       }
 
-      const endpoint = `/v1/comments/event/${eventId}`;
+      if (sortByPosted !== null) {
+        query.sortByPosted = sortByPosted;
+      }
+
       store.dispatch(getFromApi(
-        FETCH_PAGINATED_EVENT_COMMENTS, spaceName, endpoint, query,
+        FETCH_PAGINATED_COMMENTS, spaceName, '/v1/comments', query,
       ));
+
       break;
     }
 
     case FETCH_COMMENT: {
-      const { eventId, commentId } = action;
+      const { commentId } = action;
+      const spaceName = `commentId=${commentId}`;
 
-      const endpoint = `/v1/comments/id/${commentId}/event/${eventId}`;
+      const endpoint = `/v1/comments/id/${commentId}`;
       store.dispatch(getFromApi(
-        FETCH_COMMENT, 'id', endpoint,
+        FETCH_COMMENT, spaceName, endpoint,
       ));
 
       break;
     }
 
-    case POST_COMMENT_TO_EVENT: {
+    case POST_COMMENT: {
       const { eventId, message, inReplyTo } = action;
       const payload = { eventId, message, inReplyTo };
+      const space = `eventId=${eventId},inReplyTo=${inReplyTo}`;
 
-      const endpoint = `/v1/comments/event/${eventId}`;
+      const endpoint = `/v1/comments`;
+
       store.dispatch(postToApi(
-        POST_COMMENT_TO_EVENT, 'update', endpoint, payload,
+        POST_COMMENT, space, endpoint, payload,
       ));
 
+      break;
+    }
+
+    case UPDATE_COMMENT: {
+      const { commentId, message } = action;
+      const payload = { message };
+      const space = `commentId=${commentId}`;
+
+      const endpoint = `/v1/comments/id/${commentId}`;
+
+      store.dispatch(putToApi(
+        UPDATE_COMMENT, space, endpoint, payload,
+      ));
+
+      break;
+    }
+
+    case DELETE_COMMENT: {
+      const { commentId } = action;
+      const space = `commentId=${commentId}`;
+
+      const endpoint = `/v1/comments/id/${commentId}`;
+
+      store.dispatch(deleteFromApi(
+        DELETE_COMMENT, space, endpoint,
+      ));
+      
       break;
     }
 
@@ -112,7 +124,8 @@ const commentsIncomingRequest = (store, action) => {
 
   switch (metaAction) {
     case FETCH_COMMENT:
-    case POST_COMMENT_TO_EVENT: {
+    case UPDATE_COMMENT:
+    case POST_COMMENT: {
       const { data } = action;
       const { comment } = data;
 
@@ -134,8 +147,21 @@ const commentsIncomingRequest = (store, action) => {
       break;
     }
 
-    case FETCH_PAGINATED_EVENT_COMMENTS:
-    case FETCH_PAGINATED_USER_COMMENTS: {
+    case DELETE_COMMENT: {
+      const { data } = action;
+      const { ok, deleted } = data;
+
+      if (! ok || ! deleted) {
+        return;
+      }
+
+      const comment = { id: deleted, _delete: true };
+      store.dispatch(storeComment(comment));
+
+      break;
+    }
+
+    case FETCH_PAGINATED_COMMENTS: {
       const { data } = action;
       const { comments } = data;
 

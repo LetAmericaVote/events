@@ -10,9 +10,9 @@ import {
   FlexDown,
   FlexAcrossJustifyCenter,
 } from '../blocks/Flex';
-import {
-  fetchPaginatedEventComments,
-} from '../actions';
+// import {
+//   fetchPaginatedEventComments,
+// } from '../actions';
 import {
   selectTopLevelCommentsForEventSortedByRecent,
 } from '../selectors';
@@ -45,8 +45,8 @@ Community.mapStateToProps = (state, ownProps) => ({
   topLevelComments: selectTopLevelCommentsForEventSortedByRecent(ownProps.eventId, state),
 });
 
-Community.actionCreators = {
-  fetchPaginatedEventComments,
-};
+// Community.actionCreators = {
+//   fetchPaginatedEventComments,
+// };
 
 export default Rivet(Community);

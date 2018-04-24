@@ -1,32 +1,14 @@
-export const FETCH_PAGINATED_USER_COMMENTS = 'FETCH_PAGINATED_USER_COMMENTS';
+export const FETCH_PAGINATED_COMMENTS = 'FETCH_PAGINATED_COMMENTS';
 
 /**
- * Fetch a paginated list of the authenticated users comments.
+ * Fetch a paginated list of comments.
  *
- * @param  {Boolean} sortByRecent Sort comments by post time
+ * @param  {Integer|null} [sortByPosted=null] Sort direction (+/- 1) or `null` for not sort.
+ * @param  {String|null}  [eventId=null] Event id to search for or null
+ * @param  {String|null} [userId=null] User id to search for or null
  */
-export function fetchPaginatedUserComments(sortByRecent) {
-  return { type: FETCH_PAGINATED_USER_COMMENTS, sortByRecent };
-}
-
-export const FETCH_PAGINATED_EVENT_COMMENTS = 'FETCH_PAGINATED_EVENT_COMMENTS';
-
-/**
- * Fetch a paginated list of comments for an event.
- *
- * @param  {String} eventId Event id
- * @param  {String} inReplyTo Comment id
- */
-
-/**
- * Fetch a paginated list of comments for an event.
- *
- * @param  {String} eventId       Event id
- * @param  {Boolean} sortByRecent Sort comments by post time
- * @param  {String} inReplyTo     Comment id
- */
-export function fetchPaginatedEventComments(eventId, sortByRecent, inReplyTo) {
-  return { type: FETCH_PAGINATED_EVENT_COMMENTS, eventId, sortByRecent, inReplyTo };
+export function fetchPaginatedComments(sortByPosted = null, eventId = null, userId = null) {
+  return { type: FETCH_PAGINATED_COMMENTS, sortByPosted, eventId, userId };
 }
 
 export const FETCH_COMMENT = 'FETCH_COMMENT';
@@ -34,24 +16,46 @@ export const FETCH_COMMENT = 'FETCH_COMMENT';
 /**
  * Fetch a comment by id.
  *
- * @param  {String} eventId   Event id of where the comment was posted
  * @param  {String} commentId Comment id
  */
-export function fetchComment(eventId, commentId) {
-  return { type: FETCH_COMMENT, eventId, commentId };
+export function fetchComment(commentId) {
+  return { type: FETCH_COMMENT, commentId };
 }
 
-export const POST_COMMENT_TO_EVENT = 'POST_COMMENT_TO_EVENT';
+export const POST_COMMENT = 'POST_COMMENT';
 
 /**
- * Post a comment to an event.
+ * Post a comment.
  *
- * @param  {String} eventId   Event id to post to.
- * @param  {String} message   Message to write
- * @param  {[type]} [inReplyTo=null] Optionally, reply to a specific comment.
+ * @param  {String} message          Comment content
+ * @param  {String} [eventId=null]   Optional event id
+ * @param  {String} [inReplyTo=null] Optional comment reply id
  */
-export function postCommentToEvent(eventId, message, inReplyTo = null) {
-  return { type: POST_COMMENT_TO_EVENT, eventId, message, inReplyTo };
+export function postComment(message, eventId = null, inReplyTo = null) {
+  return { type: POST_COMMENT, message, eventId, inReplyTo };
+}
+
+export const UPDATE_COMMENT = 'UPDATE_COMMENT';
+
+/**
+ * Update a comment by id with a new message.
+ *
+ * @param  {String} commentId Comment id
+ * @param  {String} message   New comment content
+ */
+export function updateComment(commentId, message) {
+  return { type: UPDATE_COMMENT, commentId, message };
+}
+
+export const DELETE_COMMENT = 'DELETE_COMMENT';
+
+/**
+ * Delete a comment.
+ *
+ * @param  {String} commentId Comment id
+ */
+export function deleteComment(commentId) {
+  return { type: DELETE_COMMENT, commentId };
 }
 
 export const STORE_COMMENT = 'STORE_COMMENT';

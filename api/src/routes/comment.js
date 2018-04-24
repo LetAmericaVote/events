@@ -28,15 +28,16 @@ async function getComments(req, res) {
     };
   }
 
-  if (user) {
+  if (userId) {
     if (user !== requestUser.id) {
+      // TODO: Add profile options so people can choose to share this or not.
       return res.status(401).json({ error: true, message: 'You cannot request other user comments at this time.' });
     }
 
     findQuery.user = user;
   }
 
-  if (event) {
+  if (eventId) {
     const signup = await Signup.findOne({ user: requestUser, event: eventId });
     if (! signup || ! signup.id) {
       return res.status(401).json({ error: true, message: 'You must be signed up for this event.' });
