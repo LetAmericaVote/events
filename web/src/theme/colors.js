@@ -5,6 +5,7 @@ export const actionColor = '#ff4c4d';
 export const nightColor = '#000000';
 export const paperColor = '#ffffff';
 export const cloudColor = '#cccccc';
+export const rainCloud = '#e9f5f8';
 
 const colorVariables = [
   { name: 'primary', color: primaryColor },
@@ -13,6 +14,7 @@ const colorVariables = [
   { name: 'night', color: nightColor },
   { name: 'paper', color: paperColor },
   { name: 'cloud', color: cloudColor },
+  { name: 'rainCloud', color: rainCloud },
 ];
 
 const reducedColors = colorVariables.reduce((acc, pair) => {

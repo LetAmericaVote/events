@@ -15,10 +15,21 @@ export const selectComment = (commentId, state) =>
       selectCommentItems(state)[commentId].user || null,
     event: selectEvent(selectCommentItems(state)[commentId].event, state) ||
       selectCommentItems(state)[commentId].event || null,
-    inReplyTo: selectCommentItems(state)[commentId].inReplyTo ?
-      selectComment(selectCommentItems(state)[commentId].inReplyTo, state) ||
-        selectCommentItems(state)[commentId].inReplyTo || null : null,
+    inReplyTo: selectCommentItems(state)[commentId].inReplyTo || null,
   }) : null;
+
+export const selectCommentUserId = (commentId, state) =>
+  selectCommentExists(commentId, state) ?
+    ((selectComment(commentId, state).user || {}).id ||
+    selectComment(commentId, state).user) : null;
+
+export const selectCommentMessage = (commentId, state) =>
+  selectCommentExists(commentId, state) ?
+    selectComment(commentId, state).message || null : null;
+
+export const selectCommentCreatedAt = (commentId, state) =>
+  selectCommentExists(commentId, state) ?
+    selectComment(commentId, state).createdAt || null : null;
 
 export const selectCommentsAsArray = (state) =>
   Object.keys(selectCommentItems(state))
@@ -52,8 +63,7 @@ export const selectTopLevelCommentsForEventSortedByRecent = (eventId, state) =>
 
 export const selectRepliesForComment = (commentId, state) =>
   selectCommentsAsArray(state)
-    .filter(comment => comment.inReplyTo === commentId ||
-      (comment.inReplyTo.id && comment.inReplyTo.id === commentId));
+    .filter(comment => comment.inReplyTo === commentId);
 
 export const selectRepliesForCommentSortedByRecent = (commentId, state) =>
   selectRepliesForComment(commentId, state)

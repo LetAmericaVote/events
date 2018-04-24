@@ -83,7 +83,9 @@ const Byline = (props) => {
 
   return (
     <FlexAcross>
-      <ProfilePhoto src={displayPhoto} />
+      <div>
+        <ProfilePhoto src={displayPhoto} />
+      </div>
       <FlexDown>
         <FlexAcross>
           <Detail enlarge boldend>{displayName}</Detail>

@@ -19,6 +19,8 @@ import {
   fetchPaginatedComments,
   STORE_SIGNUP,
   STORE_SIGNUPS,
+  STORE_COMMENT,
+  STORE_COMMENTS,
 } from '../actions';
 import {
   selectInitValue,
@@ -42,6 +44,7 @@ const REQUESTED_EVENT_DATA = 'REQUESTED_EVENT_DATA';
 const REQUESTED_EVENT_SIGNUP_DATA = 'REQUESTED_EVENT_SIGNUP_DATA';
 const REQUESTED_USER_GALLERY = 'REQUESTED_USER_GALLERY';
 const REQUESTED_TOP_LEVEL_COMMENTS = 'REQUESTED_TOP_LEVEL_COMMENTS';
+const REQUESTED_REPLIES = 'REQUESTED_REPLIES';
 
 // TODO: This could probably be optimized so the logic only runs for relevant page.
 
@@ -130,7 +133,7 @@ const init = store => next => action => {
 
   if (isEventRoute && ! hasRequestedTopLevelComments && isSignedUp) {
     next(setInitValue(topLevelCommentsKey, true));
-    store.dispatch(fetchPaginatedComments(1, eventId, null, 'top'));
+    store.dispatch(fetchPaginatedComments(1, eventId, null, 'top', 5));
 
     return;
   }
@@ -183,6 +186,34 @@ const init = store => next => action => {
     }
 
     return;
+  }
+
+  function requestReplies(comment) {
+    if (comment.inReplyTo) {
+      return;
+    }
+
+    const replyKey = `${REQUESTED_REPLIES}_${comment.id}`;
+    const hasRequestedReplies = selectInitValue(replyKey, store.getState());
+
+    if (hasRequestedReplies) {
+      return;
+    }
+
+    next(setInitValue(replyKey, true));
+    store.dispatch(fetchPaginatedComments(1, comment.event, null, comment.id, 3));
+  }
+
+  if (action.type === STORE_COMMENT) {
+    const { comment } = action;
+
+    setTimeout(0, () => requestReplies(comment));
+  }
+
+  if (action.type === STORE_COMMENTS) {
+    const { comments } = action;
+
+    comments.forEach(comment => setTimeout(0, requestReplies(comment)));
   }
 };
 

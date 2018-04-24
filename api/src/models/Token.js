@@ -70,7 +70,7 @@ TokenSchema.methods.getApiResponse = async function(requestUser, populate = fals
 
   try {
     if (populate) {
-      await this.populate('user');
+      await Token.populate(this, 'user');
     }
 
     const user = !!this.user ? await this.user.getApiResponse(requestUser) : null;

@@ -34,7 +34,7 @@ FlagSchema.methods.getApiResponse = async function(requestUser, populate) {
 
   try {
     if (populate) {
-      await this.populate('target judge');
+      await Flag.populate(this, 'target judge');
     }
 
     baseApiResponse.target = this.target && this.target.getApiResponse ?

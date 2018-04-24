@@ -7,9 +7,10 @@ export const FETCH_PAGINATED_COMMENTS = 'FETCH_PAGINATED_COMMENTS';
  * @param  {String|null}  [eventId=null] Event id to search for or null
  * @param  {String|null} [userId=null] User id to search for or null
  * @param  {String|null} [inReplyTo=null] Comment id of parent. 'top' for top-level comments only.
+ * @param  {Int|null} [limit=null] Limit the comments fetched to a specified amount
  */
-export function fetchPaginatedComments(sortByPosted = null, eventId = null, userId = null, inReplyTo = null) {
-  return { type: FETCH_PAGINATED_COMMENTS, sortByPosted, eventId, userId, inReplyTo };
+export function fetchPaginatedComments(sortByPosted = null, eventId = null, userId = null, inReplyTo = null, limit = null) {
+  return { type: FETCH_PAGINATED_COMMENTS, sortByPosted, eventId, userId, inReplyTo, limit };
 }
 
 export const FETCH_COMMENT = 'FETCH_COMMENT';

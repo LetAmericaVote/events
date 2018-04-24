@@ -109,7 +109,7 @@ UserSchema.methods.getApiResponse = async function (requestingUser, populate = f
 
   try {
     if (populate) {
-      await this.populate('flag');
+      await User.populate(this, 'flag');
     }
 
     response.flag = this.flag && this.flag.getApiResponse ?

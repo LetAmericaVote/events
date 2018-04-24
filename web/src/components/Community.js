@@ -1,5 +1,6 @@
 import React from 'react';
 import Rivet from '../hoc/Rivet';
+import Thread from './Thread';
 import {
   Header,
 } from '../blocks/Type';
@@ -24,17 +25,21 @@ const Community = (props) => {
   const {
     topLevelComments,
     fetchPaginatedComments,
+    eventId,
   } = props;
 
-  // fetchPaginatedComments(eventId, true, null);
+  const loadMoreComments = () =>
+    fetchPaginatedComments(1, eventId, null, 'top', 5);
 
   return (
     <FlexDown>
       <Header>{COMMUNITY_TITLE}</Header>
-      {topLevelComments.map(comment => <p>{comment.id}</p>)}
+      {topLevelComments.map(comment =>
+        <Thread key={comment.id} commentId={comment.id} eventId={eventId} />
+      )}
       <FlexAcrossJustifyCenter>
         <SecondaryCallToAction
-          onClick={null}
+          onClick={loadMoreComments}
         >Load more comments</SecondaryCallToAction>
       </FlexAcrossJustifyCenter>
     </FlexDown>

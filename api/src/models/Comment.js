@@ -81,7 +81,7 @@ CommentSchema.methods.getApiResponse = async function(requestUser, populate = fa
     }
 
     if (populate) {
-      await this.populate('user event inReplyTo flag');
+      await Comment.populate(this, 'user event inReplyTo flag');
     }
 
     const user = ! hideDetails && this.user && this.user.getApiResponse ?

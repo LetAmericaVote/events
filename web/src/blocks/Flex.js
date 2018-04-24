@@ -31,6 +31,10 @@ export const FlexAcrossCenter = styled(FlexAcross)`
   justify-content: center;
 `;
 
+export const FlexAcrossWrap = styled(FlexAcross)`
+  flex-wrap: wrap;
+`;
+
 export const FlexDown = styled.div`
   ${props => props.theme.reset}
 

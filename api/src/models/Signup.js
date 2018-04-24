@@ -66,7 +66,7 @@ SignupSchema.methods.getApiResponse = async function(requestUser, populate = fal
     );
 
     if (populate) {
-      await this.populate('user event flag');
+      await Signup.populate(this, 'user event flag');
     }
 
     const user = !hideDetails && this.user && this.user.getApiResponse ?

@@ -5,6 +5,8 @@ import search from '../assets/icons/search.svg';
 import gps from '../assets/icons/gps.svg';
 import calendar from '../assets/icons/calendar.svg';
 import house from '../assets/icons/house.svg';
+import reply from '../assets/icons/reply.svg';
+import share from '../assets/icons/share.svg';
 
 export const Logo = styled.div`
   ${props => props.theme.reset}
@@ -51,4 +53,16 @@ export const GoogleIcon = styled.div`
 
   background-image: url(${googleLogo});
   background-size: 100% 100%;
+`;
+
+export const ReplyIcon = styled(BaseIcon)`
+  background-image: url(${reply});
+  width: 16px;
+  height: 16px;
+`;
+
+export const ShareIcon = styled(BaseIcon)`
+  background-image: url(${share});
+  width: 16px;
+  height: 16px;
 `;

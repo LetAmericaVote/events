@@ -228,7 +228,7 @@ EventSchema.methods.getApiResponse = async function(requestUser, populate = fals
 
   try {
     if (populate) {
-      await this.populate('hostUser');
+      await Event.populate(this, 'hostUser');
     }
 
     const hostUser = this.hostUser && this.hostUser.getApiResponse ?
