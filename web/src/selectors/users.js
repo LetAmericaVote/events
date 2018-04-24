@@ -97,6 +97,17 @@ export const selectUserRole = (userId, state) =>
     selectUser(userId, state).role : null;
 
 /**
+ * Select if a user is flagged.
+ *
+ * @param  {String} userId User id
+ * @param  {Object} state  Redux state
+ * @return {Boolean}       True if flagged
+ */
+export const selectIsUserFlagged = (userId, state) =>
+  selectUserExists(userId, state) ?
+    selectUser(userId, state).isFlagged : false;
+
+/**
  * Select the currently authenticated user.
  *
  * @param  {Object} state Redux state
@@ -183,3 +194,12 @@ export const selectAuthenticatedUserZipcode = (state) =>
   selectUserExists(selectAuthUserId(state), state) &&
   selectIsAuthenticated(state) ?
     selectUser(selectAuthUserId(state), state).zipcode : null;
+
+/**
+ * Select if the authenticated user is flagged.
+ *
+ * @param  {Object} state  Redux state
+ * @return {Boolean}       True if flagged
+ */
+export const selectIsAuthenticatedUserFlagged = (state) =>
+  selectIsUserFlagged(selectAuthUserId(state));

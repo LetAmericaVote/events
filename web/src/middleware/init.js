@@ -167,9 +167,9 @@ const init = store => next => action => {
   //         batch.map(signup => signup.event)
   //       )));
   //   }
-
-    return;
-  }
+  //
+  //   return;
+  // }
 };
 
 export default init;

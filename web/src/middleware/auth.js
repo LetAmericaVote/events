@@ -16,10 +16,10 @@ const auth = store => next => action => {
       const processedItem = processUser(action.data.user);
 
       if (processedItem.flag) {
-        store.dispatch(storeFlag(processedData.flag));
+        store.dispatch(storeFlag(processedItem.flag));
       }
 
-      store.dispatch(storeUser(processedData.user));
+      store.dispatch(storeUser(processedItem.user));
       store.dispatch(storeAuthCredentials(action.data.user.id, action.data.token.value));
     }
   } else if (action.type === POST_GOOGLE_ID_TOKEN) {

@@ -150,7 +150,7 @@ const usersIncomingRequest = (store, action) => {
         const lastUser = processedData.users[processedData.users.length - 1];
 
         store.dispatch(setApiActionMetaProperty(
-          metaAction, space, META_START, lastUser.id,
+          metaAction, space, META_USER_START, lastUser.id,
         ));
       }
 

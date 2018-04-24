@@ -224,7 +224,8 @@ class CommunityScroll extends React.Component {
 }
 
 CommunityScroll.mapStateToProps = (state) => ({
-  users: selectUsersAsArray(state),
+  users: selectUsersAsArray(state)
+    .filter(user => ! user.isFlagged),
 });
 
 export default Rivet(CommunityScroll);
