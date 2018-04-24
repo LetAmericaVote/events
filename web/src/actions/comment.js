@@ -6,9 +6,10 @@ export const FETCH_PAGINATED_COMMENTS = 'FETCH_PAGINATED_COMMENTS';
  * @param  {Integer|null} [sortByPosted=null] Sort direction (+/- 1) or `null` for not sort.
  * @param  {String|null}  [eventId=null] Event id to search for or null
  * @param  {String|null} [userId=null] User id to search for or null
+ * @param  {String|null} [inReplyTo=null] Comment id of parent. 'top' for top-level comments only.
  */
-export function fetchPaginatedComments(sortByPosted = null, eventId = null, userId = null) {
-  return { type: FETCH_PAGINATED_COMMENTS, sortByPosted, eventId, userId };
+export function fetchPaginatedComments(sortByPosted = null, eventId = null, userId = null, inReplyTo = null) {
+  return { type: FETCH_PAGINATED_COMMENTS, sortByPosted, eventId, userId, inReplyTo };
 }
 
 export const FETCH_COMMENT = 'FETCH_COMMENT';

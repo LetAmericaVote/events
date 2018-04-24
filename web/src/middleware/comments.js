@@ -29,8 +29,8 @@ const META_START = 'start';
 const commentOutgoingRequest = (store, action) => {
   switch (action.type) {
     case FETCH_PAGINATED_COMMENTS: {
-      const { sortByPosted, eventId, userId } = action;
-      const spaceName = `userId=${userId},sortByPosted=${sortByPosted},eventId=${eventId}`;
+      const { sortByPosted, eventId, userId, inReplyTo } = action;
+      const spaceName = `userId=${userId},sortByPosted=${sortByPosted},eventId=${eventId},inReplyTo=${inReplyTo}`;
 
       const start = selectApiMetaCustomProperty(
         FETCH_PAGINATED_COMMENTS,
@@ -55,6 +55,10 @@ const commentOutgoingRequest = (store, action) => {
 
       if (sortByPosted !== null) {
         query.sortByPosted = sortByPosted;
+      }
+
+      if (inReplyTo) {
+        query.inReplyTo = inReplyTo;
       }
 
       store.dispatch(getFromApi(

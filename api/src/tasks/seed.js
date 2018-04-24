@@ -140,11 +140,17 @@ async function generateReply(count, host, target) {
 
   try {
     const { event } = host;
+    let user = null;
 
-    const totalSignups = await Signup.count({ event });
-    const signup = await Signup.findOne({ event }).skip(getRandomInt(0, totalSignups - 1));
+    if (event) {
+      const totalSignups = await Signup.count({ event });
+      const signup = await Signup.findOne({ event }).skip(getRandomInt(0, totalSignups - 1));
 
-    const { user } = signup;
+      user = signup.user;
+    } else {
+      const totalUsers = await User.count();
+      user = await User.findOne().skip(getRandomInt(0, totalUsers - 1));
+    }
 
     const emojiCount = getRandomInt(0, 3);
     const emoji = randomEmoji.random({ count: emojiCount });
@@ -152,14 +158,11 @@ async function generateReply(count, host, target) {
     const minLorem = emojiCount ? 0 : 1;
     const lorem = faker.lorem.words(getRandomInt(minLorem, 3));
 
-    const isFlagged = Math.random() >= 0.95;
-
     const comment = new Comment({
       event,
       user,
       inReplyTo: host,
       message: `${lorem} ${emoji.map(emoji => emoji.character).join(' ')}`,
-      isFlagged,
     });
 
     await comment.save();
@@ -185,14 +188,11 @@ async function generateComment(count) {
     const totalEvents = await Event.count();
     const event = await Event.findOne().skip(getRandomInt(0, totalEvents - 1));
 
-    const isFlagged = Math.random() >= 0.95;
-
     const comment = new Comment({
       user,
-      event,
+      event: Math.random() > 0.4 ? event : null,
       inReplyTo: null,
       message: faker.lorem.paragraphs(getRandomInt(1, 3)),
-      isFlagged,
     });
 
     await comment.save();
@@ -210,10 +210,10 @@ async function execute() {
   common.dbConnect();
 
   try {
-    await generateUser(0);
-    await generateEvent(0);
-    await generateSignup(0);
-    // TODO: await generateComment(0);
+    // await generateUser(0);
+    // await generateEvent(0);
+    // await generateSignup(0);
+    await generateComment(0);
     // process.exit();
   } catch (error) {
     console.error(error);

@@ -6,7 +6,7 @@ export const ICEBREAKER_INTRO = `Let everyone know why you're going to the house
 
 export const CLOSED_EVENT_HEADER = `This house party has already happened!`;
 
-export const COMMUNITY_TITLE = 'House Party Community Feed';
+export const COMMUNITY_TITLE = 'House Party Community';
 
 export const HOME_HERO = [
   'Are you tired of ',

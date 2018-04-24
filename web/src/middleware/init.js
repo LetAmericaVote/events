@@ -16,6 +16,7 @@ import {
   fetchBulkUsers,
   fetchEventById,
   fetchBulkEvents,
+  fetchPaginatedComments,
   STORE_SIGNUP,
   STORE_SIGNUPS,
 } from '../actions';
@@ -29,6 +30,7 @@ import {
   selectUsersAsArray,
   selectUser,
   selectEvent,
+  selectIsAuthenticatedUserSignedUpForEvent,
 } from '../selectors';
 import { batchItems } from '../util';
 
@@ -39,6 +41,7 @@ const REQUESTED_LOCATION_STATE = 'REQUESTED_LOCATION_STATE';
 const REQUESTED_EVENT_DATA = 'REQUESTED_EVENT_DATA';
 const REQUESTED_EVENT_SIGNUP_DATA = 'REQUESTED_EVENT_SIGNUP_DATA';
 const REQUESTED_USER_GALLERY = 'REQUESTED_USER_GALLERY';
+const REQUESTED_TOP_LEVEL_COMMENTS = 'REQUESTED_TOP_LEVEL_COMMENTS';
 
 // TODO: This could probably be optimized so the logic only runs for relevant page.
 
@@ -52,7 +55,7 @@ const init = store => next => action => {
     next(setInitValue(REQUESTED_MAP_EVENTS, true));
     store.dispatch(fetchPaginatedEvents(true));
 
-    return next(action);
+    return;
   }
 
   const locationLon = selectLocationLon(store.getState());
@@ -63,7 +66,7 @@ const init = store => next => action => {
     next(setInitValue(REQUESTED_LOCATION_COORDS, true));
     store.dispatch(fetchGeoLocationFromRemote());
 
-    return next(action);
+    return;
   }
 
   const hasRequestedNearbyEvents = selectInitValue(REQUESTED_NEARBY_EVENTS, store.getState());
@@ -72,7 +75,7 @@ const init = store => next => action => {
     next(setInitValue(REQUESTED_NEARBY_EVENTS, true));
     store.dispatch(fetchEventByGeoLocation(locationLon, locationLat, 50000));
 
-    return next(action);
+    return;
   }
 
   const isSearchRoute = selectRoutingPathname(store.getState()) === SEARCH_ROUTE;
@@ -83,7 +86,7 @@ const init = store => next => action => {
     next(setInitValue(REQUESTED_LOCATION_STATE, true));
     store.dispatch(fetchGeoLocationFromRemote());
 
-    return next(action);
+    return;
   }
 
   const hasRequestedUserGallery = selectInitValue(REQUESTED_USER_GALLERY, store.getState());
@@ -93,7 +96,7 @@ const init = store => next => action => {
     next(setInitValue(REQUESTED_USER_GALLERY, true));
     store.dispatch(fetchRandomUsers());
 
-    return next(action);
+    return;
   }
 
   const eventMatch = new UrlPattern(EVENT_ROUTE).match(selectRoutingPathname(store.getState()));
@@ -108,7 +111,7 @@ const init = store => next => action => {
     next(setInitValue(eventRouteInitKey, true));
     store.dispatch(fetchEventBySlug(eventSlug));
 
-    return next(action);
+    return;
   }
 
   const eventSignupKey = `${REQUESTED_EVENT_SIGNUP_DATA}_${eventId}`;
@@ -118,7 +121,18 @@ const init = store => next => action => {
     next(setInitValue(eventSignupKey, true));
     store.dispatch(fetchPaginatedEventSignups(eventId, true, true));
 
-    return next(action);
+    return;
+  }
+
+  const topLevelCommentsKey = `${REQUESTED_TOP_LEVEL_COMMENTS}_${eventId}`;
+  const hasRequestedTopLevelComments = selectInitValue(topLevelCommentsKey, store.getState());
+  const isSignedUp = selectIsAuthenticatedUserSignedUpForEvent(eventId, store.getState());
+
+  if (isEventRoute && ! hasRequestedTopLevelComments && isSignedUp) {
+    next(setInitValue(topLevelCommentsKey, true));
+    store.dispatch(fetchPaginatedComments(1, eventId, null, 'top'));
+
+    return;
   }
 
   if (action.type === STORE_SIGNUP) {

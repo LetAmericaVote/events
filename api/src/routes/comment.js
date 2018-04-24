@@ -7,14 +7,14 @@ const MAX_REPLY_LENGTH = 24;
 
 async function getComments(req, res) {
   const { requestUser } = res.locals;
-  const { start, limit, sortByPosted, eventId, userId } = req.query;
+  const { start, limit, sortByPosted, eventId, userId, inReplyTo } = req.query;
 
   const parsedLimit = Math.max(parseInt(limit), 0) || 25;
   const limitCount = parsedLimit > 25 ? 25 : parsedLimit;
 
   const parsedSort = parseInt(sortByPosted);
 
-  if (sortByPosted && (parsedSort !== -1 || parsedSort !== 1)) {
+  if (sortByPosted && (parsedSort !== -1 && parsedSort !== 1)) {
     return res.status(400).json({ error: true, message: 'Invalid sort direction.' });
   }
 
@@ -29,12 +29,12 @@ async function getComments(req, res) {
   }
 
   if (userId) {
-    if (user !== requestUser.id) {
+    if (userId !== requestUser.id) {
       // TODO: Add profile options so people can choose to share this or not.
       return res.status(401).json({ error: true, message: 'You cannot request other user comments at this time.' });
     }
 
-    findQuery.user = user;
+    findQuery.user = userId;
   }
 
   if (eventId) {
@@ -47,7 +47,15 @@ async function getComments(req, res) {
       return res.status(401).json({ error: true, message: 'You\'ve been flagged from further posting in this event.'});
     }
 
-    findQuery.event = event;
+    findQuery.event = eventId;
+  }
+
+  if (inReplyTo) {
+    if (inReplyTo === 'top') {
+      findQuery.inReplyTo = null;
+    } else {
+      findQuery.inReplyTo = inReplyTo;
+    }
   }
 
   const sortQuery = !!parsedSort ? { '_id': parsedSort } : {};

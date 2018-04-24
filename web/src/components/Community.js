@@ -10,9 +10,9 @@ import {
   FlexDown,
   FlexAcrossJustifyCenter,
 } from '../blocks/Flex';
-// import {
-//   fetchPaginatedEventComments,
-// } from '../actions';
+import {
+  fetchPaginatedComments,
+} from '../actions';
 import {
   selectTopLevelCommentsForEventSortedByRecent,
 } from '../selectors';
@@ -22,11 +22,11 @@ import {
 
 const Community = (props) => {
   const {
-    loadMoreComments,
     topLevelComments,
+    fetchPaginatedComments,
   } = props;
 
-  // fetchPaginatedEventComments(eventId, true, null);
+  // fetchPaginatedComments(eventId, true, null);
 
   return (
     <FlexDown>
@@ -34,7 +34,7 @@ const Community = (props) => {
       {topLevelComments.map(comment => <p>{comment.id}</p>)}
       <FlexAcrossJustifyCenter>
         <SecondaryCallToAction
-          onClick={loadMoreComments}
+          onClick={null}
         >Load more comments</SecondaryCallToAction>
       </FlexAcrossJustifyCenter>
     </FlexDown>
@@ -45,8 +45,8 @@ Community.mapStateToProps = (state, ownProps) => ({
   topLevelComments: selectTopLevelCommentsForEventSortedByRecent(ownProps.eventId, state),
 });
 
-// Community.actionCreators = {
-//   fetchPaginatedEventComments,
-// };
+Community.actionCreators = {
+  fetchPaginatedComments,
+};
 
 export default Rivet(Community);
