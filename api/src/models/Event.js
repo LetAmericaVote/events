@@ -26,7 +26,6 @@ const EventSchema = mongoose.Schema({
   },
   headerPhoto: {
     type: String,
-    required: true,
   },
   dateTime: {
     type: Date,
@@ -171,7 +170,6 @@ EventSchema.statics.syncFromContentful = async function(entry) {
     event.title = fields.title[lang];
     event.slug = fields.slug[lang];
     event.description = fields.description[lang];
-    event.headerPhoto = fields.headerPhoto[lang].fields.file[lang].url;
     event.dateTime = fields.dateTime[lang];
     event.hostUser = fields.hostUser ? fields.hostUser[lang] : null;
     event.streetAddress = fields.streetAddress[lang];
@@ -182,6 +180,10 @@ EventSchema.statics.syncFromContentful = async function(entry) {
       fields.geoLocation[lang].lon,
       fields.geoLocation[lang].lat,
     ];
+
+    if (fields.headerPhoto[lang].fields) {
+      event.headerPhoto = fields.headerPhoto[lang].fields.file[lang].url;
+    }
 
     await event.save();
 
