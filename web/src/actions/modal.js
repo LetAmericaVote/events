@@ -22,6 +22,18 @@ export function openSignupModal(eventId, stepIndex = 1) {
   return openModal(OPEN_SIGNUP_MODAL, { eventId, stepIndex });
 }
 
+export const OPEN_COMMENT_MODAL = 'OPEN_COMMENT_MODAL';
+
+/**
+ * Open a comment modal.
+ *
+ * @param  {String} commentId Comment id
+ * @param  {String} [eventSlug=null] Event slug
+ */
+export function openCommentModal(commentId, eventSlug = null) {
+  return openModal(OPEN_COMMENT_MODAL, { commentId, eventSlug });
+}
+
 export const CLOSE_MODAL = 'CLOSE_MODAL';
 
 /**

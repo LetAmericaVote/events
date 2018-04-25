@@ -70,7 +70,6 @@ function GoogleAuthHOC(InnerComponent) {
     }
 
     onLogin () {
-      console.log(this.googleAuth);
       const login = async () => {
         try {
           const user = await this.googleAuth.signIn();

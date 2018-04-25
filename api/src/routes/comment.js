@@ -87,7 +87,7 @@ async function getComment(req, res) {
     _id: commentId,
   };
 
-  const comment = await Comment.find(findQuery);
+  const comment = await Comment.findOne(findQuery);
 
   if (! comment || ! comment.id) {
     return res.status(404).json({ error: true, message: 'Comment not found' });
@@ -242,7 +242,7 @@ module.exports = [
     middleware: requiresAuth,
   },
   {
-    route: '/v1/comments/id/:id',
+    route: '/v1/comments/id/:commentId',
     method: 'get',
     handler: getComment,
     middleware: requiresAuth,

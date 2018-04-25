@@ -10,23 +10,22 @@ import {
   SectionHeader,
 } from '../blocks/Type';
 import {
-  CallToActionButton
+  CallToActionButton,
 } from '../blocks/Button';
 
-const ModalContainer = styled.div`
+export const ModalContainer = styled.div`
   ${props => props.theme.reset}
 
   width: 100%;
   max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: auto;
 
   ${props => props.theme.borderRadius}
 
   ${props => props.theme.bg.paper}
 `;
 
-const ModalSpacer = styled.div`
+export const ModalSpacer = styled.div`
   ${props => props.theme.reset}
 
   width: 100%;
@@ -35,9 +34,10 @@ const ModalSpacer = styled.div`
   ${props => props.theme.basePaddingHorizontal}
 `;
 
-const ModalHeader = styled(SectionHeader)`
+export const ModalHeader = styled(SectionHeader)`
   text-align: center;
   text-transform: uppercase;
+  margin-bottom: 0;
 `;
 
 const ModalDot = styled.div`

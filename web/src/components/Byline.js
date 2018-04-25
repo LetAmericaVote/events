@@ -67,6 +67,7 @@ const Byline = (props) => {
   const displayName = hideDetails ? 'Account suspended' : fullName;
   const displayPhoto = hideDetails ? avatar : (profilePhoto || avatar);
 
+  const hasRoleIcon = role === 'admin' || isHostUser;
   const RoleIcon = () => {
     if (role === 'admin') {
       return <AdminIcon />
@@ -88,8 +89,8 @@ const Byline = (props) => {
       </div>
       <FlexDown>
         <FlexAcross>
-          <Detail enlarge boldend>{displayName}</Detail>
           <RoleIcon />
+          <Detail enlarge boldend indent={hasRoleIcon}>{displayName}</Detail>
         </FlexAcross>
         {tagline ? <Detail>{tagline}</Detail> : null}
       </FlexDown>
@@ -103,7 +104,7 @@ Byline.mapStateToProps = (state, ownProps) => ({
   authenticatedRole: selectAuthenticatedUserRole(state),
   isFlagged: selectIsUserFlagged(ownProps.userId, state),
   isHostUser: ownProps.eventId ?
-    selectEventHostUserId(ownProps.eventId, state) : false,
+    selectEventHostUserId(ownProps.eventId, state) === ownProps.userId : false,
   fullName: selectUserExists(ownProps.userId, state) ?
     selectUserFullName(ownProps.userId, state) : null,
   profilePhoto: selectUserExists(ownProps.userId, state) ?

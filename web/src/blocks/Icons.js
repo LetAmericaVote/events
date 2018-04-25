@@ -8,6 +8,8 @@ import house from '../assets/icons/house.svg';
 import reply from '../assets/icons/reply.svg';
 import share from '../assets/icons/share.svg';
 import smile from '../assets/icons/smile.svg';
+import dotMenu from '../assets/icons/dot-menu.svg';
+import pencil from '../assets/icons/pencil.svg';
 
 export const Logo = styled.div`
   ${props => props.theme.reset}
@@ -48,6 +50,10 @@ export const SmileIcon = styled(BaseIcon)`
   background-image: url(${smile});
 `;
 
+export const DotMenuIcon = styled(BaseIcon)`
+  background-image: url(${dotMenu});
+`;
+
 export const GoogleIcon = styled.div`
   ${props => props.theme.reset}
 
@@ -68,6 +74,12 @@ export const ReplyIcon = styled(BaseIcon)`
 
 export const ShareIcon = styled(BaseIcon)`
   background-image: url(${share});
+  width: 16px;
+  height: 16px;
+`;
+
+export const PencilIcon = styled(BaseIcon)`
+  background-image: url(${pencil});
   width: 16px;
   height: 16px;
 `;

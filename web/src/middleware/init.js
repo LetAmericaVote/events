@@ -3,6 +3,8 @@ import {
   HOME_ROUTE,
   SEARCH_ROUTE,
   EVENT_ROUTE,
+  EVENT_COMMENT_ROUTE,
+  COMMENT_ROUTE,
 } from '../routing/routes';
 import {
   setInitValue,
@@ -17,6 +19,7 @@ import {
   fetchEventById,
   fetchBulkEvents,
   fetchPaginatedComments,
+  fetchComment,
   STORE_SIGNUP,
   STORE_SIGNUPS,
   STORE_COMMENT,
@@ -45,6 +48,9 @@ const REQUESTED_EVENT_SIGNUP_DATA = 'REQUESTED_EVENT_SIGNUP_DATA';
 const REQUESTED_USER_GALLERY = 'REQUESTED_USER_GALLERY';
 const REQUESTED_TOP_LEVEL_COMMENTS = 'REQUESTED_TOP_LEVEL_COMMENTS';
 const REQUESTED_REPLIES = 'REQUESTED_REPLIES';
+const REQUESTED_COMMENT_MODAL = 'REQUESTED_COMMENT_MODAL';
+
+// TODO: If authenticated user in auth but not in user store, fetch user.
 
 // TODO: This could probably be optimized so the logic only runs for relevant page.
 
@@ -102,7 +108,10 @@ const init = store => next => action => {
     return;
   }
 
-  const eventMatch = new UrlPattern(EVENT_ROUTE).match(selectRoutingPathname(store.getState()));
+  const eventPageMatch = new UrlPattern(EVENT_ROUTE).match(selectRoutingPathname(store.getState()));
+  const eventCommentMatch = new UrlPattern(EVENT_COMMENT_ROUTE).match(selectRoutingPathname(store.getState()));
+  const eventMatch = eventPageMatch || eventCommentMatch;
+
   const eventSlug = eventMatch ? eventMatch.eventSlug : false;
   const isEventRoute = !!eventSlug;
   const eventId = isEventRoute ? selectEventIdBySlug(eventSlug, store.getState()) : false;
@@ -134,6 +143,20 @@ const init = store => next => action => {
   if (isEventRoute && ! hasRequestedTopLevelComments && isSignedUp) {
     next(setInitValue(topLevelCommentsKey, true));
     store.dispatch(fetchPaginatedComments(-1, eventId, null, 'top', 5));
+
+    return;
+  }
+
+  const commentRouteMatch = new UrlPattern(COMMENT_ROUTE).match(selectRoutingPathname(store.getState()));
+  const commentId = eventCommentMatch ? eventCommentMatch.commentId : (
+    commentRouteMatch ? commentRouteMatch.commentId : null
+  );
+  const commentRouteKey = `${REQUESTED_COMMENT_MODAL}_${commentId}`;
+  const hasRequestedCommentRouteData = selectInitValue(commentRouteKey, store.getState());
+
+  if (commentId && ! hasRequestedCommentRouteData) {
+    next(setInitValue(commentRouteKey, true));
+    store.dispatch(fetchComment(commentId));
 
     return;
   }

@@ -13,7 +13,7 @@ export default function make() {
   const middlewares = [thunk, ...appMiddleware];
 
   if (process.env.NODE_ENV === 'development') {
-    middlewares.push(logger);
+    // middlewares.push(logger);
   }
 
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

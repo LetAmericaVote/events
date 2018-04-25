@@ -10,7 +10,7 @@ const CommunityContainer = styled.div`
 
   ${props => props.theme.basePadding}
 
-  ${props => props.theme.baseMarginBottom}
+  ${props => props.noBottomMargin ? '' : props.theme.baseMarginBottom}
 `;
 
 export default CommunityContainer;

@@ -1,6 +1,12 @@
 import createHistory from 'history/createBrowserHistory';
-import { setInternalPathname } from '../actions';
-import { selectRoutingPathname } from '../selectors';
+import {
+  setInternalPathname,
+  closeModal,
+} from '../actions';
+import {
+  selectRoutingPathname,
+  selectIsModalOpen,
+} from '../selectors';
 
 function getUrlParams(search) {
   const hashes = search.slice(search.indexOf('?') + 1).split('&');
@@ -31,6 +37,10 @@ const sync = (store) => {
 
     if (location.pathname !== storePath) {
       updatePathFromLocation(location);
+    }
+
+    if (selectIsModalOpen(store.getState())) {
+      store.dispatch(closeModal());
     }
   });
 };

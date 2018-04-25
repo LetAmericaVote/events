@@ -13,16 +13,33 @@ import Event from './routes/Event';
 import Profile from './routes/Profile';
 import HostLink from './routes/HostLink';
 import { selectIsModalOpen } from './selectors';
+import { openCommentModal } from './actions';
 /* eslint-disable react/jsx-pascal-case */
 import _404 from './routes/404';
 
 const App = (props) => {
-  const { isModalOpen } = props;
+  const { isModalOpen, openCommentModal } = props;
 
   const appRoutes = {
     [routes.HOME_ROUTE]: props => <Home {...props} />,
     [routes.SEARCH_ROUTE]: props => <Search {...props} />,
     [routes.EVENT_ROUTE]: props => <Event {...props} />,
+    [routes.EVENT_COMMENT_ROUTE]: (props) => {
+      const { commentId, eventSlug } = props;
+      openCommentModal(commentId, eventSlug);
+
+      return (
+        <Event {...props} />
+      );
+    },
+    [routes.COMMENT_ROUTE]: (props) => {
+      const { commentId } = props;
+      openCommentModal(commentId);
+
+      return (
+        <Home {...props} />
+      );
+    },
     [routes.PROFILE_ROUTE]: props => <Profile {...props} />,
     [routes.HOST_ROUTE]: props => <HostLink {...props} />,
   };
@@ -41,5 +58,9 @@ const App = (props) => {
 App.mapStateToProps = (state) => ({
   isModalOpen: selectIsModalOpen(state),
 });
+
+App.actionCreators = {
+  openCommentModal,
+};
 
 export default Rivet(App);

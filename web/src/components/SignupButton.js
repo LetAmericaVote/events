@@ -8,25 +8,19 @@ import { SecondaryCallToAction } from '../blocks/Button';
 import {
   signupForEvent,
   openSignupModal,
+  setFormValue,
 } from '../actions';
 import {
   selectIsAuthenticated,
   selectAuthUserId,
   selectAuthenticatedUserFirstName,
+  selectFormValue,
 } from '../selectors';
 
 class SignupButton extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      hasClicked: false,
-    };
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    const triggger = ! prevState.hasClicked || ! prevProps.isAuthenticated;
-    const condition = this.state.hasClicked && this.props.isAuthenticated;
+  componentDidUpdate(prevProps) {
+    const triggger = ! prevProps.hasClicked || ! prevProps.isAuthenticated;
+    const condition = this.props.hasClicked && this.props.isAuthenticated;
 
     if (triggger && condition && this.props.eventId) {
       this.props.signupForEvent(this.props.eventId);
@@ -39,6 +33,7 @@ class SignupButton extends React.Component {
       isAuthenticated,
       authenticatedUserId,
       authenticatedFirstName,
+      setFormValue,
     } = this.props;
 
     const SignupButtonFlow = (props) => {
@@ -74,7 +69,7 @@ class SignupButton extends React.Component {
     const WrappedSignup = isAuthenticated ?
       SignupButtonFlow : GoogleAuth(SignupButtonFlow);
 
-    const setClicked = () => this.setState({ hasClicked: true });
+    const setClicked = () => setFormValue('auth', 'click', true);
 
     const InnerSignup = () => isAuthenticated ? (
       <FlexAcrossAlignCenter>
@@ -103,11 +98,13 @@ SignupButton.mapStateToProps = (state, ownProps) => ({
   isAuthenticated: selectIsAuthenticated(state),
   authenticatedUserId: selectAuthUserId(state),
   authenticatedFirstName: selectAuthenticatedUserFirstName(state),
+  hasClicked: selectFormValue('auth', 'click', state),
 });
 
 SignupButton.actionCreators = {
   signupForEvent,
   openSignupModal,
+  setFormValue,
 };
 
 export default Rivet(SignupButton);
