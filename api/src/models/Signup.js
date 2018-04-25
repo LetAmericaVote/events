@@ -59,7 +59,7 @@ SignupSchema.methods.getApiResponse = async function(requestUser, populate = fal
   try {
     // The flagged check is to prevent the unnecessary query if its false.
     const isHostUser = (requestUser && requestUser.id && !!this.flag) ?
-      await Event.isHostUser(requestUser.id || requestUser) : false;
+      await Event.isHostUser(requestUser.id || requestUser, this.event) : false;
 
     const hideDetails = !!this.flag && (
       (requestUser || {}).role !== ADMIN_ROLE || ! isHostUser

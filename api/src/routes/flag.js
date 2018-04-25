@@ -3,7 +3,7 @@ const Comment = require('../models/Comment');
 const Signup = require('../models/Signup');
 const User = require('../models/User');
 const Event = require('../models/Event');
-const { loadUser, requiresUser } = require('../middleware/auth');
+const { loadUser, requiresAuth } = require('../middleware/auth');
 const { USER_ROLE, ADMIN_ROLE } = require('../lib/roles');
 
 async function getFlag(req, res) {
@@ -16,7 +16,7 @@ async function getFlag(req, res) {
     return res.status(404).json({ error: true, message: 'Flag not found.' });
   }
 
-  const formattedFlag = await flag.getApiResponse(requestUser);
+  const formattedFlag = await flag.getApiResponse(requestUser, true);
 
   return res.json({
     flag: formattedFlag,
@@ -40,6 +40,8 @@ async function postFlag(req, res) {
     judge: requestUser,
   });
 
+  let setFlagOn = null;
+
   if (targetType === 'user') {
     if (requestUser.role !== ADMIN_ROLE) {
       return res.status(401).json({ error: true, message: 'You must be an admin to flag a user.' });
@@ -53,6 +55,8 @@ async function postFlag(req, res) {
 
     flag.target = user;
     flag.targetType = 'user';
+
+    setFlagOn = user;
   }
 
   if (targetType === 'comment' || targetType === 'signup') {
@@ -66,17 +70,25 @@ async function postFlag(req, res) {
     const event = target.event ? await Event.findOne({ _id: target.event }) : null;
     const isHost = !!event ? event.hostUser === requestUser.id : false;
 
-    if (requestUser.role !== ADMIN_ROLE || ! isHost) {
+    if (requestUser.role !== ADMIN_ROLE && ! isHost) {
       return res.status(401).json({ error: true, message: 'You must be an admin or event host to flag this.' });
     }
 
     flag.target = target;
     flag.targetType = targetType;
+
+    setFlagOn = target;
   }
 
   await flag.save();
 
-  const formattedFlag = await flag.getApiResponse(requestUser);
+  if (setFlagOn) {
+    setFlagOn.flag = flag;
+
+    await setFlagOn.save();
+  }
+
+  const formattedFlag = await flag.getApiResponse(requestUser, true);
 
   return res.json({
     flag: formattedFlag,
@@ -94,6 +106,6 @@ module.exports = [
     route: '/v1/flags',
     method: 'post',
     handler: postFlag,
-    middleware: requiresUser,
+    middleware: requiresAuth,
   },
 ];

@@ -4,6 +4,7 @@ import Rivet from '../hoc/Rivet';
 import Byline from './Byline';
 import ThreadReply from './ThreadReply';
 import WriteComment from './WriteComment';
+import WriteFlag from './WriteFlag';
 import Spacer from '../blocks/Spacer';
 import CommunityContainer from '../blocks/CommunityContainer';
 import {
@@ -64,6 +65,7 @@ const Thread = (props) => {
     isFlagged,
     showReplyBox,
     showEditBox,
+    showFlagBox,
     setFormValue,
     eventSlug,
     showShareConfirmation,
@@ -114,6 +116,9 @@ const Thread = (props) => {
     setFormValue('reply', commentId, true);
     setFormValue('edit', commentId, true);
   };
+  const showFlag = () => {
+    setFormValue('flag', commentId, true);
+  };
 
   const buttons = [];
 
@@ -151,7 +156,7 @@ const Thread = (props) => {
 
     if (authUserRole === 'ADMIN' || (eventId && isHostUser)) {
       buttons.push(
-        <MenuButton rightIndent key="flag">
+        <MenuButton rightIndent key="flag" onClick={showFlag}>
           <FlexAcross>
             <Detail>Flag</Detail>
           </FlexAcross>
@@ -184,13 +189,21 @@ const Thread = (props) => {
         </FlexDown>
       ) : null}
       {showReplyBox ? [
-        <Spacer key="spacer" />,
+        <Spacer key="reply-spacer" />,
         <WriteComment
           key="reply"
           inReplyToId={commentId}
           eventId={eventId}
           commentId={showEditBox ? commentId : null}
         />
+      ] : null}
+      {showFlagBox ? [
+        <Spacer key="flag-spacer" />,
+        <WriteFlag
+          key="flag"
+          targetId={commentId}
+          targetType="comment"
+        />,
       ] : null}
       {modalView && edits && edits.length ? (
         <FlexDown>
@@ -235,6 +248,7 @@ Thread.mapStateToProps = (state, ownProps) => ({
   isFlagged: selectIsCommentFlagged(ownProps.commentId, state),
   showReplyBox: selectFormValue('reply', ownProps.commentId, state),
   showEditBox: selectFormValue('edit', ownProps.commentId, state),
+  showFlagBox: selectFormValue('flag', ownProps.commentId, state),
   showShareConfirmation: selectFormValue('share', ownProps.commentId, state),
   isReply: selectIsCommentReply(ownProps.commentId, state),
   remainingReplies: selectIsCommentReply(ownProps.commentId, state) ? 0 :

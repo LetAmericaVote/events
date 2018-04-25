@@ -1,7 +1,7 @@
 import createReducer from './utils/createReducer';
 import {
-  STORE_EVENT,
-  STORE_EVENTS,
+  STORE_FLAG,
+  STORE_FLAGS,
 } from '../actions';
 
 const storeFlags = (state, flags) => ({

@@ -3,6 +3,7 @@ import api from './api';
 import auth from './auth';
 import comments from './comments';
 import events from './events';
+import flag from './flag';
 import forms from './forms';
 import hostLink from './hostLink';
 import init from './init';
@@ -18,6 +19,7 @@ const reducers = combineReducers({
   auth,
   comments,
   events,
+  flag,
   forms,
   hostLink,
   init,

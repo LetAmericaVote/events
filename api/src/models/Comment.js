@@ -69,8 +69,8 @@ CommentSchema.methods.getApiResponse = async function(requestUser, populate = fa
     }
 
     // The flagged & event check is to prevent the unnecessary query if its false.
-    const isHostUser = (requestUser && requestUser.id && !!this.flag && this.event) ?
-      await Event.isHostUser(requestUser.id || requestUser) : false;
+    const isHostUser = (requestUser && requestUser.id && this.flag && this.event) ?
+      await Event.isHostUser(requestUser.id || requestUser, this.event) : false;
 
     const hideDetails = !!this.flag && (
       (requestUser || {}).role !== ADMIN_ROLE || ! isHostUser
@@ -78,6 +78,8 @@ CommentSchema.methods.getApiResponse = async function(requestUser, populate = fa
 
     if (hideDetails) {
       baseEventResponse.message = 'This comment was deleted by a moderator.';
+      
+      return baseEventResponse;
     }
 
     if (populate) {

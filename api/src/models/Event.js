@@ -197,7 +197,7 @@ EventSchema.statics.syncFromContentful = async function(entry) {
 EventSchema.statics.isHostUser = async function(compareId, eventId) {
   const event = await this.findOne({ _id: eventId });
 
-  return event.hostUser && event.hostUser === compareId;
+  return event && event.hostUser && event.hostUser === compareId;
 };
 
 EventSchema.statics.formatArrayOfEvents = async function(events, requestUser) {

@@ -32,15 +32,7 @@ import {
 } from '../selectors';
 
 const StyledTextInput = styled(TextInput)`
-  ${props => props.theme.bg.paper}
   ${props => props.theme.borderRadius}
-`;
-
-const StyledLongTextInput = styled(LongTextInput)`
-  ${props => props.theme.bg.paper}
-  ${props => props.theme.borderRadius}
-
-  min-height: 2em;
 `;
 
 const EmojiPickerWrapper = styled.div`
@@ -75,7 +67,7 @@ class WriteComment extends React.Component {
     } = this.state;
 
     const InputComponent = inReplyToId ?
-      StyledTextInput : StyledLongTextInput;
+      StyledTextInput : LongTextInput;
 
     const limit = inReplyToId ? 25 : 1000;
 

@@ -12,6 +12,9 @@ export const TextInputContainer = styled(FlexAcross)`
 export const TextInput = styled.input`
   ${props => props.theme.reset}
 
+  ${props => props.theme.bg.paper}
+  ${props => props.theme.fg.night}
+
   flex-grow: 1;
 
   font-family: ${props => props.theme.regularFontFamily}
@@ -39,12 +42,15 @@ export const Label = styled.h6`
 export const LongTextInput = styled.textarea`
   ${props => props.theme.reset}
 
+  ${props => props.theme.bg.paper}
   ${props => props.theme.fg.night}
 
   font-family: ${props => props.theme.regularFontFamily}
   font-size: ${props => props.theme.regularFontSize}
 
   ${props => props.theme.tinyPadding}
+
+  min-height: 2em;
 
   ${props => props.theme.defaultBorderStyle}
   ${props => props.theme.borderRadius}

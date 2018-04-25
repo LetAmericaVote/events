@@ -29,6 +29,7 @@ FlagSchema.methods.getApiResponse = async function(requestUser, populate) {
   const baseApiResponse = {
     id: this.id,
     reason: this.reason,
+    targetType: this.targetType,
     createdAt: this.createdAt,
   };
 
