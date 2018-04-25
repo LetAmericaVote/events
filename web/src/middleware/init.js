@@ -36,6 +36,8 @@ import {
   selectUser,
   selectEvent,
   selectIsAuthenticatedUserSignedUpForEvent,
+  selectAuthUserId,
+  selectAuthenticatedUser,
 } from '../selectors';
 import { batchItems } from '../util';
 
@@ -49,13 +51,22 @@ const REQUESTED_USER_GALLERY = 'REQUESTED_USER_GALLERY';
 const REQUESTED_TOP_LEVEL_COMMENTS = 'REQUESTED_TOP_LEVEL_COMMENTS';
 const REQUESTED_REPLIES = 'REQUESTED_REPLIES';
 const REQUESTED_COMMENT_MODAL = 'REQUESTED_COMMENT_MODAL';
-
-// TODO: If authenticated user in auth but not in user store, fetch user.
+const REQUESTED_AUTH_USER_DATA = 'REQUESTED_AUTH_USER_DATA';
 
 // TODO: This could probably be optimized so the logic only runs for relevant page.
 
 const init = store => next => action => {
   next(action);
+
+  const authId = selectAuthUserId(store.getState());
+  const authUser = selectAuthenticatedUser(store.getState());
+  const hasRequestedAuthUserData = selectInitValue(REQUESTED_AUTH_USER_DATA, store.getState());
+  if (authId && ! authUser && ! hasRequestedAuthUserData) {
+    next(setInitValue(REQUESTED_AUTH_USER_DATA, true));
+    store.dispatch(fetchUserById(authId));
+
+    return;
+  }
 
   const isHomeRoute = selectRoutingPathname(store.getState()) === HOME_ROUTE;
   const hasRequestedMapEvents = selectInitValue(REQUESTED_MAP_EVENTS, store.getState());
