@@ -133,7 +133,7 @@ const init = store => next => action => {
 
   if (isEventRoute && ! hasRequestedTopLevelComments && isSignedUp) {
     next(setInitValue(topLevelCommentsKey, true));
-    store.dispatch(fetchPaginatedComments(1, eventId, null, 'top', 5));
+    store.dispatch(fetchPaginatedComments(-1, eventId, null, 'top', 5));
 
     return;
   }
@@ -201,8 +201,10 @@ const init = store => next => action => {
     }
 
     next(setInitValue(replyKey, true));
-    store.dispatch(fetchPaginatedComments(1, comment.event, null, comment.id, 3));
+    store.dispatch(fetchPaginatedComments(-1, comment.event, null, comment.id, 3));
   }
+
+  // TODO: Request flag.
 
   if (action.type === STORE_COMMENT) {
     const { comment } = action;

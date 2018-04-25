@@ -1,6 +1,8 @@
 import { actionColor, cloudColor } from './colors';
 
-const borderRadius = 'border-radius: 4px';
+const borderRadiusValue = '4px';
+
+const borderRadius = `border-radius: ${borderRadiusValue};`;
 
 const defaultBorderStyle = `
   border: 1px solid ${cloudColor};
@@ -12,6 +14,7 @@ const actionBorderStyle = `
 
 const border = {
   borderRadius,
+  borderRadiusValue,
   actionBorderStyle,
   defaultBorderStyle,
 };

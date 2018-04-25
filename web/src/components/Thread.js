@@ -1,9 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
 import Rivet from '../hoc/Rivet';
 import Byline from './Byline';
 import ThreadReply from './ThreadReply';
+import WriteComment from './WriteComment';
 import Spacer from '../blocks/Spacer';
+import CommunityContainer from '../blocks/CommunityContainer';
 import {
   ReplyIcon,
   ShareIcon,
@@ -18,30 +19,21 @@ import {
 import {
   FlexAcross,
   FlexAcrossWrap,
+  FlexAcrossJustifyCenter,
 } from '../blocks/Flex';
 import {
-  selectCommentExists,
   selectCommentUserId,
   selectCommentCreatedAt,
   selectCommentMessage,
   selectEventTitle,
   selectRepliesForCommentSortedByRecent,
+  selectIsCommentFlagged,
+  selectFormValue,
 } from '../selectors';
 import {
-  fetchComment,
-  fetchPaginatedEventComments,
+  fetchPaginatedComments,
+  setFormValue,
 } from '../actions';
-
-const StyledThread = styled.div`
-  ${props => props.theme.reset}
-
-  ${props => props.theme.bg.rainCloud}
-  ${props => props.theme.borderRadius}
-
-  ${props => props.theme.basePadding}
-
-  ${props => props.theme.baseMarginBottom}
-`;
 
 const Thread = (props) => {
   const {
@@ -50,11 +42,16 @@ const Thread = (props) => {
     message,
     eventTitle,
     replies,
+    fetchPaginatedComments,
+    eventId,
+    commentId,
+    isFlagged,
+    showReplyBox,
+    setFormValue,
   } = props;
 
-  // TODO: Handle flag.
-  // TODO: Display comment replies.
-  // TODO: Display dropdown menu
+  // TODO: Handle 0 hours (aka use minutes)
+  // TODO: Display dropdown menu --> open same thread modal?
   //   - edit
   //   - edit history
   //   - delete (user only)
@@ -74,8 +71,10 @@ const Thread = (props) => {
 
   const tagline = `Posted in ${eventTitle ? `"${eventTitle}"` : 'the community'} ${hoursSince <= 12 ? `${hoursSince} hours ago` : `at ${formattedTime}`}.`;
 
+  const showReply = () => setFormValue('reply', commentId, true);
+
   const buttons = [
-    <MenuButton rightIndent key="reply">
+    <MenuButton rightIndent key="reply" onClick={showReply}>
       <FlexAcross>
         <ReplyIcon />
         <Detail indent>Reply</Detail>
@@ -89,20 +88,36 @@ const Thread = (props) => {
     </MenuButton>,
   ];
 
+  const onViewMoreReplies = () =>
+    fetchPaginatedComments(-1, eventId, null, commentId, 10);
+
   return (
-    <StyledThread>
+    <CommunityContainer isFlagged={isFlagged}>
       <Byline userId={userId} tagline={tagline} />
       <Spacer />
       <Paragraph>{message}</Paragraph>
       <FlexAcross>
         {buttons}
       </FlexAcross>
+      {showReplyBox ? [
+        <Spacer key="spacer" />,
+        <WriteComment
+          key="reply"
+          inReplyToId={commentId}
+          eventId={eventId}
+        />
+      ] : null}
       <Spacer />
       <FlexAcrossWrap>
         {replies.map(reply =>
           <ThreadReply key={reply.id} commentId={reply.id} />)}
       </FlexAcrossWrap>
-    </StyledThread>
+      <MenuButton fill onClick={onViewMoreReplies}>
+        <FlexAcrossJustifyCenter>
+          <Detail>View More Replies</Detail>
+        </FlexAcrossJustifyCenter>
+      </MenuButton>
+    </CommunityContainer>
   );
 };
 
@@ -112,6 +127,13 @@ Thread.mapStateToProps = (state, ownProps) => ({
   message: selectCommentMessage(ownProps.commentId, state),
   eventTitle: selectEventTitle(ownProps.eventId, state),
   replies: selectRepliesForCommentSortedByRecent(ownProps.commentId, state),
+  isFlagged: selectIsCommentFlagged(ownProps.commentId, state),
+  showReplyBox: selectFormValue('reply', ownProps.commentId, state),
 });
+
+Thread.actionCreators = {
+  fetchPaginatedComments,
+  setFormValue,
+};
 
 export default Rivet(Thread);

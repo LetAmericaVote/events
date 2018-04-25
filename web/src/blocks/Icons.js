@@ -7,6 +7,7 @@ import calendar from '../assets/icons/calendar.svg';
 import house from '../assets/icons/house.svg';
 import reply from '../assets/icons/reply.svg';
 import share from '../assets/icons/share.svg';
+import smile from '../assets/icons/smile.svg';
 
 export const Logo = styled.div`
   ${props => props.theme.reset}
@@ -41,6 +42,10 @@ export const CalendarIcon = styled(BaseIcon)`
 
 export const HouseIcon = styled(BaseIcon)`
   background-image: url(${house});
+`;
+
+export const SmileIcon = styled(BaseIcon)`
+  background-image: url(${smile});
 `;
 
 export const GoogleIcon = styled.div`

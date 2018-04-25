@@ -1,8 +1,11 @@
 import React from 'react';
 import Rivet from '../hoc/Rivet';
 import Thread from './Thread';
+import WriteComment from './WriteComment';
+import CommunityContainer from '../blocks/CommunityContainer';
 import {
   Header,
+  Paragraph,
 } from '../blocks/Type';
 import {
   SecondaryCallToAction,
@@ -29,18 +32,22 @@ const Community = (props) => {
   } = props;
 
   const loadMoreComments = () =>
-    fetchPaginatedComments(1, eventId, null, 'top', 5);
+    fetchPaginatedComments(-1, eventId, null, 'top', 5);
 
   return (
     <FlexDown>
       <Header>{COMMUNITY_TITLE}</Header>
+      <CommunityContainer>
+        <Paragraph>Share something with the community</Paragraph>
+        <WriteComment eventId={eventId} />
+      </CommunityContainer>
       {topLevelComments.map(comment =>
         <Thread key={comment.id} commentId={comment.id} eventId={eventId} />
       )}
       <FlexAcrossJustifyCenter>
         <SecondaryCallToAction
           onClick={loadMoreComments}
-        >Load more comments</SecondaryCallToAction>
+        >View more comments</SecondaryCallToAction>
       </FlexAcrossJustifyCenter>
     </FlexDown>
   );

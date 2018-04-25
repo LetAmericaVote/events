@@ -37,8 +37,10 @@ export const MenuButton = styled.button`
   ${props => props.theme.bg.paper}
   ${props => props.theme.fg.night}
 
-  font-family: ${props => props.theme.thinFontFamily}
+  font-family: ${props => props.theme.regularFontFamily};
   font-size: ${props => props.theme.smallFontSize}
+
+  ${props => props.fill ? 'width: 100%;' : ''}
 
   ${props => props.theme.tinyPaddingHorizontal}
   ${props => props.theme.extraTinyPaddingVertical}
@@ -50,4 +52,9 @@ export const MenuButton = styled.button`
   cursor: pointer;
 
   ${props => props.centered ? 'text-align: center;' : ''}
+`;
+
+export const ActionMenuButton = styled(MenuButton)`
+  ${props => props.theme.bg.secondary}
+  ${props => props.theme.fg.paper}
 `;

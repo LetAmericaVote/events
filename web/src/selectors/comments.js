@@ -27,6 +27,10 @@ export const selectCommentMessage = (commentId, state) =>
   selectCommentExists(commentId, state) ?
     selectComment(commentId, state).message || null : null;
 
+export const selectIsCommentFlagged = (commentId, state) =>
+  selectCommentExists(commentId, state) ?
+    selectComment(commentId, state).isFlagged || false : false;
+
 export const selectCommentCreatedAt = (commentId, state) =>
   selectCommentExists(commentId, state) ?
     selectComment(commentId, state).createdAt || null : null;

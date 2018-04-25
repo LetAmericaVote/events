@@ -198,7 +198,7 @@ const commentsIncomingRequest = (store, action) => {
         }
 
         if (!!processedItem.parentComment) {
-          acc.comments.push(processedItem.parentComment);
+          acc.parentComments.push(processedItem.parentComment);
         }
 
         if (!!processedItem.flag) {
@@ -208,6 +208,7 @@ const commentsIncomingRequest = (store, action) => {
         return acc;
       }, {
         comments: [],
+        parentComments: [],
         events: [],
         users: [],
         flags: [],
@@ -229,6 +230,10 @@ const commentsIncomingRequest = (store, action) => {
 
       if (processedData.flags.length) {
         store.dispatch(storeFlags(processedData.flags));
+      }
+
+      if (processedData.parentComments.length) {
+        store.dispatch(storeComments(processedData.parentComments));
       }
 
       if (processedData.comments.length) {

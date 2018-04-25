@@ -114,8 +114,7 @@ async function getComment(req, res) {
 
 async function postComment(req, res) {
   const { requestUser } = res.locals;
-  const { eventId } = req.params;
-  const { message, inReplyTo } = req.body;
+  const { message, inReplyTo, eventId } = req.body;
 
   if (! message) {
     return res.status(400).json({ error: true, message: 'Missing message' });
@@ -142,7 +141,7 @@ async function postComment(req, res) {
       return res.status(400).json({ error: true, message: 'Replies are capped to 24 characters' });
     }
 
-    comment.inReplyTo = comment;
+    comment.inReplyTo = inReplyToComment;
   }
 
   await comment.save();

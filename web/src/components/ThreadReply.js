@@ -6,12 +6,13 @@ import {
   Paragraph,
 } from '../blocks/Type';
 import {
-  FlexAcross,
+  FlexAcrossAlignCenter,
 } from '../blocks/Flex';
 import {
   selectCommentExists,
   selectCommentUserId,
   selectCommentMessage,
+  selectIsCommentFlagged,
 } from '../selectors';
 
 const ReplyType = styled(Paragraph)`
@@ -29,7 +30,7 @@ const ThreadReplyContainer = styled.div`
   ${props => props.theme.bg.paper}
 
   ${props => props.theme.borderRadius}
-  ${props => props.theme.defaultBorderStyle}
+  ${props => props.isFlagged ? props.theme.actionBorderStyle : ''}
 
   ${props => props.theme.baseMarginBottom}
 
@@ -45,6 +46,7 @@ const ThreadReply = (props) => {
     exists,
     userId,
     message,
+    isFlagged,
   } = props;
 
   if (! exists) {
@@ -52,11 +54,11 @@ const ThreadReply = (props) => {
   }
 
   return (
-    <ThreadReplyContainer>
-      <FlexAcross>
+    <ThreadReplyContainer isFlagged={isFlagged}>
+      <FlexAcrossAlignCenter>
         <Face userId={userId} indent />
         <ReplyType>{message}</ReplyType>
-      </FlexAcross>
+      </FlexAcrossAlignCenter>
     </ThreadReplyContainer>
   );
 };
@@ -65,6 +67,7 @@ ThreadReply.mapStateToProps = (state, ownProps) => ({
   exists: selectCommentExists(ownProps.commentId, state),
   userId: selectCommentUserId(ownProps.commentId, state),
   message: selectCommentMessage(ownProps.commentId, state),
+  isFlagged: selectIsCommentFlagged(ownProps.commentId, state),
 });
 
 export default Rivet(ThreadReply);
