@@ -40,6 +40,9 @@ import {
   selectEventSlug,
   selectAuthUserId,
   selectAuthenticatedUserRole,
+  selectIsCommentReply,
+  selectCommentEdits,
+  selectEventHostUserId,
 } from '../selectors';
 import {
   fetchPaginatedComments,
@@ -59,6 +62,7 @@ const Thread = (props) => {
     commentId,
     isFlagged,
     showReplyBox,
+    showEditBox,
     setFormValue,
     eventSlug,
     showShareConfirmation,
@@ -66,6 +70,9 @@ const Thread = (props) => {
     modalView,
     authUserId,
     authUserRole,
+    isReply,
+    edits,
+    isHostUser,
   } = props;
 
   // TODO: Display dropdown menu --> open same thread modal?
@@ -87,8 +94,8 @@ const Thread = (props) => {
     })
   ) : '';
 
-  const timeframe = minutesSince < 60 ? `${minutesSince} minutes ago` : (
-    hoursSince <= 12 ? `${hoursSince} hours ago` : `at ${formattedTime}`
+  const timeframe = minutesSince < 60 ? `${minutesSince} minute${minutesSince === 1 ? '' : 's'} ago` : (
+    hoursSince <= 12 ? `${hoursSince} hour${hoursSince === 1 ? '' : 's'} ago` : `at ${formattedTime}`
   );
   const tagline = `Posted in ${eventTitle ? `"${eventTitle}"` : 'the community'} ${timeframe}.`;
 
@@ -101,26 +108,37 @@ const Thread = (props) => {
     copy(link);
   };
   const openModal = () => openCommentModal(commentId, eventSlug);
+  const showEdit = () => {
+    setFormValue('reply', commentId, true);
+    setFormValue('edit', commentId, true);
+  };
 
-  const buttons = [
-    <MenuButton rightIndent key="reply" onClick={showReply}>
-      <FlexAcross>
-        <ReplyIcon />
-        <Detail indent>Reply</Detail>
-      </FlexAcross>
-    </MenuButton>,
+  const buttons = [];
+
+  if (! modalView || (modalView && ! isReply)) {
+    buttons.push(
+      <MenuButton rightIndent key="reply" onClick={showReply}>
+        <FlexAcross>
+          <ReplyIcon />
+          <Detail indent>Reply</Detail>
+        </FlexAcross>
+      </MenuButton>
+    );
+  }
+
+  buttons.push(
     <MenuButton rightIndent key="share" onClick={copyLink}>
       <FlexAcross>
         <ShareIcon />
         <Detail indent>Share</Detail>
       </FlexAcross>
-    </MenuButton>,
-  ];
+    </MenuButton>
+  );
 
   if (modalView) {
     if (authUserId === userId) {
       buttons.push(
-        <MenuButton rightIndent key="edit">
+        <MenuButton rightIndent key="edit" onClick={showEdit}>
           <FlexAcross>
             <PencilIcon />
             <Detail indent>Edit</Detail>
@@ -129,9 +147,9 @@ const Thread = (props) => {
       );
     }
 
-    if (authUserRole === 'ADMIN') {
+    if (authUserRole === 'ADMIN' || (eventId && isHostUser)) {
       buttons.push(
-        <MenuButton rightIndent key="edit">
+        <MenuButton rightIndent key="flag">
           <FlexAcross>
             <Detail>Flag</Detail>
           </FlexAcross>
@@ -169,19 +187,32 @@ const Thread = (props) => {
           key="reply"
           inReplyToId={commentId}
           eventId={eventId}
+          commentId={showEditBox ? commentId : null}
         />
       ] : null}
-      <Spacer />
-      <FlexAcrossWrap>
-        {replies.map(reply =>
-          <ThreadReply key={reply.id} commentId={reply.id} />
-        )}
-      </FlexAcrossWrap>
-      <MenuButton fill onClick={onViewMoreReplies}>
-        <FlexAcrossJustifyCenter>
-          <Detail>View More Replies</Detail>
-        </FlexAcrossJustifyCenter>
-      </MenuButton>
+      {modalView && edits && edits.length ? (
+        <FlexDown>
+          <Spacer />
+          <Detail>This comment has been edited {edits.length} time{edits.length === 1 ? '' : 's'} out of 5 available edits.</Detail>
+        </FlexDown>
+      ) : null}
+      {replies && replies.length ? (
+        <FlexDown>
+          <Spacer />
+          <FlexAcrossWrap>
+            {replies.map(reply =>
+              <ThreadReply key={reply.id} commentId={reply.id} />
+            )}
+          </FlexAcrossWrap>
+        </FlexDown>
+      ) : null}
+      {(modalView && isReply) || ! replies.length ? null : (
+        <MenuButton fill onClick={onViewMoreReplies}>
+          <FlexAcrossJustifyCenter>
+            <Detail>View More Replies</Detail>
+          </FlexAcrossJustifyCenter>
+        </MenuButton>
+      )}
     </CommunityContainer>
   );
 };
@@ -190,14 +221,20 @@ Thread.mapStateToProps = (state, ownProps) => ({
   userId: selectCommentUserId(ownProps.commentId, state),
   authUserId: selectAuthUserId(state),
   authUserRole: selectAuthenticatedUserRole(state),
+  isHostUser: ownProps.eventId ?
+    selectEventHostUserId(ownProps.eventId, state) ===
+      selectCommentUserId(ownProps.commentId, state) : false,
   createdAt: selectCommentCreatedAt(ownProps.commentId, state),
   message: selectCommentMessage(ownProps.commentId, state),
   eventTitle: selectEventTitle(ownProps.eventId, state),
   eventSlug: selectEventSlug(ownProps.eventId, state),
   replies: selectRepliesForCommentSortedByRecent(ownProps.commentId, state),
+  edits: selectCommentEdits(ownProps.commentId, state),
   isFlagged: selectIsCommentFlagged(ownProps.commentId, state),
   showReplyBox: selectFormValue('reply', ownProps.commentId, state),
+  showEditBox: selectFormValue('edit', ownProps.commentId, state),
   showShareConfirmation: selectFormValue('share', ownProps.commentId, state),
+  isReply: selectIsCommentReply(ownProps.commentId, state),
 });
 
 Thread.actionCreators = {

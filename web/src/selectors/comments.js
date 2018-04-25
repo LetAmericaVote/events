@@ -31,6 +31,10 @@ export const selectCommentEventId = (commentId, state) =>
   selectCommentExists(commentId, state) ?
     selectCommentItems(state)[commentId].event || null : null;
 
+export const selectCommentEdits = (commentId, state) =>
+selectCommentExists(commentId, state) ?
+  selectCommentItems(state)[commentId].edits || null : null;
+
 export const selectIsCommentFlagged = (commentId, state) =>
   selectCommentExists(commentId, state) ?
     selectComment(commentId, state).isFlagged || false : false;
@@ -38,6 +42,17 @@ export const selectIsCommentFlagged = (commentId, state) =>
 export const selectCommentCreatedAt = (commentId, state) =>
   selectCommentExists(commentId, state) ?
     selectComment(commentId, state).createdAt || null : null;
+
+/**
+ * Select if a comment is a reply.
+ *
+ * @param  {String} commentId Comment id
+ * @param  {Object} state     Redux store
+ * @return {Boolean}          True if reply
+ */
+export const selectIsCommentReply = (commentId, state) =>
+  selectCommentExists(commentId, state) ?
+    !!selectComment(commentId, state).inReplyTo || false : false;
 
 export const selectCommentsAsArray = (state) =>
   Object.keys(selectCommentItems(state))

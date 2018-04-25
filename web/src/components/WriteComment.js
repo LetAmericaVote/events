@@ -17,6 +17,7 @@ import {
 import {
   setFormValue,
   postComment,
+  updateComment,
 } from '../actions';
 import {
   TextInput,
@@ -26,6 +27,9 @@ import {
   FlexAcross,
   FlexDown,
 } from '../blocks/Flex';
+import {
+  selectCommentMessage,
+} from '../selectors';
 
 const StyledTextInput = styled(TextInput)`
   ${props => props.theme.bg.paper}
@@ -51,7 +55,7 @@ class WriteComment extends React.Component {
     super(props);
 
     this.state = {
-      input: '',
+      input: props.initialMessage,
       hideEmojiPicker: true,
     };
   }
@@ -59,9 +63,11 @@ class WriteComment extends React.Component {
   render() {
     const {
       postComment,
+      updateComment,
       eventId,
       inReplyToId,
       setFormValue,
+      commentId,
     } = this.props;
     const {
       input,
@@ -83,15 +89,23 @@ class WriteComment extends React.Component {
     };
 
     const onSubmit = () => {
-      setFormValue('reply', inReplyToId, false);
-      postComment(input, eventId, inReplyToId);
+      setFormValue('reply', commentId ? commentId : inReplyToId, false);
+
+      if (commentId) {
+        updateComment(commentId, input);
+        setFormValue('edit', commentId, false);
+      } else {
+        postComment(input, eventId, inReplyToId);
+      }
 
       this.setState({ input: '' });
     };
 
     const onCancel = () => {
-      setFormValue('reply', inReplyToId, false);
+      setFormValue('reply', inReplyToId || commentId, false);
     };
+
+    const emojiOffset = inReplyToId ? -250 : -150;
 
     return (
       <FlexDown>
@@ -99,13 +113,13 @@ class WriteComment extends React.Component {
         <Detail>{input.length}/{limit}</Detail>
         <Spacer tiny />
         <FlexAcross>
-          <ActionMenuButton rightIndent onClick={onSubmit}>Post Comment</ActionMenuButton>
-          {inReplyToId ? <MenuButton rightIndent onClick={onCancel}>Cancel</MenuButton> : null }
+          <ActionMenuButton rightIndent onClick={onSubmit}>{commentId ? 'Edit' : 'Post'} Comment</ActionMenuButton>
+          {(inReplyToId || commentId) ? <MenuButton rightIndent onClick={onCancel}>Cancel</MenuButton> : null }
           <SmileIcon onClick={() => this.setState({ hideEmojiPicker: ! hideEmojiPicker })} />
           {hideEmojiPicker ? null : (
             <EmojiPickerWrapper>
               <Picker
-                style={{ position: 'absolute', top: '48px', left: '-250px' }}
+                style={{ position: 'absolute', top: '48px', left: `${emojiOffset}px` }}
                 onSelect={(emoji) => {
                   onChange({ target: { value: `${input}${emoji.native}`}});
                   this.setState({ hideEmojiPicker: true });
@@ -119,9 +133,15 @@ class WriteComment extends React.Component {
   }
 }
 
+WriteComment.mapStateToProps = (state, ownProps) => ({
+  initialMessage: ownProps.commentId ?
+    selectCommentMessage(ownProps.commentId, state) || '' : '',
+})
+
 WriteComment.actionCreators = {
   setFormValue,
   postComment,
+  updateComment,
 };
 
 export default Rivet(WriteComment);

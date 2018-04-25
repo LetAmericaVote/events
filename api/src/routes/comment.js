@@ -180,7 +180,7 @@ async function updateComment(req, res) {
     }
   }
 
-  if (comment.user !== requestUser.id) {
+  if (comment.user.toString() !== requestUser.id) {
     return res.status(401).json({ error: true, message: 'You are not authorized to edit other user comments' });
   }
 

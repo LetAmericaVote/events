@@ -9,10 +9,15 @@ import {
   FlexAcrossAlignCenter,
 } from '../blocks/Flex';
 import {
+  openCommentModal,
+} from '../actions';
+import {
   selectCommentExists,
   selectCommentUserId,
   selectCommentMessage,
   selectIsCommentFlagged,
+  selectCommentEventId,
+  selectEventSlug,
 } from '../selectors';
 
 const ReplyType = styled(Paragraph)`
@@ -36,6 +41,8 @@ const ThreadReplyContainer = styled.div`
 
   width: 100%;
 
+  cursor: pointer;
+
   ${props => props.theme.tablet`
     width: auto;
   `}
@@ -47,14 +54,20 @@ const ThreadReply = (props) => {
     userId,
     message,
     isFlagged,
+    commentId,
+    eventSlug,
+    openCommentModal,
   } = props;
 
   if (! exists) {
     return null;
   }
 
+  const onClick = () =>
+    openCommentModal(commentId, eventSlug);
+
   return (
-    <ThreadReplyContainer isFlagged={isFlagged}>
+    <ThreadReplyContainer isFlagged={isFlagged} onClick={onClick}>
       <FlexAcrossAlignCenter>
         <Face userId={userId} indent />
         <ReplyType>{message}</ReplyType>
@@ -68,6 +81,11 @@ ThreadReply.mapStateToProps = (state, ownProps) => ({
   userId: selectCommentUserId(ownProps.commentId, state),
   message: selectCommentMessage(ownProps.commentId, state),
   isFlagged: selectIsCommentFlagged(ownProps.commentId, state),
+  eventSlug: selectEventSlug(selectCommentEventId(ownProps.commentId, state), state),
 });
+
+ThreadReply.actionCreators = {
+  openCommentModal,
+};
 
 export default Rivet(ThreadReply);
