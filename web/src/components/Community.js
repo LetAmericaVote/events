@@ -3,6 +3,7 @@ import Rivet from '../hoc/Rivet';
 import Thread from './Thread';
 import WriteComment from './WriteComment';
 import CommunityContainer from '../blocks/CommunityContainer';
+import HouseParty from '../blocks/HouseParty';
 import {
   Header,
   Paragraph,
@@ -19,6 +20,7 @@ import {
 } from '../actions';
 import {
   selectTopLevelCommentsForEventSortedByRecent,
+  selectRemainingRepliesForComment,
 } from '../selectors';
 import {
   COMMUNITY_TITLE,
@@ -27,6 +29,7 @@ import {
 const Community = (props) => {
   const {
     topLevelComments,
+    remainingComments,
     fetchPaginatedComments,
     eventId,
   } = props;
@@ -44,17 +47,31 @@ const Community = (props) => {
       {topLevelComments.map(comment =>
         <Thread key={comment.id} commentId={comment.id} eventId={eventId} />
       )}
-      <FlexAcrossJustifyCenter>
-        <SecondaryCallToAction
-          onClick={loadMoreComments}
-        >View more comments</SecondaryCallToAction>
-      </FlexAcrossJustifyCenter>
+      {remainingComments ? (
+        <FlexAcrossJustifyCenter>
+          <SecondaryCallToAction
+            onClick={loadMoreComments}
+          >View more comments</SecondaryCallToAction>
+        </FlexAcrossJustifyCenter>
+      ) : (
+        <FlexDown>
+          <FlexAcrossJustifyCenter>
+            {(! topLevelComments || ! topLevelComments.length) ? (
+              <Paragraph>Be the first to comment!</Paragraph>
+            ) : (
+              <Paragraph>You've reached the end!</Paragraph>
+            )}
+          </FlexAcrossJustifyCenter>
+          <HouseParty />
+        </FlexDown>
+      )}
     </FlexDown>
   );
 };
 
 Community.mapStateToProps = (state, ownProps) => ({
   topLevelComments: selectTopLevelCommentsForEventSortedByRecent(ownProps.eventId, state),
+  remainingComments: selectRemainingRepliesForComment('top', state),
 });
 
 Community.actionCreators = {

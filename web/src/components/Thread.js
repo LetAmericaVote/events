@@ -43,6 +43,7 @@ import {
   selectIsCommentReply,
   selectCommentEdits,
   selectEventHostUserId,
+  selectRemainingRepliesForComment,
 } from '../selectors';
 import {
   fetchPaginatedComments,
@@ -71,6 +72,7 @@ const Thread = (props) => {
     authUserId,
     authUserRole,
     isReply,
+    remainingReplies,
     edits,
     isHostUser,
   } = props;
@@ -206,7 +208,7 @@ const Thread = (props) => {
           </FlexAcrossWrap>
         </FlexDown>
       ) : null}
-      {(modalView && isReply) || ! replies.length ? null : (
+      {(modalView && isReply) || ! replies.length || ! remainingReplies ? null : (
         <MenuButton fill onClick={onViewMoreReplies}>
           <FlexAcrossJustifyCenter>
             <Detail>View More Replies</Detail>
@@ -235,6 +237,8 @@ Thread.mapStateToProps = (state, ownProps) => ({
   showEditBox: selectFormValue('edit', ownProps.commentId, state),
   showShareConfirmation: selectFormValue('share', ownProps.commentId, state),
   isReply: selectIsCommentReply(ownProps.commentId, state),
+  remainingReplies: selectIsCommentReply(ownProps.commentId, state) ? 0 :
+    selectRemainingRepliesForComment(ownProps.commentId, state),
 });
 
 Thread.actionCreators = {

@@ -178,11 +178,13 @@ const commentsIncomingRequest = (store, action) => {
 
     case FETCH_PAGINATED_COMMENTS: {
       const { data } = action;
-      const { comments } = data;
+      const { comments, meta } = data;
 
       if (! comments || ! comments.length) {
         break;
       }
+
+      const { remaining } = meta;
 
       const processedData = comments.reduce((acc, comment) => {
         const processedItem = processComment(comment);
@@ -219,6 +221,18 @@ const commentsIncomingRequest = (store, action) => {
       store.dispatch(setApiActionMetaProperty(
         metaAction, space, META_START, lastComment.id,
       ));
+
+      // TODO: AGHHHHHH.
+      const inReplyTo = space.split(',')
+        .find(item => item.startsWith('inReplyTo='))
+        .replace('inReplyTo=', '');
+
+      if (inReplyTo) {
+        store.dispatch(storeComment({
+          id: inReplyTo,
+          remaining,
+        }));
+      }
 
       if (processedData.users.length) {
         store.dispatch(storeUsers(processedData.users));

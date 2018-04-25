@@ -54,6 +54,10 @@ export const selectIsCommentReply = (commentId, state) =>
   selectCommentExists(commentId, state) ?
     !!selectComment(commentId, state).inReplyTo || false : false;
 
+export const selectRemainingRepliesForComment = (commentId, state) =>
+  selectCommentExists(commentId, state) ?
+    selectComment(commentId, state).remaining || 0 : 0;
+
 export const selectCommentsAsArray = (state) =>
   Object.keys(selectCommentItems(state))
     .map(commentId => selectComment(commentId, state));
