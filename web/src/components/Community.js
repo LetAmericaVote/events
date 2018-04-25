@@ -20,7 +20,7 @@ import {
 } from '../actions';
 import {
   selectTopLevelCommentsForEventSortedByRecent,
-  selectRemainingRepliesForComment,
+  selectEventRemainingTopLevelComments,
 } from '../selectors';
 import {
   COMMUNITY_TITLE,
@@ -71,7 +71,7 @@ const Community = (props) => {
 
 Community.mapStateToProps = (state, ownProps) => ({
   topLevelComments: selectTopLevelCommentsForEventSortedByRecent(ownProps.eventId, state),
-  remainingComments: selectRemainingRepliesForComment('top', state),
+  remainingComments: selectEventRemainingTopLevelComments(ownProps.eventId || 'community', state),
 });
 
 Community.actionCreators = {

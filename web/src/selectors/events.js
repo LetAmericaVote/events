@@ -249,3 +249,7 @@ export const selectEventStreetAddress = (eventId, state) =>
 export const selectEventZipcode = (eventId, state) =>
   selectEventExists(eventId, state) ?
     selectEvent(eventId, state).zipcode : null;
+
+export const selectEventRemainingTopLevelComments = (eventId, state) =>
+  selectEventExists(eventId, state) ?
+    selectEvent(eventId, state).remainingTopLevelComments || 0 : 0;

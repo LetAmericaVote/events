@@ -227,11 +227,27 @@ const commentsIncomingRequest = (store, action) => {
         .find(item => item.startsWith('inReplyTo='))
         .replace('inReplyTo=', '');
 
-      if (inReplyTo) {
+      const eventId = space.split(',')
+        .find(item => item.startsWith('eventId='))
+        .replace('eventId=', '');
+
+      if (inReplyTo && inReplyTo !== 'top') {
         store.dispatch(storeComment({
           id: inReplyTo,
           remaining,
         }));
+      } else if (inReplyTo === 'top' && eventId) {
+        if (eventId === 'null') {
+          store.dispatch(storeEvent({
+            id: 'community',
+            remainingTopLevelComments: remaining,
+          }));
+        } else {
+          store.dispatch(storeEvent({
+            id: eventId,
+            remainingTopLevelComments: remaining,
+          }));
+        }
       }
 
       if (processedData.users.length) {
