@@ -69,7 +69,7 @@ const Byline = (props) => {
 
   const hasRoleIcon = role === 'admin' || isHostUser;
   const RoleIcon = () => {
-    if (role === 'admin') {
+    if (role === 'ADMIN') {
       return <AdminIcon />
     }
 
