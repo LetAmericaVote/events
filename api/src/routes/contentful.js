@@ -4,13 +4,34 @@ const HostLink = require('../models/HostLink');
 const { contentfulAuth } = require('../middleware/auth');
 
 async function contentfulWebhook(req, res) {
-  // TODO: Check if req.body contains the right data or if its nested
-  const isSynced = await Event.syncFromContentful(req.body);
+  const type = req.headers['x-contentful-topic'];
 
-  if (isSynced) {
+  const deletes = [
+    'ContentManagement.Entry.unpublish',
+    'ContentManagement.Entry.delete',
+    'ContentManagement.Entry.archive',
+  ];
+
+  const saves = [
+    'ContentManagement.Entry.unarchive',
+    'ContentManagement.Entry.publish',
+  ];
+
+  if (deletes.contains(type)) {
     res.send('ok');
-  } else {
-    res.status(500).send('failed sync');
+
+    const contentfulId = req.body.sys.id
+    await Event.remove({ contentfulId });
+
+    return;
+  }
+
+  if (saves.contains(type)) {
+    res.send('ok');
+
+    await Event.syncFromContentful(req.body);
+
+    return;
   }
 }
 
