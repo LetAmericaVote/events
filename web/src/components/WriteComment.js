@@ -69,7 +69,7 @@ class WriteComment extends React.Component {
     const InputComponent = inReplyToId ?
       StyledTextInput : LongTextInput;
 
-    const limit = inReplyToId ? 25 : 1000;
+    const limit = inReplyToId ? 24 : 1000;
 
     const onChange = (event) => {
       const { value } = event.target;
