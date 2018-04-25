@@ -5,10 +5,8 @@ const { DEPLOY_CONTENTFUL_SPACE } = process.env;
 
 const DEPLOY = `
   react-scripts build &&
-  cp ./build/index.html ./build/200.html &&
   cp ./extension.json ./build/extension.json &&
-  surge ./build https://extension.votingrightshouseparty.com &&
-  contentful extension update --space-id ${DEPLOY_CONTENTFUL_SPACE} --force
+  now ./build rowboat-extension
 `;
 
 const pipelineProcess = cmd.get(DEPLOY, (err, data, stderr) => {
