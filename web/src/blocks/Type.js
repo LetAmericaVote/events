@@ -11,7 +11,7 @@ export const Hero = styled.h1`
   font-size: ${props => props.theme.heroFontSizeSmall};
   font-weight: 900;
 
-  ${props => props.theme.mediumMarginBottom}
+  ${props => props.reducedMargin ? props.theme.tinyMarginBottom : props.theme.mediumMarginBottom}
 
   ${props => props.theme.tablet`
     font-size: ${props => props.theme.heroFontSizeLarge};

@@ -142,7 +142,8 @@ const Home = (props) => {
       <Spacer medium />
       <Section>
         <FlexDown>
-          <Hero centered>{HOME_HERO[0]}<HeroHighlight>{HOME_HERO[1]}</HeroHighlight>{HOME_HERO[2]}<HeroHighlight>{HOME_HERO[3]}</HeroHighlight></Hero>
+          <Hero centered reducedMargin>{HOME_HERO[0]}<HeroHighlight>{HOME_HERO[1]}</HeroHighlight></Hero>
+          <Hero centered>{HOME_HERO[2]}<HeroHighlight>{HOME_HERO[3]}</HeroHighlight></Hero>
           <HeroBold centered>{HOME_HERO_2}</HeroBold>
           <Paragraph centered>{HOME_DESCRIPTION}</Paragraph>
           <FlexResponsiveRow>
@@ -175,7 +176,9 @@ const Home = (props) => {
             <Quote centered>{HOME_QUOTE}</Quote>
             <InvertedDetail>{QUOTE_SOURCE_AKA_PUTINS_ASSET}</InvertedDetail>
             <Spacer />
-            <HeroInverted centered>{HOME_STRAT[0]}<HeroHighlight>{HOME_STRAT[1]}</HeroHighlight>{HOME_STRAT[2]}</HeroInverted>
+            <HeroInverted centered reducedMargin>{HOME_STRAT[0]}</HeroInverted>
+            <HeroInverted centered reducedMargin><HeroHighlight>{HOME_STRAT[1]}</HeroHighlight></HeroInverted>
+            <HeroInverted centered>{HOME_STRAT[2]}</HeroInverted>
           </FlexDownCenter>
           <FlexAcrossJustifyCenter>
             <Connection />
@@ -199,8 +202,11 @@ const Home = (props) => {
           <FlexResponsiveRow>
             <FlexResponsiveHalfColumn>
               <FlexDown>
-                <Hero>{HOME_COMMUNITY_HERO}</Hero>
-                <HeroBold>{HOME_COMMUNITY_HERO_BOLD}</HeroBold>
+                <Hero reducedMargin>{HOME_COMMUNITY_HERO[0]}</Hero>
+                <Hero reducedMargin>{HOME_COMMUNITY_HERO[1]}</Hero>
+                <Hero reducedMargin>{HOME_COMMUNITY_HERO[2]}</Hero>
+                <Hero reducedMargin>{HOME_COMMUNITY_HERO[3]}</Hero>
+                <HeroBold>{HOME_COMMUNITY_HERO[4]}</HeroBold>
               </FlexDown>
             </FlexResponsiveHalfColumn>
             <FlexResponsiveHalfColumn>

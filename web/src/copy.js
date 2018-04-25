@@ -11,7 +11,7 @@ export const COMMUNITY_TITLE = 'House Party Community';
 export const HOME_HERO = [
   'Are you tired of ',
   'Republicans',
-  ' taking away your ',
+  ' threatening your ',
   'right to vote?',
 ];
 
@@ -21,32 +21,36 @@ export const HOME_DESCRIPTION = 'Find a voting rights house party near you and s
 
 export const HOME_SUB_HEADER = 'We\'re throwing parties across the nation';
 
-export const HOME_SUB_1 = 'Let America Vote Supporters are hosting voting rights house parties across the country to standup for our democracy. Will you join them?';
+export const HOME_SUB_1 = 'Let America Vote supporters are hosting voting rights house parties across the country to standup for our democracy. Will you join them?';
 
 export const HOME_SUB_2 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nam libero justo laoreet sit amet cursus. Nunc scelerisque viverra mauris in. Non sodales neque sodales ut etiam sit amet.';
 
 export const HOME_CALL_TO_ACTION = 'Search For House Party';
 
-export const HOME_QUOTE = '"In addition to winning the Electoral College in a landslide, I won the popular vote if you deduct the millions of people who voted illegally"';
+export const HOME_QUOTE = '"In addition to winning the Electoral College in a landslide, I won the popular vote if you deduct the millions of people who voted illegally."';
 
 export const QUOTE_SOURCE_AKA_PUTINS_ASSET = '-Donald Trump, Nov. 2016';
 
 export const HOME_STRAT = [
   'Step one in ',
-  'Trumps reelection strategy ',
+  'Trump\'s re-election strategy ',
   'is to lie about our elections.',
 ];
 
-export const HOME_EVENT_HEADER = 'Join an upcoming voting rights house party and make sure that politicians who want to make it harder to vote don\'t get reelected.';
+export const HOME_EVENT_HEADER = 'Join an upcoming voting rights house party and make sure that politicians who want to make it harder to vote don\'t get re-elected.';
 
-export const HOME_COMMUNITY_HERO = 'This is not just about resisting.';
-
-export const HOME_COMMUNITY_HERO_BOLD = 'This is about building a community to protect voting rights.';
+export const HOME_COMMUNITY_HERO = [
+  'This is about',
+  'building',
+  'a community',
+  'to protect',
+  'voting rights.',
+];
 
 export const HOME_COMMUNITY_SIGNUP_HEADER = 'Signup now to get access to the Let America Vote online community';
 
 export const HOME_COMMUNITY_SIGNUP_COPY = [
-  'Join our digital space where you can chat with other activists, share something interested you read, and get regular updates from the Let America Vote team.',
+  'Join our digital space where you can chat with other activists, share news and information and get regular updates from the Let America Vote team.',
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tincidunt eget nullam non nisi est sit amet facilisis magna.',
 ];
 
