@@ -51,7 +51,6 @@ import {
   HOME_EVENT_HEADER,
   QUOTE_SOURCE_AKA_PUTINS_ASSET,
   HOME_COMMUNITY_HERO,
-  HOME_COMMUNITY_HERO_BOLD,
 } from '../copy';
 
 const SearchBarContainer = styled.div`
