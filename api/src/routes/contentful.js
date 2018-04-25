@@ -17,7 +17,7 @@ async function contentfulWebhook(req, res) {
     'ContentManagement.Entry.publish',
   ];
 
-  if (deletes.contains(type)) {
+  if (deletes.includes(type)) {
     res.send('ok');
 
     const contentfulId = req.body.sys.id
@@ -26,7 +26,7 @@ async function contentfulWebhook(req, res) {
     return;
   }
 
-  if (saves.contains(type)) {
+  if (saves.includes(type)) {
     res.send('ok');
 
     await Event.syncFromContentful(req.body);
