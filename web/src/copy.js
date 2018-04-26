@@ -17,9 +17,9 @@ export const HOME_HERO = [
 
 export const HOME_HERO_2 = 'Join the party.';
 
-export const HOME_DESCRIPTION = 'Find a voting rights house party near you and stand up for voting rights.';
+export const HOME_DESCRIPTION = 'Find a Voting Rights House Party near you and take action in your community to protect access to the ballot box.';
 
-export const HOME_SUB_HEADER = 'We\'re throwing parties across the nation';
+export const HOME_SUB_HEADER = 'On May 19, 2018, we\'re throwing Voting Rights House Parties -- and you’re invited';
 
 export const HOME_SUB_1 = 'Let America Vote supporters are hosting voting rights house parties across the country to standup for our democracy. Will you join them?';
 
@@ -50,8 +50,8 @@ export const HOME_COMMUNITY_HERO = [
 export const HOME_COMMUNITY_SIGNUP_HEADER = 'Signup now to get access to the Let America Vote online community';
 
 export const HOME_COMMUNITY_SIGNUP_COPY = [
-  'Join our digital space where you can chat with other activists, share news and information and get regular updates from the Let America Vote team.',
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tincidunt eget nullam non nisi est sit amet facilisis magna.',
+  'Sign in with Google to RSVP for a house party hosted by Let America Vote supporters.',
+  'Voting Rights House Parties are taking place across the country in May 19, 2018. Sign in, RSVP and take action to protect access to the ballot box.',
 ];
 
 export const SEARCH_HEADER = 'Search for a voting rights house party near you';

@@ -9,6 +9,9 @@ import {
   STORE_AUTH_CREDENTIALS,
 } from '../actions';
 
+const preloadedState = window.__PRELOADED_STATE__;
+delete window.__PRELOADED_STATE__;
+
 export default function make() {
   const middlewares = [thunk, ...appMiddleware];
 
@@ -17,7 +20,7 @@ export default function make() {
   }
 
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-  const store = createStore(reducers, composeEnhancers(applyMiddleware(...middlewares)));
+  const store = createStore(reducers, preloadedState, composeEnhancers(applyMiddleware(...middlewares)));
 
   const sessionAuth = sessionStorage.getItem(STORE_AUTH_CREDENTIALS);
   if (sessionAuth) {

@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === 'development') {
   window.store = store;
 }
 
-ReactDOM.render((
+ReactDOM.hydrate((
   <Provider store={store}>
     <ThemeProvider theme={theme}>
       <App />
