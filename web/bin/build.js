@@ -5,12 +5,12 @@ const { TARGET_ENV } = process.env;
 
 const BUILD_STEP = `
   react-scripts build &&
-  cp ./build/index.html ./build/200.html &&
 `;
 
 const DEPLOY_SECRET_FILE = '.env.production.local';
 const STAGING_SECRET_FILE = '.env.staging';
 const PRODUCTION_SECRET_FILE = '.env.prod';
+const DEVELOPMENT_SECRET_FILE = '.env.development.local';
 
 const WIPE_TMP_SECRET_FILE = `rm ${DEPLOY_SECRET_FILE}`;
 
@@ -26,13 +26,22 @@ const STAGING_DEPLOY = `
   ${WIPE_TMP_SECRET_FILE}
 `;
 
+const DEVELOPMENT_DEPLOY = `
+  cp ${DEVELOPMENT_SECRET_FILE} ${DEPLOY_SECRET_FILE}
+  ${BUILD_STEP}
+  ${WIPE_TMP_SECRET_FILE}
+`;
+
 if (! TARGET_ENV) {
   console.error('No target environment specified.');
   process.exit(1);
 }
 
 const isProduction = TARGET_ENV === 'production';
-const pipeline = isProduction ? PRODUCTION_DEPLOY : STAGING_DEPLOY;
+const isStaging = TARGET_ENV === 'staging';
+const pipeline = isProduction ? PRODUCTION_DEPLOY : (
+  isStaging ? STAGING_DEPLOY : DEVELOPMENT_DEPLOY
+);
 
 const pipelineProcess = cmd.get(pipeline, (err, data, stderr) => {
   if (err) {

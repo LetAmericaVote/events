@@ -1,4 +1,5 @@
 import React from 'react';
+import Helmet from 'react-helmet';
 import Byline from '../components/Byline';
 import EventTimePlace from '../components/EventTimePlace';
 import Signup from '../components/Signup';
@@ -61,6 +62,12 @@ const Event = (props) => {
 
   return (
     <Section>
+      <Helmet>
+        <title>{title} | Let America Vote, Voting Rights House Party</title>
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={headerPhoto} />
+      </Helmet>
       <FlexResponsiveRow>
         <FlexResponsiveThirdColumn useMargin>
           <FlexDown fill>
