@@ -23,6 +23,8 @@ const links = {
   'donate': 'https://secure.actblue.com/contribute/page/lav-main',
   'privacy': 'https://www.letamericavote.org/privacy-policy',
   'contact': 'https://www.letamericavote.org/contact',
+  'vrhpAbout': 'https://www.letamericavote.org/about-voting-rights-house-parties/',
+  'host': 'https://secure.letamericavote.org/page/s/host-a-house-party',
 };
 
 const FooterTitle = styled(Paragraph)`
@@ -87,11 +89,9 @@ const Footer = (props) => {
         <FlexResponsiveQuarterColumn>
           <FlexDown fill>
             <FooterTitle>Voting Rights House Party</FooterTitle>
-            {/* TODO: VRHP About Page? */}
-            <FooterLink href={links.about}>About</FooterLink>
+            <FooterLink href={links.vrhpAbout}>About</FooterLink>
             <FooterLink href={SEARCH_ROUTE}>Find a house party</FooterLink>
-            {/* TODO: Host google form link */}
-            <FooterLink href={links.intern}>Host a house party</FooterLink>
+            <FooterLink href={links.host}>Host a house party</FooterLink>
           </FlexDown>
         </FlexResponsiveQuarterColumn>
         <FlexResponsiveHalfColumn>
