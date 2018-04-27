@@ -2,9 +2,12 @@
   "name": "rowboat",
   "version": "1.0.0",
   "scripts": {
-    "start": "serve --single --cache=60000"
+    "start": "node index.js"
   },
   "dependencies": {
-    "serve": "latest"
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.3",
+    "node-fetch": "^2.1.2",
+    "url-pattern": "^1.0.3"
   }
 }

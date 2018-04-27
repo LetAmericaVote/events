@@ -20,11 +20,6 @@ function getUrlParams(search) {
 }
 
 const sync = (store) => {
-  const { redirect } = getUrlParams(window.location.search);
-  if (document.location.pathname === '/' && redirect) {
-    document.location.assign(`${document.location.origin}/${redirect}`);
-  }
-
   const history = createHistory();
 
   const updatePathFromLocation = (location) =>
