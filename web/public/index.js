@@ -15,10 +15,10 @@ const filePath = path.resolve(__dirname, 'index.html');
 const html = fs.readFileSync(filePath, 'utf8');
 
 // @NOTE: There is intentionally no space between the string and closing bracket.
-const DEFAULT_META_TITLE = `<meta type="og:title" content="Voting Rights House Party | Let America Vote"/>`;
-const DEFAULT_META_DESCRIPTION = `<meta type="og:description" content="Voting Rights House Parties are taking place across the country in May 19, 2018. Sign in, RSVP and take action to protect access to the ballot box.">`;
-const DEFAULT_META_PHOTO = `<meta type="og:photo" content="https://cdn.letamericavote.org/wp-content/uploads/2017/02/Homepagebanner-1.jpg">`;
-const DEFAULT_META_URL = `<meta type="og:url" content="https://votingrightshouseparty.com">`;
+const DEFAULT_META_TITLE = `<meta property="og:title" content="Voting Rights House Party | Let America Vote">`;
+const DEFAULT_META_DESCRIPTION = `<meta property="og:description" content="Voting Rights House Parties are taking place across the country in May 19, 2018. Sign in, RSVP and take action to protect access to the ballot box.">`;
+const DEFAULT_META_PHOTO = `<meta property="og:image" content="https://votingrightshouseparty.com/LAV_Meta.png">`;
+const DEFAULT_META_URL = `<meta property="og:url" content="https://votingrightshouseparty.com">`;
 
 router.use('/', express.static(
   process.env.NOW ?
@@ -46,10 +46,10 @@ router.use('*', async (req, res, next) => {
       if (! json.error && eventResponse.status === 200) {
         const { event } = json;
 
-        metaTitle = `<meta type="og:title" content="${event.title}" />`;
-        metaDescription = `<meta type="og:description" content="${event.description}" />`;
-        metaPhoto = `<meta type="og:photo" content="${event.headerPhoto}" />`;
-        metaUrl = `<meta type="og:url" content="${req.protocol + '://' + req.get('host') + req.originalUrl}">`;
+        metaTitle = `<meta property="og:title" content="${event.title}" />`;
+        metaDescription = `<meta property="og:description" content="${event.description}" />`;
+        metaPhoto = `<meta property="og:image" content="${event.headerPhoto}" />`;
+        metaUrl = `<meta property="og:url" content="${req.protocol + '://' + req.get('host') + req.originalUrl}">`;
       }
     }
 
