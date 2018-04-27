@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "heroku local --procfile=ProcfileDev",
-    "contentful-sync-task": "node tasks/contentfulSync.js",
+    "contentful-sync-task": "node src/tasks/contentfulSync.js",
     "contentful-sync-task-local": "node -r dotenv/config src/tasks/contentfulSync.js",
     "seed-task": "node src/tasks/seed.js",
     "seed-task-local": "node -r dotenv/config src/tasks/seed.js"
