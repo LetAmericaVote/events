@@ -20,7 +20,9 @@ const DEFAULT_META_DESCRIPTION = `<meta type="og:description" content="Voting Ri
 const DEFAULT_META_PHOTO = `<meta type="og:photo" content="https://cdn.letamericavote.org/wp-content/uploads/2017/02/Homepagebanner-1.jpg"/>`;
 
 router.use('/', express.static(
-  path.resolve(__dirname, '..', 'build'),
+  process.env.NOW ?
+  path.resolve(__dirname) :
+  path.resolve(__dirname, '..', 'build')
 ));
 
 router.use('*', async (req, res, next) => {
