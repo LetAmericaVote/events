@@ -47,7 +47,7 @@ export const HOME_COMMUNITY_HERO = [
   'voting rights.',
 ];
 
-export const HOME_COMMUNITY_SIGNUP_HEADER = 'Signup now to get access to the Let America Vote online community';
+export const HOME_COMMUNITY_SIGNUP_HEADER = 'Sign up to RSVP for a Voting Rights House Party';
 
 export const HOME_COMMUNITY_SIGNUP_COPY = [
   'Sign in with Google to RSVP for a house party hosted by Let America Vote supporters.',

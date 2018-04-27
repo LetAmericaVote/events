@@ -34,7 +34,7 @@
     "build:dev": "TARGET_ENV=development node bin/build.js",
     "build:staging": "TARGET_ENV=staging node bin/build.js",
     "build:prod": "TARGET_ENV=production node bin/build.js",
-    "deploy:staging": "now ./build --name rowboat-staging",
+    "deploy:staging": "now ./build --name rowboat-staging --dotenv .env.staging",
     "deploy:prod": "now ./build --name rowboat-prod",
     "alias:staging": "now alias $DOMAIN staging.votingrightshouseparty.com",
     "alias:prod": "now alias $DOMAIN votingrightshouseparty.com"

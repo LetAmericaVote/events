@@ -16,8 +16,9 @@ const html = fs.readFileSync(filePath, 'utf8');
 
 // @NOTE: There is intentionally no space between the string and closing bracket.
 const DEFAULT_META_TITLE = `<meta type="og:title" content="Voting Rights House Party | Let America Vote"/>`;
-const DEFAULT_META_DESCRIPTION = `<meta type="og:description" content="Voting Rights House Parties are taking place across the country in May 19, 2018. Sign in, RSVP and take action to protect access to the ballot box."/>`;
-const DEFAULT_META_PHOTO = `<meta type="og:photo" content="https://cdn.letamericavote.org/wp-content/uploads/2017/02/Homepagebanner-1.jpg"/>`;
+const DEFAULT_META_DESCRIPTION = `<meta type="og:description" content="Voting Rights House Parties are taking place across the country in May 19, 2018. Sign in, RSVP and take action to protect access to the ballot box.">`;
+const DEFAULT_META_PHOTO = `<meta type="og:photo" content="https://cdn.letamericavote.org/wp-content/uploads/2017/02/Homepagebanner-1.jpg">`;
+const DEFAULT_META_URL = `<meta type="og:url" content="https://votingrightshouseparty.com">`;
 
 router.use('/', express.static(
   process.env.NOW ?
@@ -35,6 +36,7 @@ router.use('*', async (req, res, next) => {
     let metaTitle = DEFAULT_META_TITLE
     let metaDescription = DEFAULT_META_DESCRIPTION;
     let metaPhoto = DEFAULT_META_PHOTO;
+    let metaUrl = DEFAULT_META_URL;
 
     if (eventSlug) {
       const endpoint = `${ROWBOAT_API_URI}/v1/events/slug/${eventSlug}`;
@@ -47,15 +49,20 @@ router.use('*', async (req, res, next) => {
         metaTitle = `<meta type="og:title" content="${event.title}" />`;
         metaDescription = `<meta type="og:description" content="${event.description}" />`;
         metaPhoto = `<meta type="og:photo" content="${event.headerPhoto}" />`;
+        metaUrl = `<meta type="og:url" content="${req.protocol + '://' + req.get('host') + req.originalUrl}">`;
       }
     }
 
     const page = html
       .replace(DEFAULT_META_TITLE, metaTitle || DEFAULT_META_TITLE)
       .replace(DEFAULT_META_DESCRIPTION, metaDescription || DEFAULT_META_DESCRIPTION)
-      .replace(DEFAULT_META_PHOTO, metaPhoto || DEFAULT_META_PHOTO);
+      .replace(DEFAULT_META_PHOTO, metaPhoto || DEFAULT_META_PHOTO)
+      .replace(DEFAULT_META_URL, metaUrl || DEFAULT_META_URL);
 
-    res.send(page);
+    res
+      .set('Content-Type', 'text/html')
+      .set('Content-Length', require('buffer').Buffer.byteLength(page))
+      .send(page);
   } catch(error) {
     console.error(error);
     return res.status(500).send('Whoops. Looks like we had a problem. Check back later!');

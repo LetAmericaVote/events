@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Rivet from '../hoc/Rivet';
 import { selectIsAuthenticated } from '../selectors';
-import { Logo } from '../blocks/Icons';
+import { LogoLong } from '../blocks/Icons';
 import InternalLink from '../routing/InternalLink';
 import { CallToActionButton } from '../blocks/Button';
 import {
@@ -54,7 +54,7 @@ const Navigation = (props) => {
       event.preventDefault();
       onClick();
     }}>
-      <Logo />
+      <LogoLong />
     </a>
   );
 
@@ -67,11 +67,11 @@ const Navigation = (props) => {
         <InternalLink to={SEARCH_ROUTE}>
           <FindButton>Find A House Party</FindButton>
         </InternalLink>
-        <InternalLink to={PROFILE_ROUTE}>
+        {/* <InternalLink to={PROFILE_ROUTE}>
           <NavLink>
             {isAuthenticated ? "Profile" : "Log in"}
           </NavLink>
-        </InternalLink>
+        </InternalLink> */}
       </FlexAcross>
     </NavRow>
   )

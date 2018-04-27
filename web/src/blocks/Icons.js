@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import logo from '../assets/icons/logo.svg';
+import logoLong from '../assets/icons/logo-long.png';
 import googleLogo from '../assets/icons/g-logo.png';
 import search from '../assets/icons/search.svg';
 import gps from '../assets/icons/gps.svg';
@@ -18,6 +19,16 @@ export const Logo = styled.div`
   height: 37px;
 
   background-image: url(${logo});
+  background-size: 100% 100%;
+`;
+
+export const LogoLong = styled.div`
+  ${props => props.theme.reset}
+
+  width: 143px;
+  height: 14px;
+
+  background-image: url(${logoLong});
   background-size: 100% 100%;
 `;
 
