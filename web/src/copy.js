@@ -21,9 +21,9 @@ export const HOME_DESCRIPTION = 'Find a Voting Rights House Party near you and t
 
 export const HOME_SUB_HEADER = 'On May 19, 2018, we\'re throwing Voting Rights House Parties -- and you’re invited';
 
-export const HOME_SUB_1 = 'Let America Vote supporters are hosting voting rights house parties across the country to standup for our democracy. Will you join them?';
+export const HOME_SUB_1 = 'People across the country are taking action to protect voting rights by holding house parties in their communities.';
 
-export const HOME_SUB_2 = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nam libero justo laoreet sit amet cursus. Nunc scelerisque viverra mauris in. Non sodales neque sodales ut etiam sit amet.';
+export const HOME_SUB_2 = 'Be part of the movement that’s protecting access to the ballot box. Find a Voting Rights House Party, meet fellow Let America Vote supporters and discuss the roadmap for standing up for voting rights.';
 
 export const HOME_CALL_TO_ACTION = 'Search For House Party';
 
