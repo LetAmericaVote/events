@@ -11,6 +11,9 @@ import share from '../assets/icons/share.svg';
 import smile from '../assets/icons/smile.svg';
 import dotMenu from '../assets/icons/dot-menu.svg';
 import pencil from '../assets/icons/pencil.svg';
+import facebookLogo from '../assets/icons/facebook-logo.png';
+import twitterLogo from '../assets/icons/twitter-logo.png';
+import youtubeLogo from '../assets/icons/youtube-logo.png';
 
 export const Logo = styled.div`
   ${props => props.theme.reset}
@@ -93,4 +96,22 @@ export const PencilIcon = styled(BaseIcon)`
   background-image: url(${pencil});
   width: 16px;
   height: 16px;
+`;
+
+export const SocialIcon = styled(BaseIcon)`
+  width: 32px;
+  height: 32px;
+  ${props => props.theme.extraTinyMargin}
+`;
+
+export const FacebookIcon = styled(SocialIcon)`
+  background-image: url(${facebookLogo});
+`;
+
+export const TwitterIcon = styled(SocialIcon)`
+  background-image: url(${twitterLogo});
+`;
+
+export const YoutubeIcon = styled(SocialIcon)`
+  background-image: url(${youtubeLogo});
 `;

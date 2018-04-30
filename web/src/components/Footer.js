@@ -3,8 +3,14 @@ import styled from 'styled-components';
 import Section from '../blocks/Section';
 import { SEARCH_ROUTE } from '../routing/routes';
 import {
+  FacebookIcon,
+  TwitterIcon,
+  YoutubeIcon,
+} from '../blocks/Icons';
+import {
   Paragraph,
   StyledAnchor,
+  UnstyledAnchor,
 } from '../blocks/Type';
 import {
   FlexDown,
@@ -75,7 +81,7 @@ const Footer = (props) => {
   return (
     <Section>
       <FlexResponsiveRow>
-        <FlexResponsiveQuarterColumn>
+        <FlexResponsiveQuarterColumn useMargin>
           <FlexDown fill>
             <FooterTitle right>Let America Vote</FooterTitle>
             <FooterLink href={links.about} right>About</FooterLink>
@@ -86,7 +92,7 @@ const Footer = (props) => {
             <FooterLink href={links.contact} right>Contact Us</FooterLink>
           </FlexDown>
         </FlexResponsiveQuarterColumn>
-        <FlexResponsiveQuarterColumn>
+        <FlexResponsiveQuarterColumn useMargin>
           <FlexDown fill>
             <FooterTitle>Voting Rights House Party</FooterTitle>
             <FooterLink href={links.vrhpAbout}>About</FooterLink>
@@ -95,7 +101,20 @@ const Footer = (props) => {
           </FlexDown>
         </FlexResponsiveQuarterColumn>
         <FlexResponsiveHalfColumn>
-          <Paragraph>TODO: Social Icons</Paragraph>
+          <FlexDown>
+            <FooterTitle right>Follow Let America Vote</FooterTitle>
+            <FlexAcrossJustifyCenter fill>
+              <UnstyledAnchor href="https://facebook.com/letamericavote">
+                <FacebookIcon />
+              </UnstyledAnchor>
+              <UnstyledAnchor href="https://twitter.com/letamericavote">
+                <TwitterIcon />
+              </UnstyledAnchor>
+              <UnstyledAnchor href="https://www.youtube.com/channel/UCXfje39xzlGF4kEeGTjiT3g">
+                <YoutubeIcon />
+              </UnstyledAnchor>
+            </FlexAcrossJustifyCenter>
+          </FlexDown>
         </FlexResponsiveHalfColumn>
       </FlexResponsiveRow>
       <FlexAcrossJustifyCenter>

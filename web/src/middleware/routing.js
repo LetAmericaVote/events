@@ -17,6 +17,8 @@ const routing = store => next => action => {
 
     const history = createHistory();
     history.push(action.pathname);
+
+    window.scrollTo(0, 0);
   }
 
   if (action.type === SET_PATH_NAME ||
