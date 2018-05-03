@@ -38,6 +38,10 @@ export const HeroBold = styled(Hero)`
   ${props => props.theme.fg.secondary}
 `;
 
+export const HeroBoldInverted = styled(HeroBold)`
+  ${props => props.theme.fg.paper}
+`;
+
 export const SectionHeader = styled.h1`
   ${props => props.theme.reset}
 

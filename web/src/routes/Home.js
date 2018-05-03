@@ -5,10 +5,11 @@ import Section from '../blocks/Section';
 import EventMap from '../components/EventMap';
 import SearchBar from '../components/SearchBar';
 import SearchResult from '../components/SearchResult';
-import CommunityScroll from '../components/CommunityScroll';
 import CommunitySignup from '../components/CommunitySignup';
+import Focus from '../components/Focus';
 import Spacer from '../blocks/Spacer';
 import InternalLink from '../routing/InternalLink';
+import communityBackground from '../assets/art/community.png';
 import {
   selectEventsSortedByDistance,
   selectEventsSortedByDatetime,
@@ -198,20 +199,11 @@ const Home = (props) => {
       <Spacer />
       <Section>
         <FlexDown>
-          <FlexResponsiveRow>
-            <FlexResponsiveHalfColumn>
-              <FlexDown>
-                <Hero reducedMargin>{HOME_COMMUNITY_HERO[0]}</Hero>
-                <Hero reducedMargin>{HOME_COMMUNITY_HERO[1]}</Hero>
-                <Hero reducedMargin>{HOME_COMMUNITY_HERO[2]}</Hero>
-                <Hero reducedMargin>{HOME_COMMUNITY_HERO[3]}</Hero>
-                <HeroBold>{HOME_COMMUNITY_HERO[4]}</HeroBold>
-              </FlexDown>
-            </FlexResponsiveHalfColumn>
-            <FlexResponsiveHalfColumn>
-              <CommunityScroll />
-            </FlexResponsiveHalfColumn>
-          </FlexResponsiveRow>
+          <Focus
+            src={communityBackground}
+            headerCopy="This is about building a community"
+            callToActionCopy="To protect voting rights"
+          />
           <Spacer medium />
           <CommunitySignup />
         </FlexDown>
