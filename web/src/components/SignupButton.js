@@ -22,6 +22,9 @@ class SignupButton extends React.Component {
     const triggger = ! prevProps.hasClicked || ! prevProps.isAuthenticated;
     const condition = this.props.hasClicked && this.props.isAuthenticated;
 
+    console.log({ triggger, condition });
+    console.log({ prevProps, props: this.props });
+
     if (triggger && condition && this.props.eventId) {
       this.props.signupForEvent(this.props.eventId);
       this.props.openSignupModal(this.props.eventId);
@@ -69,7 +72,7 @@ class SignupButton extends React.Component {
     const WrappedSignup = isAuthenticated ?
       SignupButtonFlow : GoogleAuth(SignupButtonFlow);
 
-    const setClicked = () => setFormValue('auth', 'click', true);
+    const setClicked = () => setFormValue('auth', `click-${this.props.eventId}`, true);
 
     const InnerSignup = () => isAuthenticated ? (
       <FlexAcrossAlignCenter>
@@ -98,7 +101,7 @@ SignupButton.mapStateToProps = (state, ownProps) => ({
   isAuthenticated: selectIsAuthenticated(state),
   authenticatedUserId: selectAuthUserId(state),
   authenticatedFirstName: selectAuthenticatedUserFirstName(state),
-  hasClicked: selectFormValue('auth', 'click', state),
+  hasClicked: selectFormValue('auth', `click-${ownProps.eventId}`, state),
 });
 
 SignupButton.actionCreators = {

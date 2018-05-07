@@ -1,3 +1,4 @@
+import ReactGA from 'react-ga';
 import createHistory from 'history/createBrowserHistory';
 import {
   selectIsModalOpen,
@@ -23,6 +24,8 @@ const routing = store => next => action => {
 
   if (action.type === SET_PATH_NAME ||
     action.type === SET_INTERNAL_PATH_NAME) {
+
+    ReactGA.pageview(action.pathname);
 
     if (selectIsModalOpen(store.getState())) {
       store.dispatch(closeModal());

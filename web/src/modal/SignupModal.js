@@ -49,6 +49,10 @@ const SignupModal = (props) => {
         }
       ) : (
         () => {
+          if (! icebreakerForm) {
+            return;
+          }
+
           const { answer, question } = icebreakerForm;
           const message = `"${question}" \n ${answer}`;
 

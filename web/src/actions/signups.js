@@ -1,3 +1,5 @@
+import ReactGA from 'react-ga';
+
 export const FETCH_PAGINATED_USER_SIGNUPS = 'FETCH_PAGINATED_USER_SIGNUPS';
 
 /**
@@ -41,6 +43,12 @@ export const SIGNUP_FOR_EVENT = 'SIGNUP_FOR_EVENT';
  * @param  {String} eventId Event id to signup for
  */
 export function signupForEvent(eventId) {
+  ReactGA.event({
+    category: 'Signup',
+    action: 'User signed up for an event',
+    label: eventId,
+  });
+
   return { type: SIGNUP_FOR_EVENT, eventId };
 }
 
