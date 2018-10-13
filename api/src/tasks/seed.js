@@ -210,10 +210,10 @@ async function execute() {
   common.dbConnect();
 
   try {
-    // await generateUser(0);
-    // await generateEvent(0);
-    // await generateSignup(0);
-    await generateComment(0);
+    await generateUser(0);
+    await generateEvent(0);
+    await generateSignup(0);
+    // await generateComment(0);
     // process.exit();
   } catch (error) {
     console.error(error);
